@@ -13,3 +13,10 @@ config_version=5
 config/name="ByeTale"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+ENet="*res://scr/SINGLETON/eNet.gd"
+Db="*res://scr/SINGLETON/DB.gd"
+Log="*res://scr/SINGLETON/Log.gd"
+Cifrado="*res://scr/SINGLETON/AES.gd"

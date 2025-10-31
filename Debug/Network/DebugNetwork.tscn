@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://chfeyinuif778"]
+
+[ext_resource type="Script" uid="uid://cbmpedxeoanlr" path="res://Debug/Network/DebugNetwork.gd" id="1_fp1jl"]
+
+[node name="DebugNetwork" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fp1jl")
+
+[node name="DebugConnection" type="ItemList" parent="."]
+layout_mode = 0
+offset_right = 515.0
+offset_bottom = 548.0
+
+[node name="host" type="Button" parent="."]
+layout_mode = 0
+offset_left = 637.0
+offset_top = 39.0
+offset_right = 1078.0
+offset_bottom = 129.0
+text = "Host
+"
+
+[node name="client" type="Button" parent="."]
+layout_mode = 0
+offset_left = 637.0
+offset_top = 156.0
+offset_right = 1078.0
+offset_bottom = 246.0
+text = "Cliente
+"
+
+[connection signal="Status" from="." to="." method="status_change"]
+[connection signal="pressed" from="host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="client" to="." method="_on_client_pressed"]
