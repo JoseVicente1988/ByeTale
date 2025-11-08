@@ -11,5 +11,13 @@ config_version=5
 [application]
 
 config/name="ByeTale"
+run/main_scene="uid://dif0vja07bvqq"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[file_customization]
+
+folder_colors={
+"res://Audio/": "purple",
+"res://Blockout/": "gray"
+}
