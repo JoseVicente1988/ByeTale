@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://ixj0545yyuac"]
+
+[ext_resource type="Script" uid="uid://yt3uvbcuml3l" path="res://scr/Player.gd" id="1_5vrke"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_q17qp"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5vrke"]
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+script = ExtResource("1_5vrke")
+camera_distance = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_q17qp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_5vrke")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1199027, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.8969345, 0.44216347, 0, -0.44216347, 0.8969345, 0.52120274, 0.9725342, 2.1106057)
+fov = 60.0
+near = 0.001
