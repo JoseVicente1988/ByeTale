@@ -5,7 +5,7 @@ extends Node
 const ADRESS = "localhost"#aqui ponemos la direccion correspondiente
 const PORT = 3689
 
-
+var accounts ={}
 
 var eNet = ENetMultiplayerPeer.new()
 
@@ -21,6 +21,14 @@ func _ready() -> void:
 func _on_peer_connected(id: int) -> void:
 	if multiplayer.is_server():
 		Log.log_create("El id: " + str(id) +" se unio a la partida.")
+		rpc_id(id,"sendaespass",Cifrado.AES_KEY,Cifrado.AES_IV)
+
+@rpc("any_peer")
+func sendaespass(AESData,IV):
+	if not multiplayer.is_server():
+		Cifrado.AES_KEY = AESData
+		Cifrado.AES_IV = IV
+		print("[AES] %s - [IV] %s" %[Cifrado.AES_KEY,Cifrado.AES_IV] )
 
 func _on_peer_disconnected(id: int) -> void:
 	if multiplayer.is_server():
@@ -28,6 +36,10 @@ func _on_peer_disconnected(id: int) -> void:
 
 func _on_connected_ok() -> void:
 	print("Conectado al servidor.")
+
+@rpc("any_peer")
+func TakeAES():
+	pass
 
 func _on_connected_fail() -> void:
 	printerr("No se conecto al servidor, error: ", eNet.get_packet_error())

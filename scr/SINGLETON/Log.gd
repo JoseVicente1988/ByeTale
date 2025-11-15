@@ -9,6 +9,7 @@ func _ready() -> void:
 	# Asegura carpeta de logs
 	DirAccess.make_dir_recursive_absolute(LOG_DIR)
 
+@rpc("any_peer")
 func log_create(message: String) -> void:
 	var path := _daily_path()
 	var _err := cfg.load(path)  # si no existe, cfg queda vacío (ok)
@@ -41,3 +42,11 @@ func _timestamp_hms_ms() -> String:
 	var s := str(dt["second"]).pad_zeros(2)
 	var ms := str(Time.get_ticks_msec() % 1000).pad_zeros(3)
 	return h + ":" + m + ":" + s + " - " + ms + "ms"
+
+func error()->void:
+	for i in get_stack():
+		var SceneName = i.get("source")
+		var functionName= i.get("function")
+		if not functionName == "error":
+			log_create("❗[ERROR] %s - [FUNCION] %s." % [SceneName,functionName])
+	

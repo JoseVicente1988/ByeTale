@@ -86,9 +86,19 @@ func _get_id(username: String) -> int:
 	SQL.close_db()
 	return id
 
+func _get_map(username: String) -> String:
+	var result
+	if not SQL.open_db():
+		return "fallo"
+	var query = "SELECT map FROM accounts WHERE usrname = ? LIMIT 1;"
+	if SQL.query_with_bindings(query, [username]):
+		result = str(SQL.query_result)  # esperado: [ {"id": X} ]
+	SQL.close_db()
+	return result
 
 func check_same_password(username: String, taken_password: String) -> bool:
 	if not multiplayer.is_server(): return false
+	print("[USERNAME] %s - [PASSWORD] %s" %[username,taken_password])
 	if not SQL.open_db():
 		push_error("[DB] open_db() falló (check_same_password): %s" % str(SQL.error_message))
 		return false
