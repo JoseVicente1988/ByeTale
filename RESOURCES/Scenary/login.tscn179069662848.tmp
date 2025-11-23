@@ -1,0 +1,189 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvv1b1e4a77uf"]
+
+[ext_resource type="Texture2D" uid="uid://cfkduv208fl3s" path="res://UI/background_1.jpeg" id="1_0cqgo"]
+[ext_resource type="Script" uid="uid://dko3qqh8mk43p" path="res://scr/login.gd" id="1_d44is"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d44is"]
+texture = ExtResource("1_0cqgo")
+
+[node name="Login" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_d44is")
+metadata/_edit_vertical_guides_ = [576.0]
+metadata/_edit_horizontal_guides_ = [324.0]
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_d44is")
+
+[node name="LoginPanel" type="Panel" parent="Background"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.347
+anchor_top = 0.56600004
+anchor_right = 0.65400004
+anchor_bottom = 0.56600004
+offset_left = 0.25598145
+offset_top = 0.23196411
+offset_right = -0.40808105
+offset_bottom = 196.23196
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/LoginPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.057000004
+anchor_top = 0.09200001
+anchor_right = 0.943
+anchor_bottom = 0.91300005
+offset_left = -0.1210022
+offset_top = -0.032001495
+offset_right = 0.1210022
+offset_bottom = 0.051986694
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="username_text" type="Label" parent="Background/LoginPanel/VBoxContainer"]
+layout_mode = 2
+text = "username"
+horizontal_alignment = 1
+
+[node name="username" type="LineEdit" parent="Background/LoginPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="password_text" type="Label" parent="Background/LoginPanel/VBoxContainer"]
+layout_mode = 2
+text = "password"
+horizontal_alignment = 1
+
+[node name="password" type="LineEdit" parent="Background/LoginPanel/VBoxContainer"]
+layout_mode = 2
+secret = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Background/LoginPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Register" type="Button" parent="Background/LoginPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Register
+"
+
+[node name="Loggin" type="Button" parent="Background/LoginPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Loggin"
+
+[node name="Register" type="Panel" parent="Background"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.347
+anchor_top = 0.45800003
+anchor_right = 0.65400004
+anchor_bottom = 0.869
+offset_left = 0.25598145
+offset_top = 0.2159729
+offset_right = -0.40808105
+offset_bottom = -0.11199951
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/Register"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.057000004
+anchor_top = 0.068
+anchor_right = 0.943
+anchor_bottom = 0.93600005
+offset_left = -0.1210022
+offset_top = -0.08800125
+offset_right = 0.1210022
+offset_bottom = 0.023986816
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="username_text" type="Label" parent="Background/Register/VBoxContainer"]
+layout_mode = 2
+text = "username"
+horizontal_alignment = 1
+
+[node name="username" type="LineEdit" parent="Background/Register/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="password_text" type="Label" parent="Background/Register/VBoxContainer"]
+layout_mode = 2
+text = "password"
+horizontal_alignment = 1
+
+[node name="password" type="LineEdit" parent="Background/Register/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+secret = true
+
+[node name="email_text" type="Label" parent="Background/Register/VBoxContainer"]
+layout_mode = 2
+text = "email"
+horizontal_alignment = 1
+
+[node name="email" type="LineEdit" parent="Background/Register/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+secret = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Background/Register/VBoxContainer"]
+layout_mode = 2
+
+[node name="Back" type="Button" parent="Background/Register/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Atras
+"
+
+[node name="Register" type="Button" parent="Background/Register/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Registrar"
+
+[node name="MessagePanel" type="Panel" parent="Background"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -177.0
+offset_top = -46.0
+offset_right = 178.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Message" type="RichTextLabel" parent="Background/MessagePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="Background/LoginPanel/VBoxContainer/HBoxContainer/Register" to="." method="register_panel"]
+[connection signal="pressed" from="Background/LoginPanel/VBoxContainer/HBoxContainer/Loggin" to="." method="try_loggin"]
+[connection signal="pressed" from="Background/Register/VBoxContainer/HBoxContainer/Back" to="." method="back_to_menu"]
+[connection signal="pressed" from="Background/Register/VBoxContainer/HBoxContainer/Register" to="." method="register_pressed"]
