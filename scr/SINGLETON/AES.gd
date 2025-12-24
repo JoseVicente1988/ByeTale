@@ -1,6 +1,9 @@
 extends Node
 class_name AES_Manager
-# AES-CBC (IV fijo) + PKCS7. API antigua preservada.
+# AES-CBC + PKCS7
+# - KEY/IV fijas por export o persistidas
+# - (Opcional) IV aleatoria por mensaje (prefijada)
+# - decrypt_base64() ahora autodetecta: IV fija / IV prefijada / IV sufijada
 
 var AES_KEY: PackedByteArray = PackedByteArray() # 16/24/32 bytes
 var AES_IV: PackedByteArray = PackedByteArray()  # 16 bytes
@@ -8,39 +11,40 @@ var AES_IV: PackedByteArray = PackedByteArray()  # 16 bytes
 @export var auto_generate_on_ready: bool = true
 @export var desired_key_len: int = 32 # 16, 24 o 32
 
-# OPCIÓN A: usar KEY/IV fijas por export (mismas en todas las instancias).
 @export var use_exported_key_iv: bool = false
-@export var exported_key_b64: String = ""   # base64 de la KEY (16/24/32 bytes)
-@export var exported_iv_b64: String = ""    # base64 de la IV (16 bytes)
+@export var exported_key_b64: String = ""   # base64 KEY (16/24/32 bytes)
+@export var exported_iv_b64: String = ""    # base64 IV (16 bytes)
 
-# OPCIÓN B: persistir KEY/IV en disco para que no cambien entre escenas/instancias.
 @export var persist_keys: bool = false
 @export var persist_path: String = "user://aes_kv.bin" # MAGIC | keylen(1) | KEY | IV(16)
+
+@export var debug_logs: bool = false
+@export var auto_format_detection: bool = true # <- NUEVO: autodetección en decrypt_base64()
 
 const _MAGIC := "AES1"
 
 func _ready() -> void:
-	if auto_generate_on_ready:
-		_init_key_iv()
+	if  multiplayer.is_server():
+		if auto_generate_on_ready:
+			_init_key_iv()
 
 # =========================
 # Inicialización / Persistencia
 # =========================
 func _init_key_iv() -> void:
-	# A) Si pides usar KEY/IV exportadas, instálalas y termina.
+	# A) KEY/IV exportadas
 	if use_exported_key_iv and exported_key_b64 != "" and exported_iv_b64 != "":
 		set_key_iv_base64(exported_key_b64, exported_iv_b64)
 		if _key_iv_ok():
 			return
-		# si los exports son inválidos, seguimos con B/C
 
-	# B) Intentar cargar de disco si procede
+	# B) Cargar de disco
 	if persist_keys:
 		var loaded = _load_key_iv_from_disk()
 		if loaded:
 			return
 
-	# C) Generar una sola vez si aún no hay KEY/IV válidas
+	# C) Generar si no hay válidas
 	var klen = desired_key_len
 	if not (klen == 16 or klen == 24 or klen == 32):
 		klen = 32
@@ -69,7 +73,9 @@ func _load_key_iv_from_disk() -> bool:
 	if not FileAccess.file_exists(persist_path):
 		return false
 	var f = FileAccess.open(persist_path, FileAccess.READ)
+	
 	if f == null:
+		print("No hay datos en AES file")
 		return false
 	var total = f.get_length()
 	if total < 4 + 1 + 16:
@@ -78,7 +84,7 @@ func _load_key_iv_from_disk() -> bool:
 	var magic = f.get_buffer(4).get_string_from_utf8()
 	if magic != _MAGIC:
 		f.close(); return false
-
+		#print("[AES] "+str(magic))
 	var klen = f.get_8()
 	if not (klen == 16 or klen == 24 or klen == 32):
 		f.close(); return false
@@ -95,9 +101,10 @@ func _load_key_iv_from_disk() -> bool:
 	return _key_iv_ok()
 
 # =========================
-# Setters/Getters de KEY/IV
+# Setters/Getters KEY/IV
 # =========================
 func set_key_iv(key, iv) -> void:
+	# ATENCIÓN: si pasas String aquí, se toma como bytes UTF-8 literales.
 	if typeof(key) == TYPE_STRING:
 		AES_KEY = (key as String).to_utf8_buffer()
 	elif typeof(key) == TYPE_PACKED_BYTE_ARRAY:
@@ -130,7 +137,7 @@ func get_iv_base64() -> String:
 	return Marshalls.raw_to_base64(AES_IV)
 
 # =========================
-# Cifrado / Descifrado (IV fijo)
+# Cifrado / Descifrado (IV fija)
 # =========================
 func aes_encrypt(text: String) -> PackedByteArray:
 	if not _key_iv_ok():
@@ -152,7 +159,7 @@ func aes_encrypt(text: String) -> PackedByteArray:
 		return PackedByteArray()
 
 	var enc = aes.update(data)
-	aes.finish() # void en Godot 4
+	aes.finish() # void
 	return enc
 
 func aes_decrypt(data: PackedByteArray) -> String:
@@ -199,29 +206,149 @@ func encrypt_base64(text: String) -> String:
 		return ""
 	return Marshalls.raw_to_base64(enc)
 
+# =========================
+# Decrypt base64 con autodetección (por defecto)
+# =========================
 func decrypt_base64(b64: String) -> String:
-	# Tolerante con URL-safe y padding.
-	if typeof(b64) != TYPE_STRING:
-		push_error("AES: decrypt_base64 esperaba String, llegó type=%s" % [str(typeof(b64))])
-		return ""
-
-	var s = b64.strip_edges().replace("\n","").replace("\r","").replace(" ","")
-	s = s.replace("-", "+").replace("_", "/")
-	var rem = s.length() % 4
-	if rem == 2:
-		s += "=="
-	elif rem == 3:
-		s += "="
-	elif rem == 1:
-		push_error("AES: longitud Base64 inválida (mod4==1).")
-		return ""
-
-	var raw = Marshalls.base64_to_raw(s)
+	var raw = _b64_to_raw(b64)
 	if raw.is_empty():
-		push_error("AES: base64_to_raw devolvió vacío (payload corrupto).")
+		return ""
+	if not auto_format_detection:
+		return aes_decrypt(raw)
+
+	# 1) Intento IV fija
+	if raw.size() % 16 == 0:
+		var t1 = aes_decrypt(raw)
+		if t1 != "":
+			if debug_logs:
+				print("[AES] base64: IV fija OK")
+			return t1
+
+	# 2) Intento IV prefijada (primeros 16 bytes)
+	if raw.size() >= 32 and (raw.size() - 16) % 16 == 0:
+		var t2 = decrypt_with_prefixed_iv(raw)
+		if t2 != "":
+			if debug_logs:
+				print("[AES] base64: IV prefijada OK")
+			return t2
+
+	# 3) Intento IV sufijada (últimos 16 bytes)
+	if raw.size() >= 32 and (raw.size() - 16) % 16 == 0:
+		var t3 = decrypt_with_suffixed_iv(raw)
+		if t3 != "":
+			if debug_logs:
+				print("[AES] base64: IV sufijada OK")
+			return t3
+
+	# 4) Señaliza formato OpenSSL "Salted__"
+	if raw.size() >= 16 and raw.slice(0, 8).get_string_from_utf8() == "Salted__":
+		push_error("AES: Detectado encabezado OpenSSL 'Salted__'. Ese formato usa contraseña/KDF; no es compatible con KEY/IV directas. Genera con -K <hex> y -iv <hex> y -nosalt.")
+
+	push_error("AES: decrypt_base64 no pudo descifrar (KEY/IV o formato no coinciden).")
+	return ""
+
+# =========================
+# (Opcional) IV aleatoria por mensaje (IV prefijada)
+# =========================
+func encrypt_with_random_iv(text: String) -> PackedByteArray:
+	if not _key_iv_ok():
+		return PackedByteArray()
+	var iv = Crypto.new().generate_random_bytes(16)
+	var data: PackedByteArray = text.to_utf8_buffer()
+
+	# PKCS7
+	var pad = 16 - (data.size() % 16)
+	var i = 0
+	while i < pad:
+		data.append(pad)
+		i += 1
+
+	var aes = AESContext.new()
+	var rc = aes.start(AESContext.MODE_CBC_ENCRYPT, AES_KEY, iv)
+	if rc != OK:
+		push_error("AES: start ENCRYPT rc=%d" % rc)
+		return PackedByteArray()
+
+	var enc = aes.update(data)
+	aes.finish()
+
+	# Prefijar IV
+	var out = PackedByteArray()
+	out.append_array(iv)
+	out.append_array(enc)
+	return out
+
+func decrypt_with_prefixed_iv(raw: PackedByteArray) -> String:
+	if not _key_iv_ok():
+		return ""
+	if raw.size() < 16 or (raw.size() - 16) % 16 != 0:
+		push_error("AES: buffer con IV prefijada inválido (len=%d)." % raw.size())
+		return ""
+	var iv = raw.slice(0, 16)
+	var data = raw.slice(16, raw.size())
+
+	var aes = AESContext.new()
+	var rc = aes.start(AESContext.MODE_CBC_DECRYPT, AES_KEY, iv)
+	if rc != OK:
+		push_error("AES: start DECRYPT rc=%d" % rc)
 		return ""
 
-	return aes_decrypt(raw)
+	var dec = aes.update(data)
+	aes.finish()
+
+	if dec.is_empty():
+		push_error("AES: decrypt vacío (KEY/IV incorrectas o datos corruptos).")
+		return ""
+
+	var pad = int(dec[dec.size() - 1])
+	if pad <= 0 or pad > 16 or pad > dec.size():
+		push_error("AES: padding PKCS7 inválido (%d)." % pad)
+		return ""
+	var i = 0
+	while i < pad:
+		if int(dec[dec.size() - 1 - i]) != pad:
+			push_error("AES: padding inconsistente (probable KEY/IV incorrectas).")
+			return ""
+		i += 1
+
+	dec = dec.slice(0, dec.size() - pad)
+	return dec.get_string_from_utf8()
+
+func decrypt_with_suffixed_iv(raw: PackedByteArray) -> String:
+	if not _key_iv_ok():
+		return ""
+	if raw.size() < 16 or (raw.size() - 16) % 16 != 0:
+		push_error("AES: buffer con IV sufijada inválido (len=%d)." % raw.size())
+		return ""
+	var iv = raw.slice(raw.size() - 16, raw.size())
+	var data = raw.slice(0, raw.size() - 16)
+
+	var aes = AESContext.new()
+	var rc = aes.start(AESContext.MODE_CBC_DECRYPT, AES_KEY, iv)
+	if rc != OK:
+		push_error("AES: start DECRYPT rc=%d" % rc)
+		return ""
+
+	var dec = aes.update(data)
+	aes.finish()
+
+	if dec.is_empty():
+		push_error("AES: decrypt vacío (KEY/IV incorrectas o datos corruptos).")
+		return ""
+
+	var pad = int(dec[dec.size() - 1])
+	if pad <= 0 or pad > 16 or pad > dec.size():
+		push_error("AES: padding PKCS7 inválido (%d)." % pad)
+		return ""
+	var i = 0
+	while i < pad:
+		if int(dec[dec.size() - 1 - i]) != pad:
+			push_error("AES: padding inconsistente (probable KEY/IV incorrectas).")
+			return ""
+		i += 1
+
+	dec = dec.slice(0, dec.size() - pad)
+	return dec.get_string_from_utf8()
 
 # =========================
 # Utils
@@ -237,6 +364,36 @@ func _key_iv_ok() -> bool:
 		return false
 	return true
 
+func debug_fingerprint() -> String:
+	var kb = Marshalls.raw_to_base64(AES_KEY)
+	var ib = Marshalls.raw_to_base64(AES_IV)
+	return "KEY(%d):%s…  IV(16):%s…" % [AES_KEY.size(), kb.left(8), ib.left(8)]
+
+func _normalize_b64(s: String) -> String:
+	var t = s.strip_edges().replace("\n","").replace("\r","").replace(" ","")
+	t = t.replace("-", "+").replace("_", "/")
+	var rem = t.length() % 4
+	if rem == 2:
+		t += "=="
+	elif rem == 3:
+		t += "="
+	elif rem == 1:
+		return ""
+	return t
+
+func _b64_to_raw(s: String) -> PackedByteArray:
+	if typeof(s) != TYPE_STRING:
+		push_error("AES: se esperaba String base64.")
+		return PackedByteArray()
+	var t = _normalize_b64(s)
+	if t == "":
+		push_error("AES: longitud Base64 inválida (mod4==1).")
+		return PackedByteArray()
+	var raw = Marshalls.base64_to_raw(t)
+	if raw.is_empty():
+		push_error("AES: base64_to_raw devolvió vacío (payload corrupto).")
+	return raw
+
 func _hex_to_pba(hex: String) -> PackedByteArray:
 	var s = hex.strip_edges().to_upper().replace(" ", "")
 	var out = PackedByteArray()
@@ -245,11 +402,5 @@ func _hex_to_pba(hex: String) -> PackedByteArray:
 	var i = 0
 	while i < s.length():
 		out.append(int("0x" + s.substr(i, 2)))
-		i += 1
+		i += 2
 	return out
-
-# === Diagnóstico opcional ===
-func debug_fingerprint() -> String:
-	var kb = Marshalls.raw_to_base64(AES_KEY)
-	var ib = Marshalls.raw_to_base64(AES_IV)
-	return "KEY(%d):%s  IV(16):%s" % [AES_KEY.size(), kb.left(8), ib.left(8)]
