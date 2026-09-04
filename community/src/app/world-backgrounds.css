@@ -1,0 +1,174 @@
+/*
+ * Shared environmental treatment for ByeTale Community.
+ * Reuses --scene, which is derived from the current ByeTale 2D menu artwork,
+ * then changes crop, lighting and pixel texture per section instead of introducing
+ * unrelated fantasy artwork.
+ */
+
+.worldSection,
+.roadmapSection,
+.participationSection,
+.finalSection,
+.streamSection,
+.forumPage {
+  position: relative;
+  isolation: isolate;
+}
+
+.worldSection,
+.roadmapSection,
+.participationSection,
+.finalSection,
+.streamSection {
+  overflow: hidden;
+}
+
+.worldSection::before,
+.roadmapSection::before,
+.participationSection::before,
+.finalSection::before,
+.streamSection::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.worldSection > .shell,
+.roadmapSection > .shell,
+.participationSection > .shell,
+.finalSection > .shell,
+.streamSection > .shell {
+  position: relative;
+  z-index: 1;
+}
+
+/* Daylight / exploration: keeps the landscape recognizable but subdued. */
+.worldSection::before {
+  background-image:
+    linear-gradient(180deg, rgba(7, 13, 17, .82), rgba(8, 15, 18, .62) 44%, rgba(6, 11, 14, .92)),
+    var(--scene);
+  background-position: center 58%;
+  opacity: .48;
+  filter: saturate(.86) contrast(1.06);
+}
+
+/* Development: cooler dusk crop so cards remain the focus. */
+.roadmapSection::before {
+  background-image:
+    radial-gradient(circle at 76% 32%, rgba(95, 137, 151, .20), transparent 34%),
+    linear-gradient(180deg, rgba(5, 10, 14, .90), rgba(10, 17, 22, .70), rgba(5, 9, 12, .94)),
+    var(--scene);
+  background-position: center, center, 66% 44%;
+  opacity: .42;
+  filter: saturate(.72) contrast(1.12) brightness(.82);
+}
+
+/* Participation: warmer crop, closer to campfire / community mood. */
+.participationSection::before {
+  background-image:
+    radial-gradient(circle at 24% 38%, rgba(205, 164, 91, .20), transparent 30%),
+    linear-gradient(90deg, rgba(8, 12, 14, .91), rgba(8, 12, 14, .66), rgba(8, 12, 14, .91)),
+    var(--scene);
+  background-position: center, center, 34% 62%;
+  opacity: .45;
+  filter: sepia(.08) saturate(.86) contrast(1.08) brightness(.82);
+}
+
+.finalSection::before {
+  background-image:
+    linear-gradient(180deg, rgba(4, 8, 11, .82), rgba(4, 8, 11, .96)),
+    var(--scene);
+  background-position: center 72%;
+  opacity: .36;
+  filter: saturate(.65) contrast(1.12) brightness(.72);
+}
+
+.streamSection::before {
+  background-image:
+    radial-gradient(circle at 76% 20%, rgba(145, 91, 186, .13), transparent 31%),
+    linear-gradient(180deg, rgba(5, 9, 13, .91), rgba(7, 12, 16, .78), rgba(5, 9, 13, .93)),
+    var(--scene);
+  background-position: center, center, 78% 30%;
+  opacity: .32;
+  filter: saturate(.72) brightness(.72);
+}
+
+/* A very light pixel-grid keeps the website visually tied to the 2D game. */
+.worldSection::after,
+.roadmapSection::after,
+.participationSection::after,
+.finalSection::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .055;
+  background-image:
+    linear-gradient(rgba(255,255,255,.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.22) 1px, transparent 1px);
+  background-size: 8px 8px;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+}
+
+/* Forum hero: replace the removed legacy JPEG with the current 2D scene. */
+.forumHero {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(5, 10, 15, .96) 0%, rgba(5, 10, 15, .78) 44%, rgba(5, 10, 15, .50) 100%),
+    var(--scene) 72% 48% / cover no-repeat !important;
+}
+
+.forumHero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 58%, rgba(6, 10, 13, .58)),
+    radial-gradient(circle at 78% 44%, transparent 0 20%, rgba(3, 7, 10, .18) 58%, rgba(3, 7, 10, .45));
+}
+
+.forumHero > .forumShell {
+  position: relative;
+  z-index: 1;
+}
+
+/* Forum body gets a faint world layer instead of a flat app background. */
+.forumPage::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(6, 11, 15, .96), rgba(6, 11, 15, .87) 45%, rgba(5, 9, 12, .97)),
+    var(--scene) 45% 65% / cover no-repeat;
+  filter: saturate(.62) brightness(.66);
+}
+
+@media (max-width: 760px) {
+  .worldSection::before { background-position: 56% 58%; }
+  .roadmapSection::before { background-position: center, center, 58% 44%; }
+  .participationSection::before { background-position: center, center, 42% 62%; }
+  .forumHero { background-position: center, 60% 38% !important; }
+
+  .worldSection::after,
+  .roadmapSection::after,
+  .participationSection::after,
+  .finalSection::after {
+    opacity: .035;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .forumPage::before {
+    position: absolute;
+  }
+}
