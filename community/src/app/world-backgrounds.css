@@ -1,7 +1,7 @@
 /*
- * ByeTale Community environmental backgrounds.
- * The current website ships one real scene from the 2D project via --scene.
- * Keep it visible: no global black veil, and crop toward the illustrated side.
+ * ByeTale Community backgrounds.
+ * The current ByeTale 2D scene is painted DIRECTLY on each section.
+ * No full-section pseudo overlay sits between the artwork and the user.
  */
 
 body {
@@ -10,12 +10,10 @@ body {
 
 body::before,
 body::after {
-  display: none;
+  display: none !important;
 }
 
-/* The source artwork has the castle on the LEFT and a deliberately dark menu area on the RIGHT.
- * Flip the hero so the dark area sits behind copy and the castle becomes the visual focus on the right.
- */
+/* Hero: show the artwork itself. Keep only the natural dark side behind copy. */
 .heroScene {
   right: clamp(-110px, calc((100vw - 1500px) / 2), 10px);
   width: min(82vw, 1180px);
@@ -26,146 +24,118 @@ body::after {
   transform-origin: center;
 }
 
-.heroScene::before {
-  display: none;
-}
-
-.heroScene::after {
-  background: linear-gradient(90deg, rgba(9, 14, 18, .28) 0%, rgba(9, 14, 18, .10) 24%, transparent 48%);
-}
-
+.heroScene::before,
+.heroScene::after,
 .heroShade {
-  background:
-    linear-gradient(90deg, rgba(7, 12, 15, .58) 0%, rgba(7, 12, 15, .42) 18%, rgba(7, 12, 15, .16) 34%, transparent 52%),
-    linear-gradient(180deg, transparent 78%, rgba(7, 12, 15, .24) 100%);
+  display: none !important;
 }
 
-.worldSection,
-.roadmapSection,
-.participationSection,
-.finalSection,
-.streamSection,
-.forumPage {
-  position: relative;
-  isolation: isolate;
-}
-
+/* Put the actual image on the section, not in ::before. */
 .worldSection,
 .roadmapSection,
 .participationSection,
 .finalSection,
 .streamSection {
-  overflow: hidden;
-}
-
-.worldSection::before,
-.roadmapSection::before,
-.participationSection::before,
-.finalSection::before,
-.streamSection::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: var(--scene);
-  background-repeat: no-repeat;
-  background-size: cover;
-  opacity: 1;
-  filter: saturate(1.12) contrast(1.02) brightness(1.14);
-}
-
-/* Keep the castle / moon side in frame instead of the nearly-black menu half. */
-.worldSection::before { background-position: 20% 52%; }
-.roadmapSection::before { background-position: 14% 46%; transform: scaleX(-1); }
-.participationSection::before { background-position: 18% 58%; }
-.finalSection::before { background-position: 22% 66%; transform: scaleX(-1); }
-.streamSection::before { background-position: 18% 42%; }
-
-.worldSection > .shell,
-.roadmapSection > .shell,
-.participationSection > .shell,
-.finalSection > .shell,
-.streamSection > .shell {
   position: relative;
-  z-index: 1;
+  overflow: hidden;
+  isolation: auto;
+  background-color: #1a2a32 !important;
+  background-image: var(--scene) !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
 }
 
-/* Only tiny local tints; they do not darken the whole scene. */
+.worldSection {
+  background-position: 20% 52% !important;
+}
+
+.roadmapSection {
+  background-position: 18% 46% !important;
+}
+
+.participationSection {
+  background-position: 20% 58% !important;
+}
+
+.finalSection {
+  background-position: 20% 66% !important;
+}
+
+.streamSection {
+  background-position: 18% 42% !important;
+}
+
+/* Kill every full-section layer. Readability comes from cards/text shadows instead. */
+.worldSection::before,
 .worldSection::after,
+.roadmapSection::before,
 .roadmapSection::after,
+.participationSection::before,
 .participationSection::after,
+.finalSection::before,
 .finalSection::after,
+.streamSection::before,
 .streamSection::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(8, 14, 17, .03), rgba(8, 14, 17, .10));
+  display: none !important;
 }
 
-.roadmapSection::after {
-  background: linear-gradient(90deg, rgba(18, 41, 54, .08), transparent 58%);
+.worldSection .sectionHead,
+.roadmapSection .sectionHead,
+.participationSection .sectionHead,
+.finalSection .sectionHead,
+.streamSection .sectionHead {
+  text-shadow: 0 2px 16px rgba(0,0,0,.82);
 }
 
-.participationSection::after {
-  background: radial-gradient(circle at 24% 38%, rgba(231, 178, 87, .13), transparent 34%);
+/* Keep cards readable while letting the scene remain obvious around them. */
+.roadCard,
+.participationCard,
+.manifesto,
+.featureCard,
+.streamBand {
+  backdrop-filter: blur(8px);
 }
 
-.streamSection::after {
-  background: radial-gradient(circle at 78% 24%, rgba(147, 92, 190, .10), transparent 33%);
+/* Forum: direct scene on page and hero; no pseudo veil. */
+.forumPage {
+  position: relative;
+  background-color: #17252d !important;
+  background-image: var(--scene) !important;
+  background-position: 18% 58% !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
 }
 
-/* Forum: use the illustrated castle side prominently. */
+.forumPage::before,
+.forumPage::after {
+  display: none !important;
+}
+
 .forumHero {
   position: relative;
   overflow: hidden;
-  background:
-    linear-gradient(90deg, rgba(7, 13, 16, .48) 0%, rgba(7, 13, 16, .20) 34%, transparent 58%),
-    var(--scene) 18% 48% / cover no-repeat !important;
+  background-color: transparent !important;
+  background-image: var(--scene) !important;
+  background-position: 18% 48% !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
 }
 
 .forumHero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, transparent 76%, rgba(7, 12, 15, .18));
+  display: none !important;
 }
 
 .forumHero > .forumShell {
   position: relative;
   z-index: 1;
-}
-
-.forumPage {
-  background: transparent !important;
-}
-
-.forumPage::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: var(--scene) 18% 58% / cover no-repeat;
-  filter: saturate(1.08) contrast(1.02) brightness(1.12);
-}
-
-.forumPage::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: rgba(8, 14, 18, .10);
+  text-shadow: 0 2px 18px rgba(0,0,0,.88);
 }
 
 .forumSidebar,
 .forumMain {
-  background: rgba(9, 17, 24, .68) !important;
-  backdrop-filter: blur(9px);
+  background: rgba(9, 17, 24, .64) !important;
+  backdrop-filter: blur(8px);
 }
 
 @media (max-width: 760px) {
@@ -175,24 +145,17 @@ body::after {
     filter: saturate(1.14) brightness(1.12);
   }
 
-  .heroShade {
-    background: linear-gradient(90deg, rgba(7, 12, 15, .66), rgba(7, 12, 15, .24) 56%, transparent 88%);
+  .worldSection,
+  .roadmapSection,
+  .participationSection,
+  .finalSection,
+  .streamSection,
+  .forumHero,
+  .forumPage {
+    background-position: 16% center !important;
   }
 
-  .worldSection::before,
-  .participationSection::before,
-  .streamSection::before { background-position: 16% center; }
-
-  .roadmapSection::before,
-  .finalSection::before { background-position: 84% center; }
-
-  .forumHero,
-  .forumPage::before { background-position: 16% center !important; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .forumPage::before,
-  .forumPage::after {
-    position: absolute;
+  .forumPage {
+    background-attachment: scroll !important;
   }
 }
