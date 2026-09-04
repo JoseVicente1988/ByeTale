@@ -16,11 +16,8 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: community
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,10 +28,66 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
+        working-directory: community
         run: npm install --no-audit --no-fund
 
       - name: Typecheck
+        working-directory: community
         run: npm run typecheck
 
       - name: Production build
+        working-directory: community
         run: npm run build
+
+      - name: Verify Vercel token
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          test -n "$VERCEL_TOKEN" || { echo "VERCEL_TOKEN is missing"; exit 1; }
+          echo "VERCEL_TOKEN is configured"
+
+      - name: Ensure Vercel project exists
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          STATUS=$(curl -sS -o /tmp/vercel-project.json -w "%{http_code}" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "https://api.vercel.com/v9/projects/byetale-community?teamId=team_XyjNhaZz7oxusZTQoGYgywKS")
+
+          if [ "$STATUS" = "404" ]; then
+            CREATE_STATUS=$(curl -sS -o /tmp/vercel-create.json -w "%{http_code}" \
+              -X POST \
+              -H "Authorization: Bearer $VERCEL_TOKEN" \
+              -H "Content-Type: application/json" \
+              "https://api.vercel.com/v11/projects?teamId=team_XyjNhaZz7oxusZTQoGYgywKS" \
+              --data '{"name":"byetale-community","framework":"nextjs","gitRepository":{"type":"github","repo":"JoseVicente1988/ByeTale"}}')
+            cat /tmp/vercel-create.json
+            test "$CREATE_STATUS" -ge 200 -a "$CREATE_STATUS" -lt 300
+          else
+            cat /tmp/vercel-project.json
+            test "$STATUS" -ge 200 -a "$STATUS" -lt 300
+          fi
+
+      - name: Link Vercel project
+        working-directory: community
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: npx --yes vercel@latest link --yes --project byetale-community --scope josevicente1988s-projects --token "$VERCEL_TOKEN"
+
+      - name: Deploy ByeTale Community to production
+        working-directory: community
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          npx --yes vercel@latest deploy --prod --yes --scope josevicente1988s-projects --token "$VERCEL_TOKEN" | tee /tmp/vercel-url.txt
+          echo "Deployed URL: $(tail -n 1 /tmp/vercel-url.txt)"
+
+      - name: Configure Git root directory
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          curl -sS -X PATCH \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            "https://api.vercel.com/v9/projects/byetale-community?teamId=team_XyjNhaZz7oxusZTQoGYgywKS" \
+            --data '{"rootDirectory":"community"}'
