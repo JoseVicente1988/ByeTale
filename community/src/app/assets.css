@@ -4,25 +4,52 @@
   --scene: url("/byetale-background.jpeg");
 }
 
-/* The original artwork is 1088x960. On narrow screens its natural displayed
- * height is about 88% of the viewport width, so reserve that space instead of
- * cropping the lower part of the image. */
+/* The hero artwork is rendered as an actual first-party <Image>, not a CSS
+ * background. This makes the asset deterministic and prevents the black hero
+ * seen when an external background URL fails to load. */
+.heroScene {
+  z-index: -3 !important;
+  object-fit: contain !important;
+  object-position: right center !important;
+  filter: saturate(1.08) contrast(1.035) brightness(1.03) !important;
+  opacity: 1 !important;
+  background: transparent !important;
+}
+
+/* Keep the artwork bright; darkness belongs only behind the copy. */
+.heroShade {
+  background:
+    linear-gradient(90deg, rgba(5, 7, 10, 0.96) 0%, rgba(5, 7, 10, 0.78) 18%, rgba(5, 7, 10, 0.34) 43%, rgba(5, 7, 10, 0.05) 68%, transparent 100%),
+    linear-gradient(180deg, rgba(5, 7, 10, 0.05) 0%, transparent 60%, rgba(5, 7, 10, 0.78) 100%);
+}
+
 @media (max-width: 760px) {
+  .hero {
+    padding-top: min(94vw, 560px);
+  }
+
   .heroScene {
-    height: min(88vw, 520px);
+    object-fit: contain !important;
+    object-position: center top !important;
+  }
+
+  .heroShade {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(5, 7, 10, 0.03) 38%,
+      rgba(5, 7, 10, 0.68) 57%,
+      #05070a 76%
+    );
   }
 
   .heroLayout {
-    padding-top: min(94vw, 560px);
+    padding-top: 0;
   }
 }
 
 @media (max-width: 480px) {
-  .heroScene {
-    height: 88vw;
-  }
-
-  .heroLayout {
-    padding-top: 94vw;
+  .hero {
+    padding-top: 92vw;
   }
 }
