@@ -68,26 +68,63 @@ jobs:
             test "$STATUS" -ge 200 -a "$STATUS" -lt 300
           fi
 
-      - name: Link Vercel project
-        working-directory: community
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: npx --yes vercel@latest link --yes --project byetale-community --scope josevicente1988s-projects --token "$VERCEL_TOKEN"
-
-      - name: Deploy ByeTale Community to production
-        working-directory: community
+      - name: Configure Vercel project
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          npx --yes vercel@latest deploy --prod --yes --scope josevicente1988s-projects --token "$VERCEL_TOKEN" | tee /tmp/vercel-url.txt
-          echo "Deployed URL: $(tail -n 1 /tmp/vercel-url.txt)"
-
-      - name: Configure Git root directory
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: |
-          curl -sS -X PATCH \
+          STATUS=$(curl -sS -o /tmp/vercel-config.json -w "%{http_code}" \
+            -X PATCH \
             -H "Authorization: Bearer $VERCEL_TOKEN" \
             -H "Content-Type: application/json" \
             "https://api.vercel.com/v9/projects/byetale-community?teamId=team_XyjNhaZz7oxusZTQoGYgywKS" \
-            --data '{"rootDirectory":"community"}'
+            --data '{"framework":"nextjs","rootDirectory":"community","nodeVersion":"22.x"}')
+          cat /tmp/vercel-config.json
+          test "$STATUS" -ge 200 -a "$STATUS" -lt 300
+
+      - name: Deploy community-web to production via Vercel REST API
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          STATUS=$(curl -sS -o /tmp/vercel-deploy.json -w "%{http_code}" \
+            -X POST \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            "https://api.vercel.com/v13/deployments?teamId=team_XyjNhaZz7oxusZTQoGYgywKS" \
+            --data '{"name":"byetale-community","project":"byetale-community","target":"production","gitSource":{"type":"github","org":"JoseVicente1988","repo":"ByeTale","ref":"community-web"}}')
+          cat /tmp/vercel-deploy.json
+          test "$STATUS" -ge 200 -a "$STATUS" -lt 300
+          DEPLOYMENT_ID=$(node -e "const d=require('/tmp/vercel-deploy.json'); process.stdout.write(d.id || '')")
+          DEPLOYMENT_URL=$(node -e "const d=require('/tmp/vercel-deploy.json'); process.stdout.write(d.url || '')")
+          test -n "$DEPLOYMENT_ID"
+          echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> "$GITHUB_ENV"
+          echo "DEPLOYMENT_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
+
+      - name: Wait for Vercel production deployment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          for i in $(seq 1 60); do
+            curl -sS \
+              -H "Authorization: Bearer $VERCEL_TOKEN" \
+              "https://api.vercel.com/v13/deployments/$DEPLOYMENT_ID?teamId=team_XyjNhaZz7oxusZTQoGYgywKS" \
+              > /tmp/vercel-status.json
+            STATE=$(node -e "const d=require('/tmp/vercel-status.json'); process.stdout.write(d.readyState || d.status || '')")
+            echo "Vercel state: $STATE"
+            if [ "$STATE" = "READY" ]; then
+              cat /tmp/vercel-status.json
+              exit 0
+            fi
+            if [ "$STATE" = "ERROR" ] || [ "$STATE" = "CANCELED" ]; then
+              cat /tmp/vercel-status.json
+              exit 1
+            fi
+            sleep 5
+          done
+          echo "Timed out waiting for Vercel deployment"
+          cat /tmp/vercel-status.json
+          exit 1
+
+      - name: Print production URL
+        run: |
+          echo "Production deployment: https://$DEPLOYMENT_URL"
+          echo "Stable alias: https://byetale-community-josevicente1988s-projects.vercel.app"
