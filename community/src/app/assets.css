@@ -4,52 +4,56 @@
   --scene: url("/byetale-background.jpeg");
 }
 
-/* The hero artwork is rendered as an actual first-party <Image>, not a CSS
- * background. This makes the asset deterministic and prevents the black hero
- * seen when an external background URL fails to load. */
+/* The ByeTale artwork is a true full-bleed hero background. Next/Image uses
+ * `fill`; these rules control the crop without stretching or hiding the art. */
 .heroScene {
   z-index: -3 !important;
-  object-fit: contain !important;
-  object-position: right center !important;
-  filter: saturate(1.08) contrast(1.035) brightness(1.03) !important;
+  object-fit: cover !important;
+  object-position: 68% 42% !important;
+  filter: saturate(1.10) contrast(1.03) brightness(1.02) !important;
   opacity: 1 !important;
-  background: transparent !important;
+  background: #173047 !important;
 }
 
-/* Keep the artwork bright; darkness belongs only behind the copy. */
+/* Darkness is localized behind the copy. The center/right remain open so the
+ * original ByeTale artwork keeps visual priority. */
 .heroShade {
   background:
-    linear-gradient(90deg, rgba(5, 7, 10, 0.96) 0%, rgba(5, 7, 10, 0.78) 18%, rgba(5, 7, 10, 0.34) 43%, rgba(5, 7, 10, 0.05) 68%, transparent 100%),
-    linear-gradient(180deg, rgba(5, 7, 10, 0.05) 0%, transparent 60%, rgba(5, 7, 10, 0.78) 100%);
+    linear-gradient(90deg, rgba(5, 10, 15, 0.74) 0%, rgba(5, 10, 15, 0.48) 27%, rgba(5, 10, 15, 0.10) 54%, rgba(5, 10, 15, 0) 76%),
+    linear-gradient(180deg, rgba(5, 8, 12, 0.08) 0%, rgba(5, 8, 12, 0) 55%, rgba(5, 9, 14, 0.60) 100%) !important;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .hero {
-    padding-top: min(94vw, 560px);
+    padding-top: 128px;
   }
 
   .heroScene {
-    object-fit: contain !important;
-    object-position: center top !important;
+    object-fit: cover !important;
+    object-position: 62% 32% !important;
   }
 
   .heroShade {
-    background: linear-gradient(
-      180deg,
-      transparent 0%,
-      rgba(5, 7, 10, 0.03) 38%,
-      rgba(5, 7, 10, 0.68) 57%,
-      #05070a 76%
-    );
+    background:
+      linear-gradient(180deg, rgba(5, 10, 15, 0.04) 0%, rgba(5, 10, 15, 0.08) 30%, rgba(5, 10, 15, 0.48) 58%, rgba(5, 10, 15, 0.94) 90%),
+      linear-gradient(90deg, rgba(5, 10, 15, 0.22), rgba(5, 10, 15, 0.02)) !important;
   }
 
   .heroLayout {
-    padding-top: 0;
+    padding-top: 190px !important;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 580px) {
   .hero {
-    padding-top: 92vw;
+    padding-top: 112px;
+  }
+
+  .heroScene {
+    object-position: 60% 30% !important;
+  }
+
+  .heroLayout {
+    padding-top: 235px !important;
   }
 }
