@@ -1,1 +1,1068 @@
-/* ==========================================================================\n   ByeTale Community — visual system\n   ========================================================================== */\n\n:root {\n  --bg: #05070a;\n  --bg-elevated: #0a0d12;\n  --panel: rgba(10, 13, 18, 0.78);\n  --panel-strong: rgba(8, 11, 15, 0.92);\n  --line: rgba(230, 203, 150, 0.17);\n  --line-cold: rgba(137, 181, 218, 0.18);\n  --gold: #d8b975;\n  --gold-bright: #f4ddb0;\n  --gold-deep: #a98045;\n  --blue: #8eb9dd;\n  --violet: #b79bea;\n  --text: #f6f2ea;\n  --muted: #aaa69f;\n  --muted-bright: #d7d1c6;\n  --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);\n  --radius-lg: 24px;\n  --radius-md: 16px;\n  --scene:\n    url(\"https://raw.githubusercontent.com/JoseVicente1988/ByeTale/main/UI/background_1.jpeg\");\n}\n\n* {\n  box-sizing: border-box;\n}\n\nhtml {\n  scroll-behavior: smooth;\n  background: var(--bg);\n}\n\nbody {\n  margin: 0;\n  min-height: 100vh;\n  overflow-x: hidden;\n  color: var(--text);\n  background:\n    radial-gradient(circle at 50% 12%, rgba(87, 119, 147, 0.10), transparent 34rem),\n    linear-gradient(180deg, #080b0f 0, var(--bg) 36rem);\n  font-family:\n    Inter,\n    ui-sans-serif,\n    system-ui,\n    -apple-system,\n    BlinkMacSystemFont,\n    \"Segoe UI\",\n    sans-serif;\n  -webkit-font-smoothing: antialiased;\n}\n\nbody::before {\n  /*\n   * Ambient fill for wide monitors.\n   *\n   * The original ByeTale artwork is 1088×960, so using `cover` as the only\n   * background would crop roughly one third of the image on a 16:9 display.\n   * This blurred copy fills the viewport while the hero keeps a second,\n   * sharp copy at its natural composition.\n   */\n  content: \"\";\n  position: fixed;\n  inset: -4vh -4vw;\n  z-index: -5;\n  background: var(--scene) center 42% / cover no-repeat;\n  filter: blur(38px) saturate(0.72) brightness(0.38);\n  transform: scale(1.09);\n  opacity: 0.72;\n  pointer-events: none;\n}\n\nbody::after {\n  content: \"\";\n  position: fixed;\n  inset: 0;\n  z-index: -4;\n  background:\n    radial-gradient(circle at 50% 18%, transparent 0 14rem, rgba(0, 0, 0, 0.20) 42rem),\n    linear-gradient(180deg, rgba(4, 6, 9, 0.18), rgba(4, 6, 9, 0.78) 65%, #05070a 100%);\n  pointer-events: none;\n}\n\n::selection {\n  color: #1c160c;\n  background: var(--gold-bright);\n}\n\na {\n  color: inherit;\n  text-decoration: none;\n}\n\nbutton,\na {\n  -webkit-tap-highlight-color: transparent;\n}\n\n.shell {\n  width: min(1180px, calc(100% - 40px));\n  margin-inline: auto;\n}\n\n/* ==========================================================================\n   Header\n   ========================================================================== */\n\n.siteHeader {\n  position: fixed;\n  inset: 0 0 auto;\n  z-index: 50;\n  border-bottom: 1px solid rgba(255, 255, 255, 0.055);\n  background: linear-gradient(180deg, rgba(5, 7, 10, 0.90), rgba(5, 7, 10, 0.68));\n  backdrop-filter: blur(18px) saturate(1.18);\n}\n\n.nav {\n  min-height: 76px;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 24px;\n}\n\n.brand {\n  display: inline-flex;\n  align-items: center;\n  gap: 12px;\n  min-width: max-content;\n}\n\n.brandIcon {\n  width: 42px;\n  height: 42px;\n  border: 1px solid rgba(216, 185, 117, 0.24);\n  border-radius: 12px;\n  box-shadow:\n    0 8px 28px rgba(0, 0, 0, 0.30),\n    inset 0 0 0 1px rgba(255, 255, 255, 0.025);\n}\n\n.brandCopy strong {\n  display: block;\n  font-family: \"Palatino Linotype\", \"Book Antiqua\", Palatino, Georgia, serif;\n  font-size: 0.98rem;\n  letter-spacing: 0.15em;\n  text-transform: uppercase;\n}\n\n.brandCopy small {\n  display: block;\n  margin-top: 2px;\n  color: #8e8b85;\n  font-size: 0.61rem;\n  font-weight: 700;\n  letter-spacing: 0.10em;\n  text-transform: uppercase;\n}\n\n.navLinks {\n  display: flex;\n  align-items: center;\n  gap: 2px;\n}\n\n.navLinks a {\n  position: relative;\n  padding: 10px 12px;\n  color: #bbb7af;\n  font-size: 0.82rem;\n  font-weight: 750;\n  transition:\n    color 160ms ease,\n    background-color 160ms ease;\n}\n\n.navLinks a::after {\n  content: \"\";\n  position: absolute;\n  left: 12px;\n  right: 12px;\n  bottom: 3px;\n  height: 1px;\n  transform: scaleX(0);\n  background: var(--gold);\n  transition: transform 180ms ease;\n  transform-origin: center;\n}\n\n.navLinks a:hover {\n  color: white;\n}\n\n.navLinks a:hover::after {\n  transform: scaleX(1);\n}\n\n.streamPill {\n  display: inline-flex;\n  align-items: center;\n  gap: 7px;\n  padding: 9px 12px;\n  border: 1px solid rgba(183, 155, 234, 0.20);\n  border-radius: 999px;\n  color: #d5c5ef;\n  background: rgba(113, 80, 161, 0.10);\n  font-size: 0.70rem;\n  font-weight: 800;\n  letter-spacing: 0.035em;\n}\n\n.streamPill i {\n  width: 7px;\n  height: 7px;\n  border-radius: 50%;\n  background: #716c78;\n  box-shadow: 0 0 0 4px rgba(113, 108, 120, 0.10);\n}\n\n/* ==========================================================================\n   Hero\n   ========================================================================== */\n\n.hero {\n  position: relative;\n  min-height: 860px;\n  display: grid;\n  align-items: center;\n  overflow: hidden;\n  isolation: isolate;\n  padding: 128px 0 88px;\n  border-bottom: 1px solid rgba(255, 255, 255, 0.055);\n}\n\n.heroScene {\n  /*\n   * Sharp copy of the original 1088×960 artwork.\n   *\n   * On desktop we fit it by height instead of using `cover`, preserving the\n   * original vertical composition. The blurred body background fills the\n   * remaining horizontal space.\n   */\n  position: absolute;\n  z-index: -3;\n  top: 82px;\n  right: max(-70px, calc((100vw - 1440px) / 2));\n  bottom: 0;\n  width: min(68vw, 1088px);\n  background: var(--scene) center right / auto 100% no-repeat;\n  filter: saturate(0.92) contrast(1.04) brightness(0.86);\n  opacity: 0.98;\n}\n\n.heroScene::after {\n  content: \"\";\n  position: absolute;\n  inset: 0;\n  background:\n    linear-gradient(90deg, rgba(5, 7, 10, 0.98) 0%, rgba(5, 7, 10, 0.64) 24%, transparent 58%),\n    linear-gradient(180deg, rgba(5, 7, 10, 0.10), transparent 58%, rgba(5, 7, 10, 0.92));\n}\n\n.heroShade {\n  position: absolute;\n  z-index: -2;\n  inset: 0;\n  background:\n    linear-gradient(90deg, #05070a 0 10%, rgba(5, 7, 10, 0.95) 24%, rgba(5, 7, 10, 0.38) 54%, transparent 75%),\n    linear-gradient(180deg, rgba(5, 7, 10, 0.54) 0, transparent 18%, transparent 68%, #05070a 100%);\n  pointer-events: none;\n}\n\n.heroLayout {\n  position: relative;\n  z-index: 2;\n  min-height: 610px;\n  display: flex;\n  align-items: center;\n}\n\n.heroCopy {\n  width: min(650px, 58vw);\n  padding-top: 36px;\n}\n\n.eyebrow {\n  display: inline-flex;\n  align-items: center;\n  min-height: 32px;\n  padding: 0 12px;\n  border: 1px solid rgba(216, 185, 117, 0.25);\n  border-radius: 999px;\n  color: var(--gold-bright);\n  background: rgba(7, 9, 13, 0.62);\n  box-shadow: inset 0 1px rgba(255, 255, 255, 0.025);\n  font-size: 0.68rem;\n  font-weight: 850;\n  letter-spacing: 0.12em;\n  text-transform: uppercase;\n  backdrop-filter: blur(12px);\n}\n\n.hero h1 {\n  position: relative;\n  width: fit-content;\n  margin: 24px 0 0;\n  color: #f7f2e8;\n  font-family: \"Palatino Linotype\", \"Book Antiqua\", Palatino, Georgia, serif;\n  font-size: clamp(4.7rem, 8.8vw, 7.8rem);\n  font-weight: 700;\n  line-height: 0.82;\n  letter-spacing: 0.055em;\n  text-transform: uppercase;\n  text-shadow:\n    0 3px 0 rgba(0, 0, 0, 0.34),\n    0 12px 36px rgba(0, 0, 0, 0.78);\n}\n\n.hero h1::after {\n  content: \"\";\n  display: block;\n  width: 42%;\n  height: 1px;\n  margin-top: 24px;\n  background: linear-gradient(90deg, var(--gold-bright), rgba(216, 185, 117, 0));\n  box-shadow: 0 0 18px rgba(216, 185, 117, 0.24);\n}\n\n.heroTagline {\n  margin: 18px 0 0;\n  color: var(--gold-bright);\n  font-family: \"Palatino Linotype\", \"Book Antiqua\", Palatino, Georgia, serif;\n  font-size: clamp(1.25rem, 2vw, 1.58rem);\n  line-height: 1.35;\n  letter-spacing: 0.02em;\n  text-shadow: 0 3px 16px rgba(0, 0, 0, 0.85);\n}\n\n.lead {\n  max-width: 620px;\n  margin: 18px 0 0;\n  color: #d5d0c7;\n  font-size: clamp(0.98rem, 1.35vw, 1.10rem);\n  line-height: 1.78;\n  text-wrap: pretty;\n  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.88);\n}\n\n.actions {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 12px;\n  margin-top: 28px;\n}\n\n.button {\n  min-height: 48px;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  padding: 0 20px;\n  border: 1px solid transparent;\n  border-radius: 12px;\n  font-size: 0.82rem;\n  font-weight: 850;\n  letter-spacing: 0.025em;\n  transition:\n    transform 160ms ease,\n    box-shadow 160ms ease,\n    border-color 160ms ease,\n    background 160ms ease;\n}\n\n.button:hover {\n  transform: translateY(-2px);\n}\n\n.button.primary {\n  color: #18120a;\n  background: linear-gradient(135deg, #f1d8a2, #c39d58);\n  box-shadow: 0 12px 34px rgba(178, 139, 70, 0.20);\n}\n\n.button.primary:hover {\n  box-shadow: 0 16px 42px rgba(178, 139, 70, 0.28);\n}\n\n.button.secondary {\n  border-color: rgba(255, 255, 255, 0.14);\n  color: #e6e1d8;\n  background: rgba(9, 12, 16, 0.64);\n  backdrop-filter: blur(12px);\n}\n\n.button.secondary:hover {\n  border-color: rgba(216, 185, 117, 0.30);\n  background: rgba(14, 17, 22, 0.78);\n}\n\n.tech {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n  margin-top: 24px;\n}\n\n.tech span {\n  padding: 7px 10px;\n  border: 1px solid rgba(142, 185, 221, 0.18);\n  border-radius: 9px;\n  color: #c7def0;\n  background: rgba(55, 94, 128, 0.10);\n  font-size: 0.68rem;\n  font-weight: 750;\n}\n\n.heroCaption {\n  position: absolute;\n  right: 0;\n  bottom: 26px;\n  width: min(330px, 30vw);\n  padding: 15px 17px;\n  border-left: 1px solid rgba(216, 185, 117, 0.34);\n  background: linear-gradient(90deg, rgba(5, 7, 10, 0.54), rgba(5, 7, 10, 0));\n  text-align: right;\n}\n\n.heroCaption span {\n  display: block;\n  color: var(--gold);\n  font-size: 0.62rem;\n  font-weight: 850;\n  letter-spacing: 0.14em;\n  text-transform: uppercase;\n}\n\n.heroCaption strong {\n  display: block;\n  margin-top: 6px;\n  color: #d8d3cb;\n  font-family: \"Palatino Linotype\", \"Book Antiqua\", Palatino, Georgia, serif;\n  font-size: 0.88rem;\n  font-weight: 600;\n  line-height: 1.4;\n}\n\n.scrollCue {\n  position: absolute;\n  left: 50%;\n  bottom: 22px;\n  z-index: 3;\n  display: inline-flex;\n  align-items: center;\n  gap: 10px;\n  transform: translateX(-50%);\n  color: #7f7c77;\n  font-size: 0.62rem;\n  font-weight: 800;\n  letter-spacing: 0.12em;\n  text-transform: uppercase;\n}\n\n.scrollCue i {\n  color: var(--gold);\n  font-style: normal;\n}\n\n/* ==========================================================================\n   Twitch strip\n   ========================================================================== */\n\n.streamSection {\n  position: relative;\n  z-index: 3;\n  padding: 0 0 26px;\n  margin-top: -26px;\n}\n\n.streamBand {\n  min-height: 100px;\n  display: grid;\n  grid-template-columns: minmax(260px, 0.9fr) minmax(300px, 1.25fr) auto;\n  align-items: center;\n  gap: 28px;\n  padding: 20px 22px;\n  border: 1px solid rgba(183, 155, 234, 0.16);\n  border-radius: 18px;\n  background:\n    linear-gradient(100deg, rgba(106, 74, 153, 0.13), rgba(10, 13, 18, 0.94) 30% 100%);\n  box-shadow: var(--shadow);\n  backdrop-filter: blur(20px);\n}\n\n.streamIdentity {\n  display: flex;\n  align-items: center;\n  gap: 13px;\n}\n\n.streamDot {\n  flex: 0 0 auto;\n  width: 11px;\n  height: 11px;\n  border-radius: 50%;\n  background: #716b78;\n  box-shadow: 0 0 0 6px rgba(113, 107, 120, 0.10);\n}\n\n.streamIdentity small {\n  display: block;\n  color: var(--violet);\n  font-size: 0.62rem;\n  font-weight: 850;\n  letter-spacing: 0.11em;\n  text-transform: uppercase;\n}\n\n.streamIdentity strong {\n  display: block;\n  margin-top: 5px;\n  font-family: \"Palatino Linotype\", \"Book Antiqua\", Palatino, Georgia, serif;\n  font-size: 0.94rem;\n  line-height: 1.35;\n}\n\n.streamBand p {\n  margin: 0;\n  color: #a9a5ae;\n  font-size: 0.80rem;\n  line-height: 1.6;\n}\n\n.streamStatus {\n  min-width: max-content;\n  padding: 9px 11px;\n  border: 1px solid rgba(255, 255, 255, 0.08);\n  border-radius: 999px;\n  color: #8f8b94;\n  background: rgba(255, 255, 255, 0.025);\n  font-size: 0.66rem;\n  font-weight: 800;\n}\n\n/* ==========================================================================\n   Shared sections\n   ========================================================================== */\n\n.section {\n  position: relative;\n  padding: 78px 0;\n}\n\n.section::before {\n  content: \"\";\n  position: absolute;\n  left: 50%;\n  top: 0;\n  width: min(1180px, calc(100% - 40px));\n  height: 1px;\n  transform: translateX(-50%);\n  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);\n}\n\n.sectionHead {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) minmax(300px, 520px);\n  align-items: end;\n  gap: 52px;\n  margin-bottom: 30px;\n}\n\n.sectionHead > div > span,\n.label {\n  color: var(--gold);\n  font-size: 0.66rem;\n  font-weight: 900;\n  letter-spacing: 0.14em;\n  text-transform: uppercase;\n}\n\n.label {\n  color: var(--blue);\n}\n\n.label.gold {\n  color: var(--gold);\n}\n\n.sectionHead h2,\n.manifesto h2 {\n  margin: 9px 0 0;\n  color: #f3eee5;\n  font-family: \"Palatino Linotype\", \"Book Antiqua\", Palatino, Georgia, serif;\n  font-size: clamp(2rem, 4vw, 3.1rem);\n  font-weight: 650;\n  line-height: 1.05;\n  letter-spacing: -0.02em;\n  text-wrap: balance;\n}\n\n.sectionHead p {\n  margin: 0;\n  color: var(--muted);\n  font-size: 0.88rem;\n  line-height: 1.72;\n  text-wrap: pretty;\n}\n\n/* ==========================================================================\n   World\n   ========================================================================== */\n\n.worldSection {\n  padding-top: 92px;\n}\n\n.worldGrid {\n  display: grid;\n  grid-template-columns: 1.16fr 0.84fr;\n  grid-template-rows: repeat(2, minmax(190px, auto));\n  gap: 16px;\n}\n\n.featureCard {\n  position: relative;\n  min-height: 190px;\n  overflow: hidden;\n  display: flex;\n  align-items: end;\n  padding: 28px;\n  border: 1px solid rgba(255, 255, 255, 0.075);\n  border-radius: var(--radius-lg);\n  background:\n    linear-gradient(145deg, rgba(16, 20, 26, 0.80), rgba(7, 9, 13, 0.92));\n  box-shadow:\n    0 20px 58px rgba(0, 0, 0, 0.24),\n    inset 0 1px rgba(255, 255, 255, 0.025);\n}\n\n.featureCard::before {\n  content: \"\";\n  position: absolute;\n  inset: 0;\n  background:\n    radial-gradient(circle at 82% 12%, rgba(142, 185, 221, 0.10), transparent 36%),\n    linear-gradient(135deg, transparent 58%, rgba(216, 185, 117, 0.035));\n  pointer-events: none;\n}\n\n.featureLarge {\n  grid-row: 1 / span 2;\n  min-height: 396px;\n  background:\n    linear-gradient(180deg, rgba(8, 11, 15, 0.30), rgba(8, 11, 15, 0.94)),\n    var(--scene) 52% 42% / cover no-repeat;\n}\n\n.featureCard > div {\n  position: relative;\n  z-index: 2;\n  max-width: 560px;\n}\n\n.featureNumber {\n  position: absolute;\n  top: 17px;\n  right: 20px;\n  color: rgba(244, 221, 176, 0.12);\n  font-family: Georgia, serif;\n  font-size: 3.5rem;\n  font-weight: 700;\n  line-height: 1;\n}\n\n.featureCard h3 {\n  margin: 8px 0 10px;\n  font-family: \"Palatino Linotype\", \"Book Antiqua\", Palatino, Georgia, serif;\n  font-size: 1.32rem;\n  font-weight: 650;\n}\n\n.featureLarge h3 {\n  font-size: 2.05rem;\n}\n\n.featureCard p {\n  margin: 0;\n  color: #aaa69e;\n  font-size: 0.84rem;\n  line-height: 1.68;\n  text-wrap: pretty;\n}\n\n.featureLarge p {\n  max-width: 520px;\n  color: #d1ccc2;\n  font-size: 0.90rem;\n}\n\n/* ==========================================================================\n   Roadmap\n   ========================================================================== */\n\n.roadmapSection {\n  background:\n    linear-gradient(180deg, rgba(8, 11, 15, 0), rgba(12, 15, 20, 0.32), rgba(8, 11, 15, 0));\n}\n\n.roadmap {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 16px;\n}\n\n.roadCard {\n  position: relative;\n  min-height: 245px;\n  padding: 23px;\n  border: 1px solid rgba(255, 255, 255, 0.075);\n  border-radius: 20px;\n  background:\n    linear-gradient(165deg, rgba(18, 22, 28, 0.82), rgba(8, 10, 14, 0.92));\n  box-shadow:\n    0 18px 50px rgba(0, 0, 0, 0.24),\n    inset 0 1px rgba(255, 255, 255, 0.025);\n}\n\n.roadCard::after {\n  content: \"\";\n  position: absolute;\n  inset: 0 auto 0 0;\n  width: 1px;\n  background: linear-gradient(180deg, transparent, rgba(216, 185, 117, 0.42), transparent);\n}\n\n.roadTop {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 14px;\n}\n\n.roadTop span {\n  color: var(--gold);\n  font-size: 0.64rem;\n  font-weight: 900;\n  letter-spacing: 0.09em;\n  text-transform: uppercase;\n}\n\n.roadTop small {\n  color: #89857e;\n  font-size: 0.68rem;\n  font-weight: 800;\n}\n\n.roadCard h3 {\n  margin: 22px 0 10px;\n  min-height: 48px;\n  font-family: \"Palatino Linotype\", \"Book Antiqua\", Palatino, Georgia, serif;\n  font-size: 1.15rem;\n  font-weight: 650;\n  line-height: 1.3;\n}\n\n.roadCard p {\n  min-height: 65px;\n  margin: 0 0 22px;\n  color: var(--muted);\n  font-size: 0.79rem;\n  line-height: 1.62;\n}\n\n.progress {\n  height: 5px;\n  overflow: hidden;\n  border-radius: 999px;\n  background: rgba(255, 255, 255, 0.07);\n}\n\n.progress b {\n  display: block;\n  height: 100%;\n  border-radius: inherit;\n  background: linear-gradient(90deg, #668fb3, #d5b774);\n  box-shadow: 0 0 18px rgba(142, 185, 221, 0.16);\n}\n\n/* ==========================================================================\n   Participation\n   ========================================================================== */\n\n.participation {\n  display: grid;\n  grid-template-columns: repeat(4, 1fr);\n  gap: 14px;\n}\n\n.participationCard {\n  position: relative;\n  min-height: 286px;\n  overflow: hidden;\n  padding: 24px 22px;\n  border: 1px solid rgba(255, 255, 255, 0.07);\n  border-radius: 20px;\n  background:\n    linear-gradient(165deg, rgba(17, 21, 27, 0.80), rgba(7, 9, 13, 0.92));\n  transition:\n    transform 180ms ease,\n    border-color 180ms ease,\n    background 180ms ease;\n}\n\n.participationCard:hover {\n  transform: translateY(-4px);\n  border-color: rgba(216, 185, 117, 0.20);\n  background:\n    linear-gradient(165deg, rgba(20, 24, 31, 0.92), rgba(8, 10, 14, 0.96));\n}\n\n.participationIndex {\n  position: absolute;\n  top: 17px;\n  right: 18px;\n  color: rgba(255, 255, 255, 0.10);\n  font-family: Georgia, serif;\n  font-size: 1.8rem;\n  font-weight: 700;\n}\n\n.participationCard > i {\n  width: 42px;\n  height: 42px;\n  display: grid;\n  place-items: center;\n  border: 1px solid rgba(216, 185, 117, 0.16);\n  border-radius: 12px;\n  color: var(--gold-bright);\n  background: rgba(216, 185, 117, 0.055);\n  font-size: 1.1rem;\n  font-style: normal;\n}\n\n.participationCard h3 {\n  margin: 24px 0 10px;\n  font-family: \"Palatino Linotype\", \"Book Antiqua\", Palatino, Georgia, serif;\n  font-size: 1.08rem;\n  font-weight: 650;\n}\n\n.participationCard p {\n  min-height: 112px;\n  margin: 0;\n  color: var(--muted);\n  font-size: 0.80rem;\n  line-height: 1.64;\n}\n\n.participationCard a {\n  display: inline-flex;\n  gap: 6px;\n  margin-top: 20px;\n  color: var(--gold-bright);\n  font-size: 0.73rem;\n  font-weight: 850;\n}\n\n/* ==========================================================================\n   Manifesto + footer\n   ========================================================================== */\n\n.finalSection {\n  padding-bottom: 100px;\n}\n\n.manifesto {\n  position: relative;\n  overflow: hidden;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 42px;\n  padding: 34px;\n  border: 1px solid rgba(216, 185, 117, 0.15);\n  border-radius: var(--radius-lg);\n  background:\n    radial-gradient(circle at 85% 10%, rgba(216, 185, 117, 0.08), transparent 26rem),\n    linear-gradient(145deg, rgba(17, 20, 26, 0.88), rgba(7, 9, 13, 0.96));\n  box-shadow: var(--shadow);\n}\n\n.manifesto::before {\n  content: \"\";\n  position: absolute;\n  inset: 0;\n  pointer-events: none;\n  background: linear-gradient(110deg, transparent 68%, rgba(142, 185, 221, 0.04));\n}\n\n.manifesto > div {\n  position: relative;\n  z-index: 2;\n}\n\n.manifesto h2 {\n  max-width: 760px;\n}\n\n.manifesto p {\n  max-width: 720px;\n  margin: 14px 0 0;\n  color: var(--muted);\n  font-size: 0.86rem;\n  line-height: 1.7;\n}\n\nfooter {\n  border-top: 1px solid rgba(255, 255, 255, 0.06);\n  background: rgba(4, 6, 9, 0.72);\n}\n\n.footer {\n  min-height: 116px;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 24px;\n  color: #8e8a83;\n  font-size: 0.76rem;\n}\n\n.footerIcon {\n  width: 38px;\n  height: 38px;\n}\n\n.footer p {\n  margin: 0;\n}\n\n.footer > a {\n  color: #b8b3aa;\n  font-weight: 750;\n}\n\n/* ==========================================================================\n   Responsive composition\n   ========================================================================== */\n\n@media (max-width: 980px) {\n  .navLinks {\n    display: none;\n  }\n\n  .hero {\n    min-height: 820px;\n  }\n\n  .heroScene {\n    top: 76px;\n    right: -120px;\n    width: 82vw;\n    opacity: 0.78;\n  }\n\n  .heroShade {\n    background:\n      linear-gradient(90deg, #05070a 0 18%, rgba(5, 7, 10, 0.90) 35%, rgba(5, 7, 10, 0.48) 68%, transparent),\n      linear-gradient(180deg, rgba(5, 7, 10, 0.38), transparent 50%, #05070a 100%);\n  }\n\n  .heroCopy {\n    width: min(630px, 70vw);\n  }\n\n  .heroCaption {\n    display: none;\n  }\n\n  .streamBand {\n    grid-template-columns: 1fr auto;\n  }\n\n  .streamBand p {\n    grid-column: 1 / -1;\n    grid-row: 2;\n  }\n\n  .sectionHead {\n    grid-template-columns: 1fr;\n    gap: 16px;\n  }\n\n  .sectionHead p {\n    max-width: 650px;\n  }\n\n  .roadmap {\n    grid-template-columns: 1fr 1fr;\n  }\n\n  .participation {\n    grid-template-columns: 1fr 1fr;\n  }\n}\n\n@media (max-width: 720px) {\n  .shell {\n    width: min(100% - 28px, 1180px);\n  }\n\n  .siteHeader {\n    position: absolute;\n  }\n\n  .nav {\n    min-height: 68px;\n  }\n\n  .brandIcon {\n    width: 38px;\n    height: 38px;\n  }\n\n  .brandCopy small {\n    display: none;\n  }\n\n  .streamPill {\n    display: none;\n  }\n\n  .hero {\n    min-height: 820px;\n    align-items: end;\n    padding: 98px 0 76px;\n  }\n\n  .heroScene {\n    top: 54px;\n    right: 50%;\n    bottom: auto;\n    width: 100vw;\n    height: 610px;\n    transform: translateX(50%);\n    background-position: center 20%;\n    background-size: auto 74%;\n    filter: saturate(0.92) contrast(1.05) brightness(0.80);\n    opacity: 0.95;\n  }\n\n  .heroScene::after {\n    background:\n      linear-gradient(180deg, rgba(5, 7, 10, 0.12), rgba(5, 7, 10, 0.20) 38%, #05070a 88%),\n      linear-gradient(90deg, rgba(5, 7, 10, 0.34), transparent 30% 70%, rgba(5, 7, 10, 0.34));\n  }\n\n  .heroShade {\n    background:\n      linear-gradient(180deg, rgba(5, 7, 10, 0.20), transparent 26%, rgba(5, 7, 10, 0.90) 66%, #05070a 100%);\n  }\n\n  .heroLayout {\n    min-height: 640px;\n    align-items: end;\n  }\n\n  .heroCopy {\n    width: 100%;\n    padding-top: 0;\n  }\n\n  .eyebrow {\n    font-size: 0.60rem;\n  }\n\n  .hero h1 {\n    font-size: clamp(3.35rem, 17vw, 4.75rem);\n    letter-spacing: 0.035em;\n  }\n\n  .hero h1::after {\n    margin-top: 18px;\n  }\n\n  .heroTagline {\n    font-size: 1.12rem;\n  }\n\n  .lead {\n    font-size: 0.92rem;\n    line-height: 1.68;\n  }\n\n  .actions {\n    display: grid;\n    grid-template-columns: 1fr 1fr;\n  }\n\n  .button {\n    width: 100%;\n    padding-inline: 13px;\n  }\n\n  .tech {\n    margin-top: 18px;\n  }\n\n  .tech span {\n    font-size: 0.62rem;\n  }\n\n  .scrollCue {\n    display: none;\n  }\n\n  .streamSection {\n    margin-top: 0;\n    padding-top: 14px;\n  }\n\n  .streamBand {\n    grid-template-columns: 1fr;\n    gap: 15px;\n    padding: 18px;\n  }\n\n  .streamBand p {\n    grid-column: auto;\n    grid-row: auto;\n  }\n\n  .streamStatus {\n    width: fit-content;\n  }\n\n  .section {\n    padding: 60px 0;\n  }\n\n  .worldSection {\n    padding-top: 70px;\n  }\n\n  .worldGrid {\n    grid-template-columns: 1fr;\n    grid-template-rows: auto;\n  }\n\n  .featureLarge {\n    grid-row: auto;\n    min-height: 330px;\n  }\n\n  .featureCard {\n    min-height: 178px;\n    padding: 22px;\n  }\n\n  .roadmap,\n  .participation {\n    grid-template-columns: 1fr;\n  }\n\n  .roadCard,\n  .participationCard {\n    min-height: auto;\n  }\n\n  .roadCard p,\n  .participationCard p {\n    min-height: auto;\n  }\n\n  .manifesto {\n    align-items: flex-start;\n    flex-direction: column;\n    padding: 25px;\n  }\n\n  .footer {\n    min-height: auto;\n    align-items: flex-start;\n    flex-direction: column;\n    padding: 28px 0;\n  }\n}\n\n@media (max-width: 430px) {\n  .hero {\n    min-height: 790px;\n  }\n\n  .heroScene {\n    height: 560px;\n    background-size: auto 70%;\n  }\n\n  .actions {\n    grid-template-columns: 1fr;\n  }\n\n  .button {\n    min-height: 46px;\n  }\n\n  .sectionHead h2,\n  .manifesto h2 {\n    font-size: 2rem;\n  }\n}\n\n@media (prefers-reduced-motion: reduce) {\n  html {\n    scroll-behavior: auto;\n  }\n\n  .button,\n  .participationCard,\n  .navLinks a::after {\n    transition: none;\n  }\n}\n
+/* ByeTale Community visual system.
+ *
+ * The game background is 1088x960. A single `cover` layer crops too much on
+ * widescreen monitors, so the page uses a blurred ambient layer plus a sharp
+ * hero layer that preserves the original composition.
+ */
+
+:root {
+  --bg: #05070a;
+  --panel: rgba(10, 13, 18, 0.82);
+  --panel-strong: rgba(7, 10, 14, 0.94);
+  --gold: #d8b975;
+  --gold-bright: #f4ddb0;
+  --blue: #8eb9dd;
+  --violet: #b79bea;
+  --text: #f6f2ea;
+  --muted: #aaa69f;
+  --radius: 22px;
+  --scene: url("https://raw.githubusercontent.com/JoseVicente1988/ByeTale/main/UI/background_1.jpeg");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 50% 10%, rgba(89, 124, 154, 0.10), transparent 35rem),
+    linear-gradient(180deg, #080b0f, var(--bg) 42rem);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -5vh -5vw;
+  z-index: -5;
+  background: var(--scene) center 42% / cover no-repeat;
+  filter: blur(40px) saturate(0.7) brightness(0.36);
+  transform: scale(1.1);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -4;
+  background:
+    radial-gradient(circle at 50% 20%, transparent 0 14rem, rgba(0, 0, 0, 0.22) 44rem),
+    linear-gradient(180deg, rgba(4, 6, 9, 0.15), rgba(4, 6, 9, 0.82) 72%, #05070a);
+  pointer-events: none;
+}
+
+::selection {
+  color: #18120a;
+  background: var(--gold-bright);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.shell {
+  width: min(1180px, calc(100% - 40px));
+  margin-inline: auto;
+}
+
+/* Header */
+
+.siteHeader {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+  background: linear-gradient(180deg, rgba(5, 7, 10, 0.92), rgba(5, 7, 10, 0.68));
+  backdrop-filter: blur(18px) saturate(1.15);
+}
+
+.nav {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: max-content;
+}
+
+.brandIcon {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(216, 185, 117, 0.24);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+}
+
+.brandCopy strong {
+  display: block;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  font-size: 0.98rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.brandCopy small {
+  display: block;
+  margin-top: 2px;
+  color: #8e8b85;
+  font-size: 0.61rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.navLinks a {
+  position: relative;
+  padding: 10px 12px;
+  color: #bbb7af;
+  font-size: 0.82rem;
+  font-weight: 750;
+  transition: color 160ms ease;
+}
+
+.navLinks a::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 3px;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 180ms ease;
+}
+
+.navLinks a:hover {
+  color: #fff;
+}
+
+.navLinks a:hover::after {
+  transform: scaleX(1);
+}
+
+.streamPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border: 1px solid rgba(183, 155, 234, 0.2);
+  border-radius: 999px;
+  color: #d5c5ef;
+  background: rgba(113, 80, 161, 0.1);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.streamPill i,
+.streamDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #716c78;
+}
+
+/* Hero */
+
+.hero {
+  position: relative;
+  min-height: 860px;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 128px 0 90px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.heroScene {
+  position: absolute;
+  z-index: -3;
+  top: 76px;
+  right: max(-70px, calc((100vw - 1440px) / 2));
+  bottom: 0;
+  width: min(68vw, 1088px);
+  background: var(--scene) center right / auto 100% no-repeat;
+  filter: saturate(0.92) contrast(1.04) brightness(0.86);
+  opacity: 0.98;
+}
+
+.heroScene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(5, 7, 10, 0.98), rgba(5, 7, 10, 0.62) 25%, transparent 60%),
+    linear-gradient(180deg, rgba(5, 7, 10, 0.08), transparent 55%, rgba(5, 7, 10, 0.94));
+}
+
+.heroShade {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #05070a 0 9%, rgba(5, 7, 10, 0.95) 23%, rgba(5, 7, 10, 0.36) 55%, transparent 77%),
+    linear-gradient(180deg, rgba(5, 7, 10, 0.48), transparent 20%, transparent 68%, #05070a);
+  pointer-events: none;
+}
+
+.heroLayout {
+  position: relative;
+  z-index: 2;
+  min-height: 610px;
+  display: flex;
+  align-items: center;
+}
+
+.heroCopy {
+  width: min(650px, 58vw);
+  padding-top: 32px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid rgba(216, 185, 117, 0.25);
+  border-radius: 999px;
+  color: var(--gold-bright);
+  background: rgba(7, 9, 13, 0.62);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+}
+
+.hero h1 {
+  width: fit-content;
+  margin: 24px 0 0;
+  color: #f7f2e8;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  font-size: clamp(4.7rem, 8.8vw, 7.8rem);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.34), 0 12px 36px rgba(0, 0, 0, 0.78);
+}
+
+.hero h1::after {
+  content: "";
+  display: block;
+  width: 42%;
+  height: 1px;
+  margin-top: 24px;
+  background: linear-gradient(90deg, var(--gold-bright), transparent);
+  box-shadow: 0 0 18px rgba(216, 185, 117, 0.24);
+}
+
+.heroTagline {
+  margin: 18px 0 0;
+  color: var(--gold-bright);
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  font-size: clamp(1.25rem, 2vw, 1.58rem);
+  line-height: 1.35;
+  text-shadow: 0 3px 16px rgba(0, 0, 0, 0.85);
+}
+
+.lead {
+  max-width: 620px;
+  margin: 18px 0 0;
+  color: #d5d0c7;
+  font-size: clamp(0.98rem, 1.35vw, 1.1rem);
+  line-height: 1.78;
+  text-wrap: pretty;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.88);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.button {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 850;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button.primary {
+  color: #18120a;
+  background: linear-gradient(135deg, #f1d8a2, #c39d58);
+  box-shadow: 0 12px 34px rgba(178, 139, 70, 0.2);
+}
+
+.button.secondary {
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #e6e1d8;
+  background: rgba(9, 12, 16, 0.64);
+  backdrop-filter: blur(12px);
+}
+
+.tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.tech span {
+  padding: 7px 10px;
+  border: 1px solid rgba(142, 185, 221, 0.18);
+  border-radius: 9px;
+  color: #c7def0;
+  background: rgba(55, 94, 128, 0.1);
+  font-size: 0.68rem;
+  font-weight: 750;
+}
+
+.heroCaption {
+  position: absolute;
+  right: 0;
+  bottom: 28px;
+  width: min(330px, 30vw);
+  padding: 15px 17px;
+  border-left: 1px solid rgba(216, 185, 117, 0.34);
+  background: linear-gradient(90deg, rgba(5, 7, 10, 0.56), transparent);
+  text-align: right;
+}
+
+.heroCaption span {
+  display: block;
+  color: var(--gold);
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.heroCaption strong {
+  display: block;
+  margin-top: 6px;
+  color: #d8d3cb;
+  font-family: Georgia, serif;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.scrollCue {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateX(-50%);
+  color: #7f7c77;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.scrollCue i {
+  color: var(--gold);
+  font-style: normal;
+}
+
+/* Twitch strip */
+
+.streamSection {
+  position: relative;
+  z-index: 3;
+  margin-top: -26px;
+  padding-bottom: 26px;
+}
+
+.streamBand {
+  min-height: 100px;
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(300px, 1.25fr) auto;
+  align-items: center;
+  gap: 28px;
+  padding: 20px 22px;
+  border: 1px solid rgba(183, 155, 234, 0.16);
+  border-radius: 18px;
+  background: linear-gradient(100deg, rgba(106, 74, 153, 0.13), rgba(10, 13, 18, 0.95) 30%);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(20px);
+}
+
+.streamIdentity {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.streamDot {
+  flex: 0 0 auto;
+  width: 11px;
+  height: 11px;
+  box-shadow: 0 0 0 6px rgba(113, 107, 120, 0.1);
+}
+
+.streamIdentity small {
+  display: block;
+  color: var(--violet);
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.streamIdentity strong {
+  display: block;
+  margin-top: 5px;
+  font-family: Georgia, serif;
+  font-size: 0.94rem;
+  line-height: 1.35;
+}
+
+.streamBand p {
+  margin: 0;
+  color: #a9a5ae;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.streamStatus {
+  min-width: max-content;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  color: #8f8b94;
+  font-size: 0.66rem;
+  font-weight: 800;
+}
+
+/* Shared sections */
+
+.section {
+  position: relative;
+  padding: 78px 0;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(1180px, calc(100% - 40px));
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+}
+
+.sectionHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 520px);
+  align-items: end;
+  gap: 52px;
+  margin-bottom: 30px;
+}
+
+.sectionHead > div > span,
+.label {
+  color: var(--gold);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.label {
+  color: var(--blue);
+}
+
+.label.gold {
+  color: var(--gold);
+}
+
+.sectionHead h2,
+.manifesto h2 {
+  margin: 9px 0 0;
+  color: #f3eee5;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  font-weight: 650;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.sectionHead p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.72;
+  text-wrap: pretty;
+}
+
+/* World cards */
+
+.worldSection {
+  padding-top: 92px;
+}
+
+.worldGrid {
+  display: grid;
+  grid-template-columns: 1.16fr 0.84fr;
+  grid-template-rows: repeat(2, minmax(190px, auto));
+  gap: 16px;
+}
+
+.featureCard,
+.roadCard,
+.participationCard {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: var(--radius);
+  background: linear-gradient(155deg, rgba(18, 22, 28, 0.82), rgba(7, 9, 13, 0.94));
+  box-shadow: 0 20px 58px rgba(0, 0, 0, 0.24);
+}
+
+.featureCard {
+  min-height: 190px;
+  display: flex;
+  align-items: end;
+  padding: 28px;
+}
+
+.featureCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 82% 12%, rgba(142, 185, 221, 0.1), transparent 36%);
+  pointer-events: none;
+}
+
+.featureLarge {
+  grid-row: 1 / span 2;
+  min-height: 396px;
+  background:
+    linear-gradient(180deg, rgba(8, 11, 15, 0.22), rgba(8, 11, 15, 0.94)),
+    var(--scene) 52% 42% / cover no-repeat;
+}
+
+.featureCard > div {
+  position: relative;
+  z-index: 2;
+  max-width: 560px;
+}
+
+.featureNumber {
+  position: absolute;
+  top: 17px;
+  right: 20px;
+  color: rgba(244, 221, 176, 0.12);
+  font-family: Georgia, serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.featureCard h3 {
+  margin: 8px 0 10px;
+  font-family: Georgia, serif;
+  font-size: 1.32rem;
+}
+
+.featureLarge h3 {
+  font-size: 2.05rem;
+}
+
+.featureCard p {
+  margin: 0;
+  color: #aaa69e;
+  font-size: 0.84rem;
+  line-height: 1.68;
+}
+
+.featureLarge p {
+  max-width: 520px;
+  color: #d1ccc2;
+  font-size: 0.9rem;
+}
+
+/* Roadmap */
+
+.roadmapSection {
+  background: linear-gradient(180deg, transparent, rgba(12, 15, 20, 0.32), transparent);
+}
+
+.roadmap {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.roadCard {
+  min-height: 245px;
+  padding: 23px;
+}
+
+.roadCard::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(216, 185, 117, 0.42), transparent);
+}
+
+.roadTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.roadTop span {
+  color: var(--gold);
+  font-size: 0.64rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.roadTop small {
+  color: #89857e;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.roadCard h3 {
+  min-height: 48px;
+  margin: 22px 0 10px;
+  font-family: Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.roadCard p {
+  min-height: 65px;
+  margin: 0 0 22px;
+  color: var(--muted);
+  font-size: 0.79rem;
+  line-height: 1.62;
+}
+
+.progress {
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.progress b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #668fb3, #d5b774);
+}
+
+/* Participation */
+
+.participation {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.participationCard {
+  min-height: 286px;
+  padding: 24px 22px;
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.participationCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(216, 185, 117, 0.2);
+}
+
+.participationIndex {
+  position: absolute;
+  top: 17px;
+  right: 18px;
+  color: rgba(255, 255, 255, 0.1);
+  font-family: Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.participationCard > i {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(216, 185, 117, 0.16);
+  border-radius: 12px;
+  color: var(--gold-bright);
+  background: rgba(216, 185, 117, 0.055);
+  font-size: 1.1rem;
+  font-style: normal;
+}
+
+.participationCard h3 {
+  margin: 24px 0 10px;
+  font-family: Georgia, serif;
+  font-size: 1.08rem;
+}
+
+.participationCard p {
+  min-height: 112px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.64;
+}
+
+.participationCard a {
+  display: inline-flex;
+  gap: 6px;
+  margin-top: 20px;
+  color: var(--gold-bright);
+  font-size: 0.73rem;
+  font-weight: 850;
+}
+
+/* Manifesto + footer */
+
+.finalSection {
+  padding-bottom: 100px;
+}
+
+.manifesto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 42px;
+  padding: 34px;
+  border: 1px solid rgba(216, 185, 117, 0.15);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 85% 10%, rgba(216, 185, 117, 0.08), transparent 26rem),
+    linear-gradient(145deg, rgba(17, 20, 26, 0.88), rgba(7, 9, 13, 0.96));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.manifesto h2 {
+  max-width: 760px;
+}
+
+.manifesto p {
+  max-width: 720px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.7;
+}
+
+footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(4, 6, 9, 0.72);
+}
+
+.footer {
+  min-height: 116px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  color: #8e8a83;
+  font-size: 0.76rem;
+}
+
+.footerIcon {
+  width: 38px;
+  height: 38px;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer > a {
+  color: #b8b3aa;
+  font-weight: 750;
+}
+
+/* Responsive composition */
+
+@media (max-width: 980px) {
+  .navLinks {
+    display: none;
+  }
+
+  .hero {
+    min-height: 820px;
+  }
+
+  .heroScene {
+    top: 76px;
+    right: -120px;
+    width: 82vw;
+    opacity: 0.8;
+  }
+
+  .heroCopy {
+    width: min(630px, 70vw);
+  }
+
+  .heroCaption {
+    display: none;
+  }
+
+  .streamBand {
+    grid-template-columns: 1fr auto;
+  }
+
+  .streamBand p {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .sectionHead {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .roadmap,
+  .participation {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .shell {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .siteHeader {
+    position: absolute;
+  }
+
+  .nav {
+    min-height: 68px;
+  }
+
+  .brandIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .brandCopy small,
+  .streamPill {
+    display: none;
+  }
+
+  .hero {
+    min-height: 820px;
+    align-items: end;
+    padding: 98px 0 76px;
+  }
+
+  .heroScene {
+    top: 48px;
+    right: 50%;
+    bottom: auto;
+    width: 100vw;
+    height: 610px;
+    transform: translateX(50%);
+    background-position: center 20%;
+    background-size: auto 74%;
+    filter: saturate(0.92) contrast(1.05) brightness(0.8);
+    opacity: 0.95;
+  }
+
+  .heroScene::after {
+    background:
+      linear-gradient(180deg, rgba(5, 7, 10, 0.1), rgba(5, 7, 10, 0.18) 36%, #05070a 88%),
+      linear-gradient(90deg, rgba(5, 7, 10, 0.3), transparent 30% 70%, rgba(5, 7, 10, 0.3));
+  }
+
+  .heroShade {
+    background: linear-gradient(180deg, rgba(5, 7, 10, 0.18), transparent 28%, rgba(5, 7, 10, 0.92) 68%, #05070a);
+  }
+
+  .heroLayout {
+    min-height: 640px;
+    align-items: end;
+  }
+
+  .heroCopy {
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .eyebrow {
+    font-size: 0.6rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.35rem, 17vw, 4.75rem);
+    letter-spacing: 0.035em;
+  }
+
+  .hero h1::after {
+    margin-top: 18px;
+  }
+
+  .heroTagline {
+    font-size: 1.12rem;
+  }
+
+  .lead {
+    font-size: 0.92rem;
+    line-height: 1.68;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .button {
+    width: 100%;
+    padding-inline: 13px;
+  }
+
+  .scrollCue {
+    display: none;
+  }
+
+  .streamSection {
+    margin-top: 0;
+    padding-top: 14px;
+  }
+
+  .streamBand {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 18px;
+  }
+
+  .streamBand p {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .streamStatus {
+    width: fit-content;
+  }
+
+  .section {
+    padding: 60px 0;
+  }
+
+  .worldGrid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .featureLarge {
+    grid-row: auto;
+    min-height: 330px;
+  }
+
+  .roadmap,
+  .participation {
+    grid-template-columns: 1fr;
+  }
+
+  .roadCard,
+  .participationCard {
+    min-height: auto;
+  }
+
+  .roadCard p,
+  .participationCard p {
+    min-height: auto;
+  }
+
+  .manifesto {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 25px;
+  }
+
+  .footer {
+    min-height: auto;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 28px 0;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero {
+    min-height: 790px;
+  }
+
+  .heroScene {
+    height: 560px;
+    background-size: auto 70%;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionHead h2,
+  .manifesto h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .button,
+  .participationCard,
+  .navLinks a::after {
+    transition: none;
+  }
+}
