@@ -3,7 +3,7 @@
   min-height: 100vh;
   padding: 118px 20px 72px;
   overflow: hidden;
-  background-color: #142129;
+  background-color: #17252d;
   background-image: var(--scene);
   background-size: cover;
   background-position: 18% 48%;
@@ -11,15 +11,10 @@
   color: #f2eee6;
 }
 
-.page::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(90deg, rgba(7, 13, 16, .38) 0%, rgba(7, 13, 16, .16) 38%, transparent 67%);
+.page::before,
+.page::after {
+  display: none;
 }
-
-.page::after { display: none; }
 
 .shell {
   position: relative;
@@ -34,11 +29,11 @@
 
 .copy {
   padding-top: 38px;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.62);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.74);
 }
 
 .eyebrow {
-  color: #ead08d;
+  color: #f0d58c;
   font-size: 0.72rem;
   font-weight: 850;
   letter-spacing: 0.14em;
@@ -55,7 +50,7 @@
 .copy p {
   max-width: 650px;
   margin: 0;
-  color: #f0ebe3;
+  color: #fffaf1;
   font-size: 1rem;
   line-height: 1.8;
 }
@@ -65,7 +60,7 @@
   gap: 12px;
   margin-top: 32px;
   padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 14px;
   background: rgba(8, 14, 17, 0.30);
   backdrop-filter: blur(8px);
@@ -76,19 +71,19 @@
   grid-template-columns: 34px 1fr;
   gap: 12px;
   align-items: start;
-  color: #eee8de;
+  color: #f3ece1;
   font-size: 0.88rem;
   line-height: 1.55;
 }
 
-.rule b { color: #e6c978; }
+.rule b { color: #e8ca77; }
 
 .card {
   border: 1px solid rgba(232, 201, 132, 0.24);
   border-radius: 20px;
-  background: rgba(10, 17, 21, 0.78);
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.30);
-  backdrop-filter: blur(13px);
+  background: rgba(10, 17, 21, 0.74);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(12px);
   overflow: hidden;
 }
 
@@ -246,10 +241,6 @@
   .page {
     padding-top: 88px;
     background-position: 16% 42%;
-  }
-
-  .page::before {
-    background: rgba(7, 13, 16, .22);
   }
 
   .shell {
