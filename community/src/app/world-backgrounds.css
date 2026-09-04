@@ -1,9 +1,41 @@
 /*
  * Shared environmental treatment for ByeTale Community.
- * Reuses --scene, which is derived from the current ByeTale 2D menu artwork,
- * then changes crop, lighting and pixel texture per section instead of introducing
- * unrelated fantasy artwork.
+ * Reuses --scene from the current ByeTale 2D menu artwork.
+ * Keep the world visible: shadows are local to copy/panels, not painted over the whole page.
  */
+
+/* Lift the global canvas so the site reads as a game world, not a black dashboard. */
+body {
+  background:
+    radial-gradient(circle at 78% 4%, rgba(141, 190, 213, 0.18), transparent 36rem),
+    linear-gradient(180deg, #17232a 0%, #111a20 44rem, #0d1419 100%);
+}
+
+body::before {
+  filter: blur(34px) saturate(1.02) brightness(.82);
+  opacity: .56;
+}
+
+body::after {
+  background: linear-gradient(180deg, rgba(4, 6, 9, 0.01), rgba(4, 6, 9, 0.18) 72%, rgba(5, 8, 10, .34) 100%);
+}
+
+/* Hero: protect the left-side copy without crushing the scenery. */
+.heroShade {
+  background:
+    linear-gradient(90deg, rgba(7, 12, 15, .72) 0%, rgba(7, 12, 15, .54) 19%, rgba(7, 12, 15, .22) 42%, rgba(7, 12, 15, .03) 68%, transparent 84%),
+    linear-gradient(180deg, rgba(7, 12, 15, .05), transparent 68%, rgba(7, 12, 15, .38) 100%);
+}
+
+.heroScene {
+  filter: saturate(1.12) contrast(1.02) brightness(1.10);
+}
+
+.heroScene::after {
+  background:
+    linear-gradient(90deg, rgba(7, 12, 15, .66) 0%, rgba(7, 12, 15, .38) 16%, rgba(7, 12, 15, .08) 39%, transparent 58%),
+    linear-gradient(180deg, transparent 70%, rgba(7, 12, 15, .34) 100%);
+}
 
 .worldSection,
 .roadmapSection,
@@ -46,58 +78,58 @@
   z-index: 1;
 }
 
-/* Daylight / exploration: keeps the landscape recognizable but subdued. */
+/* Exploration: almost the original artwork, with a soft text-safe vignette. */
 .worldSection::before {
   background-image:
-    linear-gradient(180deg, rgba(7, 13, 17, .82), rgba(8, 15, 18, .62) 44%, rgba(6, 11, 14, .92)),
+    linear-gradient(180deg, rgba(8, 14, 16, .20), rgba(8, 14, 16, .08) 46%, rgba(8, 14, 16, .34)),
     var(--scene);
   background-position: center 58%;
-  opacity: .48;
-  filter: saturate(.86) contrast(1.06);
+  opacity: .94;
+  filter: saturate(1.08) contrast(1.02) brightness(1.08);
 }
 
-/* Development: cooler dusk crop so cards remain the focus. */
+/* Development: cooler, but still visibly a landscape. */
 .roadmapSection::before {
   background-image:
-    radial-gradient(circle at 76% 32%, rgba(95, 137, 151, .20), transparent 34%),
-    linear-gradient(180deg, rgba(5, 10, 14, .90), rgba(10, 17, 22, .70), rgba(5, 9, 12, .94)),
+    radial-gradient(circle at 76% 32%, rgba(112, 177, 197, .19), transparent 35%),
+    linear-gradient(180deg, rgba(8, 16, 20, .28), rgba(9, 17, 20, .12), rgba(7, 13, 16, .38)),
     var(--scene);
   background-position: center, center, 66% 44%;
-  opacity: .42;
-  filter: saturate(.72) contrast(1.12) brightness(.82);
+  opacity: .91;
+  filter: saturate(.98) contrast(1.03) brightness(1.04);
 }
 
-/* Participation: warmer crop, closer to campfire / community mood. */
+/* Community: warmer light, not a dark veil. */
 .participationSection::before {
   background-image:
-    radial-gradient(circle at 24% 38%, rgba(205, 164, 91, .20), transparent 30%),
-    linear-gradient(90deg, rgba(8, 12, 14, .91), rgba(8, 12, 14, .66), rgba(8, 12, 14, .91)),
+    radial-gradient(circle at 24% 38%, rgba(225, 180, 99, .22), transparent 32%),
+    linear-gradient(90deg, rgba(9, 14, 15, .30), rgba(9, 14, 15, .08), rgba(9, 14, 15, .26)),
     var(--scene);
   background-position: center, center, 34% 62%;
-  opacity: .45;
-  filter: sepia(.08) saturate(.86) contrast(1.08) brightness(.82);
+  opacity: .93;
+  filter: sepia(.05) saturate(1.06) contrast(1.02) brightness(1.06);
 }
 
 .finalSection::before {
   background-image:
-    linear-gradient(180deg, rgba(4, 8, 11, .82), rgba(4, 8, 11, .96)),
+    linear-gradient(180deg, rgba(8, 14, 16, .20), rgba(8, 14, 16, .44)),
     var(--scene);
   background-position: center 72%;
-  opacity: .36;
-  filter: saturate(.65) contrast(1.12) brightness(.72);
+  opacity: .90;
+  filter: saturate(.96) contrast(1.02) brightness(1.00);
 }
 
 .streamSection::before {
   background-image:
-    radial-gradient(circle at 76% 20%, rgba(145, 91, 186, .13), transparent 31%),
-    linear-gradient(180deg, rgba(5, 9, 13, .91), rgba(7, 12, 16, .78), rgba(5, 9, 13, .93)),
+    radial-gradient(circle at 76% 20%, rgba(157, 100, 200, .15), transparent 31%),
+    linear-gradient(180deg, rgba(8, 13, 17, .26), rgba(8, 13, 17, .13), rgba(8, 13, 17, .32)),
     var(--scene);
   background-position: center, center, 78% 30%;
-  opacity: .32;
-  filter: saturate(.72) brightness(.72);
+  opacity: .88;
+  filter: saturate(.98) brightness(1.00);
 }
 
-/* A very light pixel-grid keeps the website visually tied to the 2D game. */
+/* Subtle pixel-grid only; never darkens the artwork. */
 .worldSection::after,
 .roadmapSection::after,
 .participationSection::after,
@@ -107,7 +139,7 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: .055;
+  opacity: .035;
   background-image:
     linear-gradient(rgba(255,255,255,.22) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,.22) 1px, transparent 1px);
@@ -116,12 +148,12 @@
   mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
 }
 
-/* Forum hero: replace the removed legacy JPEG with the current 2D scene. */
+/* Forum hero: world first, dark gradient only under the copy. */
 .forumHero {
   position: relative;
   overflow: hidden;
   background:
-    linear-gradient(90deg, rgba(5, 10, 15, .96) 0%, rgba(5, 10, 15, .78) 44%, rgba(5, 10, 15, .50) 100%),
+    linear-gradient(90deg, rgba(7, 13, 16, .70) 0%, rgba(7, 13, 16, .48) 38%, rgba(7, 13, 16, .12) 72%, transparent 100%),
     var(--scene) 72% 48% / cover no-repeat !important;
 }
 
@@ -131,8 +163,8 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, transparent 58%, rgba(6, 10, 13, .58)),
-    radial-gradient(circle at 78% 44%, transparent 0 20%, rgba(3, 7, 10, .18) 58%, rgba(3, 7, 10, .45));
+    linear-gradient(180deg, transparent 68%, rgba(7, 12, 15, .27)),
+    radial-gradient(circle at 78% 44%, transparent 0 34%, rgba(3, 7, 10, .10) 74%, rgba(3, 7, 10, .18));
 }
 
 .forumHero > .forumShell {
@@ -140,7 +172,11 @@
   z-index: 1;
 }
 
-/* Forum body gets a faint world layer instead of a flat app background. */
+/* Forum body: clearly visible scene beneath translucent forum panels. */
+.forumPage {
+  background: rgba(10, 18, 22, .24) !important;
+}
+
 .forumPage::before {
   content: "";
   position: fixed;
@@ -148,9 +184,16 @@
   z-index: -1;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(6, 11, 15, .96), rgba(6, 11, 15, .87) 45%, rgba(5, 9, 12, .97)),
+    linear-gradient(180deg, rgba(8, 15, 18, .34), rgba(8, 15, 18, .20) 48%, rgba(7, 13, 16, .42)),
     var(--scene) 45% 65% / cover no-repeat;
-  filter: saturate(.62) brightness(.66);
+  filter: saturate(.98) brightness(1.04);
+}
+
+/* Keep panels readable while allowing the scenery to remain visible around them. */
+.forumSidebar,
+.forumMain {
+  background: rgba(9, 17, 24, .76) !important;
+  backdrop-filter: blur(10px);
 }
 
 @media (max-width: 760px) {
@@ -163,7 +206,7 @@
   .roadmapSection::after,
   .participationSection::after,
   .finalSection::after {
-    opacity: .035;
+    opacity: .025;
   }
 }
 
