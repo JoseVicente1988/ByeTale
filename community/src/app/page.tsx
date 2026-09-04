@@ -89,11 +89,11 @@ export default function HomePage() {
           <div className="heroCopy">
             <span className="eyebrow">MMORPG en desarrollo · Godot + ENet</span>
             <h1 id="hero-title">ByeTale</h1>
-            <p className="heroTagline">Un mundo que se construye contigo.</p>
+            <p className="heroTagline">Un mundo en desarrollo. Una comunidad dentro del proceso.</p>
             <p className="lead">
-              Sigue el desarrollo real del juego, participa en decisiones de comunidad,
-              aporta ideas, prueba nuevas builds y forma parte de castings de voz mientras
-              el roadmap de ByeTale evoluciona de forma pública.
+              Sigue el desarrollo real del juego, aporta ideas, prueba nuevas builds,
+              participa en castings de voz y comparte feedback mientras el roadmap
+              de ByeTale evoluciona de forma pública.
             </p>
             <div className="actions">
               <a className="button primary" href="#roadmap">Explorar roadmap</a>
