@@ -2,25 +2,28 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ByeTale Community",
+  title: {
+    default: "ByeTale Community",
+    template: "%s · ByeTale"
+  },
   description:
-    "Centro oficial de comunidad y desarrollo de ByeTale: roadmap, ideas, testing, voces y directos."
+    "Centro oficial de comunidad y desarrollo de ByeTale: roadmap, ideas, testing, voces y directos.",
+  icons: {
+    icon: "/byetale-icon.svg"
+  }
 };
 
 /**
  * Root layout for the ByeTale community site.
  *
- * The web app intentionally stays independent from the Godot runtime while
- * living in the same repository. This lets Vercel build only /community and
- * keeps the game client/server files outside the web deployment surface.
+ * The web app lives under /community in the same repository as the Godot game.
+ * Vercel can therefore build the web independently without exposing game or
+ * server files as part of the application bundle.
  */
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es">
-      <body>
-        <div className="mist" aria-hidden="true" />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
