@@ -303,7 +303,7 @@ export default function ForumPage() {
       }
 
       setComposerOpen(false);
-      setNotice("Hilo publicado en Neon.");
+      setNotice("Hilo publicado.");
       await loadForum();
       setSelectedThreadId(newThreadId);
       await loadPosts(newThreadId);
@@ -430,11 +430,11 @@ export default function ForumPage() {
 
       <section className="forumHero">
         <div className="forumShell">
-          <span className="forumEyebrow">Neon · comunidad persistente</span>
+          <span className="forumEyebrow">Comunidad persistente</span>
           <h1>Foro de ByeTale</h1>
           <p>
-            Ideas, desarrollo, bugs, voces y colaboración en un único lugar. Los hilos y respuestas de esta vista
-            viven en la base de datos de ByeTale; no son contenido de demostración.
+            Ideas, desarrollo, bugs, voces y colaboración en un único lugar. Los hilos y respuestas forman parte
+            real de la comunidad de ByeTale; no son contenido de demostración.
           </p>
           <div className="forumStats" aria-label="Estadísticas del foro">
             <div className="forumStat"><b>{stats.threads}</b><span>Hilos</span></div>
@@ -488,7 +488,7 @@ export default function ForumPage() {
 
           <section className="forumMain" aria-live="polite">
             {loading ? (
-              <div className="loadingLine"><i className="loadingDot" />Cargando desde Neon…</div>
+              <div className="loadingLine"><i className="loadingDot" />Cargando…</div>
             ) : selectedThread ? (
               <>
                 <div className="threadDetailHead">
@@ -512,7 +512,7 @@ export default function ForumPage() {
                 )}
 
                 {postsLoading ? (
-                  <div className="loadingLine"><i className="loadingDot" />Cargando conversación…</div>
+                  <div className="loadingLine"><i className="loadingDot" />Cargando…</div>
                 ) : posts.length ? (
                   <div className="postList">
                     {posts.map((post) => (
@@ -599,7 +599,7 @@ export default function ForumPage() {
         <div className="modalBackdrop" role="presentation" onMouseDown={() => setAuthOpen(false)}>
           <section className="forumModal" role="dialog" aria-modal="true" aria-labelledby="auth-title" onMouseDown={(event) => event.stopPropagation()}>
             <div className="modalHead">
-              <div><h3 id="auth-title">Entra en ByeTale</h3><p>Tu cuenta se gestiona con Neon Auth.</p></div>
+              <div><h3 id="auth-title">Entra en ByeTale</h3><p>Tu cuenta te identifica dentro de la comunidad.</p></div>
               <button className="closeModal" onClick={() => setAuthOpen(false)} aria-label="Cerrar">×</button>
             </div>
             <div className="modalBody">
@@ -630,7 +630,7 @@ export default function ForumPage() {
                 <label><span>Categoría</span><select name="category" defaultValue={categories.find((c) => c.slug === selectedCategory && !c.is_read_only)?.id ?? categories.find((c) => !c.is_read_only)?.id} required>{categories.filter((category) => !category.is_read_only).map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
                 <label><span>Título</span><input name="title" minLength={6} maxLength={120} required placeholder="¿De qué quieres hablar?" /></label>
                 <label><span>Primer mensaje</span><textarea name="body" minLength={20} maxLength={10000} required placeholder="Contexto, propuesta, pasos para reproducir el bug, detalles del casting…" /></label>
-                <div className="modalFooter"><button type="button" className="forumButton" onClick={() => setComposerOpen(false)}>Cancelar</button><button className="forumButton primary" disabled={busy}>{busy ? "Publicando…" : "Publicar en Neon"}</button></div>
+                <div className="modalFooter"><button type="button" className="forumButton" onClick={() => setComposerOpen(false)}>Cancelar</button><button className="forumButton primary" disabled={busy}>{busy ? "Publicando…" : "Publicar"}</button></div>
               </form>
             </div>
           </section>
