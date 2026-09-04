@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import AccountDock from "./components/account-dock";
 import "./globals.css";
-import "./assets.css";
+import "./scene-runtime.css";
 import "./world-backgrounds.css";
 
 export const metadata: Metadata = {
