@@ -1,10 +1,28 @@
-/*
- * First-party visual assets used by the community UI.
- *
- * Keeping the binding separate from the design system makes the background
- * source explicit and lets the main stylesheet keep a remote fallback while
- * production uses the copy versioned inside /community/public.
- */
+/* First-party visual assets and framing overrides for ByeTale Community. */
+
 :root {
   --scene: url("/byetale-background.jpeg");
+}
+
+/* The original artwork is 1088x960. On narrow screens its natural displayed
+ * height is about 88% of the viewport width, so reserve that space instead of
+ * cropping the lower part of the image. */
+@media (max-width: 760px) {
+  .heroScene {
+    height: min(88vw, 520px);
+  }
+
+  .heroLayout {
+    padding-top: min(94vw, 560px);
+  }
+}
+
+@media (max-width: 480px) {
+  .heroScene {
+    height: 88vw;
+  }
+
+  .heroLayout {
+    padding-top: 94vw;
+  }
 }
