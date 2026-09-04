@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AccountDock from "./components/account-dock";
 import "./globals.css";
 import "./assets.css";
 
@@ -17,7 +18,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        {children}
+        <AccountDock />
+      </body>
     </html>
   );
 }
