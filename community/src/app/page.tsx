@@ -1,4 +1,41 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+type StreamStatus = "checking" | "live" | "offline";
+
+type TwitchPlayerInstance = {
+  addEventListener: (event: string, callback: () => void) => void;
+};
+
+type TwitchPlayerConstructor = {
+  new (
+    elementId: string,
+    options: {
+      width: string;
+      height: string;
+      channel: string;
+      parent: string[];
+      autoplay: boolean;
+      muted: boolean;
+    },
+  ): TwitchPlayerInstance;
+  ONLINE: string;
+  OFFLINE: string;
+  PLAYING: string;
+};
+
+declare global {
+  interface Window {
+    Twitch?: {
+      Player: TwitchPlayerConstructor;
+    };
+  }
+}
+
+const TWITCH_CHANNEL = "thespaguetticode";
+const TWITCH_URL = `https://www.twitch.tv/${TWITCH_CHANNEL}`;
 
 const roadmap = [
   {
@@ -49,6 +86,55 @@ const participation = [
 ];
 
 export default function HomePage() {
+  const [streamStatus, setStreamStatus] = useState<StreamStatus>("checking");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const mountPlayer = () => {
+      if (cancelled || !window.Twitch?.Player) return;
+      const host = document.getElementById("byetale-twitch-player");
+      if (!host) return;
+      host.innerHTML = "";
+
+      const TwitchPlayer = window.Twitch.Player;
+      const player = new TwitchPlayer("byetale-twitch-player", {
+        width: "100%",
+        height: "100%",
+        channel: TWITCH_CHANNEL,
+        parent: [window.location.hostname],
+        autoplay: false,
+        muted: true,
+      });
+
+      player.addEventListener(TwitchPlayer.ONLINE, () => setStreamStatus("live"));
+      player.addEventListener(TwitchPlayer.PLAYING, () => setStreamStatus("live"));
+      player.addEventListener(TwitchPlayer.OFFLINE, () => setStreamStatus("offline"));
+    };
+
+    const existingScript = document.getElementById("twitch-player-api") as HTMLScriptElement | null;
+    if (existingScript) {
+      if (window.Twitch?.Player) mountPlayer();
+      else existingScript.addEventListener("load", mountPlayer, { once: true });
+    } else {
+      const script = document.createElement("script");
+      script.id = "twitch-player-api";
+      script.src = "https://player.twitch.tv/js/embed/v1.js";
+      script.async = true;
+      script.addEventListener("load", mountPlayer, { once: true });
+      script.addEventListener("error", () => setStreamStatus("offline"), { once: true });
+      document.body.appendChild(script);
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const streamLabel = streamStatus === "live" ? "EN DIRECTO" : streamStatus === "offline" ? "Offline" : "Comprobando";
+  const streamColor = streamStatus === "live" ? "#48d17c" : streamStatus === "offline" ? "#e15f5f" : "#8d8792";
+  const streamGlow = streamStatus === "live" ? "rgba(72, 209, 124, .30)" : streamStatus === "offline" ? "rgba(225, 95, 95, .22)" : "rgba(141, 135, 146, .16)";
+
   return (
     <main>
       <header className="siteHeader">
@@ -69,7 +155,16 @@ export default function HomePage() {
             <a href="#twitch">Twitch</a>
           </nav>
 
-          <span className="streamPill"><i aria-hidden="true" />Twitch por conectar</span>
+          <a className="streamPill" href="#twitch" aria-label={`Twitch @${TWITCH_CHANNEL}: ${streamLabel}`}>
+            <i
+              aria-hidden="true"
+              style={{
+                background: streamColor,
+                boxShadow: `0 0 0 5px ${streamGlow}, 0 0 14px ${streamGlow}`,
+              }}
+            />
+            @{TWITCH_CHANNEL}
+          </a>
         </div>
       </header>
 
@@ -112,7 +207,66 @@ export default function HomePage() {
         <a className="scrollCue" href="#mundo" aria-label="Continuar hacia la sección del mundo"><span>Descubre el proyecto</span><i aria-hidden="true">↓</i></a>
       </section>
 
-      <section className="streamSection" id="twitch"><div className="shell"><article className="streamBand"><div className="streamIdentity"><span className="streamDot" aria-hidden="true" /><div><small>Twitch / desarrollo en directo</small><strong>El stream formará parte del flujo de desarrollo.</strong></div></div><p>Cuando conectemos tu canal, cada directo podrá enlazar con propuestas, tareas, votaciones o castings que estén activos en la comunidad.</p><span className="streamStatus">Canal pendiente</span></article></div></section>
+      <section className="streamSection" id="twitch">
+        <div className="shell">
+          <article className="streamBand">
+            <div className="streamIdentity">
+              <span
+                className="streamDot"
+                aria-hidden="true"
+                style={{
+                  background: streamColor,
+                  boxShadow: `0 0 0 6px ${streamGlow}, 0 0 18px ${streamGlow}`,
+                }}
+              />
+              <div>
+                <small>Twitch / desarrollo en directo</small>
+                <strong>@{TWITCH_CHANNEL}</strong>
+              </div>
+            </div>
+            <p>Directos de desarrollo, pruebas y decisiones del proyecto conectados con la comunidad de ByeTale.</p>
+            <span className="streamStatus" style={{ color: streamColor }}>{streamLabel}</span>
+          </article>
+
+          <div
+            style={{
+              marginTop: 14,
+              overflow: "hidden",
+              border: "1px solid rgba(183, 155, 234, 0.18)",
+              borderRadius: 18,
+              background: "#05070a",
+              boxShadow: "0 24px 70px rgba(0, 0, 0, 0.30)",
+            }}
+          >
+            <div
+              id="byetale-twitch-player"
+              style={{ width: "100%", aspectRatio: "16 / 9", minHeight: 300 }}
+              aria-label={`Reproductor de Twitch de ${TWITCH_CHANNEL}`}
+            />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 16,
+                padding: "13px 16px",
+                borderTop: "1px solid rgba(255,255,255,.08)",
+                background: "rgba(10,13,18,.96)",
+              }}
+            >
+              <span style={{ color: "#aaa5ae", fontSize: ".78rem" }}>Twitch oficial de ByeTale</span>
+              <a
+                href={TWITCH_URL}
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: "#d8caf1", fontSize: ".78rem", fontWeight: 800 }}
+              >
+                Abrir en Twitch ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="section worldSection" id="mundo"><div className="shell"><div className="sectionHead"><div><span>El mundo</span><h2>ByeTale ya tiene un ADN propio.</h2></div><p>El repositorio contiene infraestructura multijugador, recursos de personajes y Godspire Citadel. La comunidad web crece alrededor de lo que el juego ya es.</p></div><div className="worldGrid"><article className="featureCard featureLarge"><span className="featureNumber">01</span><div><span className="label gold">Localización</span><h3>Godspire Citadel</h3><p>Uno de los entornos 3D existentes del proyecto y una referencia central para la dirección fantasy de ByeTale.</p></div></article><article className="featureCard"><span className="featureNumber">02</span><div><span className="label">Criaturas</span><h3>Personajes y enemigos</h3><p>Player Character, Skeleton y Slime ya forman parte de los recursos del juego.</p></div></article><article className="featureCard"><span className="featureNumber">03</span><div><span className="label">Tecnología</span><h3>Multijugador primero</h3><p>Login, persistencia, spawning, ENet y sincronización son parte del núcleo técnico sobre el que seguirá creciendo el proyecto.</p></div></article></div></div></section>
 
