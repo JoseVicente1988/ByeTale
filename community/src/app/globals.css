@@ -1,14 +1,11 @@
-/* ByeTale Community visual system.
- *
- * The game background is 1088x960. A single `cover` layer crops too much on
- * widescreen monitors, so the page uses a blurred ambient layer plus a sharp
- * hero layer that preserves the original composition.
- */
+/* ByeTale Community visual system */
 
 :root {
   --bg: #05070a;
-  --panel: rgba(10, 13, 18, 0.82);
-  --panel-strong: rgba(7, 10, 14, 0.94);
+  --bg-soft: #0a0d12;
+  --panel: rgba(9, 12, 16, 0.78);
+  --panel-strong: rgba(7, 10, 14, 0.92);
+  --line: rgba(235, 214, 173, 0.13);
   --gold: #d8b975;
   --gold-bright: #f4ddb0;
   --blue: #8eb9dd;
@@ -16,7 +13,7 @@
   --text: #f6f2ea;
   --muted: #aaa69f;
   --radius: 22px;
-  --scene: url("https://raw.githubusercontent.com/JoseVicente1988/ByeTale/main/UI/background_1.jpeg");
+  --scene: url("/byetale-background.jpeg");
 }
 
 * {
@@ -34,8 +31,8 @@ body {
   overflow-x: hidden;
   color: var(--text);
   background:
-    radial-gradient(circle at 50% 10%, rgba(89, 124, 154, 0.10), transparent 35rem),
-    linear-gradient(180deg, #080b0f, var(--bg) 42rem);
+    radial-gradient(circle at 78% 4%, rgba(110, 148, 180, 0.12), transparent 34rem),
+    linear-gradient(180deg, #080b0f, var(--bg) 44rem);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
@@ -44,11 +41,11 @@ body::before {
   content: "";
   position: fixed;
   inset: -5vh -5vw;
-  z-index: -5;
-  background: var(--scene) center 42% / cover no-repeat;
-  filter: blur(40px) saturate(0.7) brightness(0.36);
+  z-index: -6;
+  background: var(--scene) center 35% / cover no-repeat;
+  filter: blur(48px) saturate(0.82) brightness(0.42);
   transform: scale(1.1);
-  opacity: 0.7;
+  opacity: 0.34;
   pointer-events: none;
 }
 
@@ -56,10 +53,8 @@ body::after {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: -4;
-  background:
-    radial-gradient(circle at 50% 20%, transparent 0 14rem, rgba(0, 0, 0, 0.22) 44rem),
-    linear-gradient(180deg, rgba(4, 6, 9, 0.15), rgba(4, 6, 9, 0.82) 72%, #05070a);
+  z-index: -5;
+  background: linear-gradient(180deg, rgba(4, 6, 9, 0.04), rgba(4, 6, 9, 0.68) 70%, #05070a 100%);
   pointer-events: none;
 }
 
@@ -85,8 +80,8 @@ a {
   inset: 0 0 auto;
   z-index: 50;
   border-bottom: 1px solid rgba(255, 255, 255, 0.055);
-  background: linear-gradient(180deg, rgba(5, 7, 10, 0.92), rgba(5, 7, 10, 0.68));
-  backdrop-filter: blur(18px) saturate(1.15);
+  background: linear-gradient(180deg, rgba(5, 7, 10, 0.84), rgba(5, 7, 10, 0.58));
+  backdrop-filter: blur(16px) saturate(1.1);
 }
 
 .nav {
@@ -123,7 +118,7 @@ a {
 .brandCopy small {
   display: block;
   margin-top: 2px;
-  color: #8e8b85;
+  color: #9b978f;
   font-size: 0.61rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -139,7 +134,7 @@ a {
 .navLinks a {
   position: relative;
   padding: 10px 12px;
-  color: #bbb7af;
+  color: #c3beb5;
   font-size: 0.82rem;
   font-weight: 750;
   transition: color 160ms ease;
@@ -171,10 +166,10 @@ a {
   align-items: center;
   gap: 7px;
   padding: 9px 12px;
-  border: 1px solid rgba(183, 155, 234, 0.2);
+  border: 1px solid rgba(183, 155, 234, 0.22);
   border-radius: 999px;
-  color: #d5c5ef;
-  background: rgba(113, 80, 161, 0.1);
+  color: #d8caf1;
+  background: rgba(113, 80, 161, 0.12);
   font-size: 0.7rem;
   font-weight: 800;
 }
@@ -184,32 +179,44 @@ a {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #716c78;
+  background: #77717c;
 }
 
 /* Hero */
 
 .hero {
   position: relative;
-  min-height: 860px;
+  min-height: 900px;
   display: grid;
   align-items: center;
   overflow: hidden;
   isolation: isolate;
-  padding: 128px 0 90px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+  padding: 126px 0 96px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(5, 7, 10, 0.04), rgba(5, 7, 10, 0.1));
 }
 
 .heroScene {
   position: absolute;
   z-index: -3;
   top: 76px;
-  right: max(-70px, calc((100vw - 1440px) / 2));
-  bottom: 0;
-  width: min(68vw, 1088px);
-  background: var(--scene) center right / auto 100% no-repeat;
-  filter: saturate(0.92) contrast(1.04) brightness(0.86);
-  opacity: 0.98;
+  right: clamp(-90px, calc((100vw - 1500px) / 2), 24px);
+  bottom: 18px;
+  width: min(76vw, 1088px);
+  background: var(--scene) center right / contain no-repeat;
+  filter: saturate(1.05) contrast(1.03) brightness(1.02);
+  opacity: 1;
+  transform: translateZ(0);
+}
+
+.heroScene::before {
+  content: "";
+  position: absolute;
+  inset: 2% 4% 0 10%;
+  z-index: -1;
+  border-radius: 50%;
+  background: rgba(104, 147, 181, 0.12);
+  filter: blur(70px);
 }
 
 .heroScene::after {
@@ -217,8 +224,8 @@ a {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(5, 7, 10, 0.98), rgba(5, 7, 10, 0.62) 25%, transparent 60%),
-    linear-gradient(180deg, rgba(5, 7, 10, 0.08), transparent 55%, rgba(5, 7, 10, 0.94));
+    linear-gradient(90deg, rgba(5, 7, 10, 0.95) 0%, rgba(5, 7, 10, 0.72) 14%, rgba(5, 7, 10, 0.18) 39%, transparent 60%),
+    linear-gradient(180deg, rgba(5, 7, 10, 0.03) 0%, transparent 64%, rgba(5, 7, 10, 0.78) 100%);
 }
 
 .heroShade {
@@ -226,22 +233,22 @@ a {
   z-index: -2;
   inset: 0;
   background:
-    linear-gradient(90deg, #05070a 0 9%, rgba(5, 7, 10, 0.95) 23%, rgba(5, 7, 10, 0.36) 55%, transparent 77%),
-    linear-gradient(180deg, rgba(5, 7, 10, 0.48), transparent 20%, transparent 68%, #05070a);
+    linear-gradient(90deg, #05070a 0%, rgba(5, 7, 10, 0.94) 18%, rgba(5, 7, 10, 0.48) 42%, rgba(5, 7, 10, 0.06) 66%, transparent 82%),
+    linear-gradient(180deg, rgba(5, 7, 10, 0.18), transparent 26%, transparent 72%, #05070a 100%);
   pointer-events: none;
 }
 
 .heroLayout {
   position: relative;
   z-index: 2;
-  min-height: 610px;
+  min-height: 650px;
   display: flex;
   align-items: center;
 }
 
 .heroCopy {
-  width: min(650px, 58vw);
-  padding-top: 32px;
+  width: min(620px, 49vw);
+  padding-top: 26px;
 }
 
 .eyebrow {
@@ -252,7 +259,7 @@ a {
   border: 1px solid rgba(216, 185, 117, 0.25);
   border-radius: 999px;
   color: var(--gold-bright);
-  background: rgba(7, 9, 13, 0.62);
+  background: rgba(7, 9, 13, 0.54);
   font-size: 0.68rem;
   font-weight: 850;
   letter-spacing: 0.12em;
@@ -263,43 +270,46 @@ a {
 .hero h1 {
   width: fit-content;
   margin: 24px 0 0;
-  color: #f7f2e8;
+  color: #fbf7ef;
   font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
-  font-size: clamp(4.7rem, 8.8vw, 7.8rem);
+  font-size: clamp(4.8rem, 8.2vw, 7.6rem);
   font-weight: 700;
-  line-height: 0.82;
-  letter-spacing: 0.055em;
+  line-height: 0.84;
+  letter-spacing: 0.045em;
   text-transform: uppercase;
-  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.34), 0 12px 36px rgba(0, 0, 0, 0.78);
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.35),
+    0 10px 34px rgba(0, 0, 0, 0.82),
+    0 0 42px rgba(216, 185, 117, 0.08);
 }
 
 .hero h1::after {
   content: "";
   display: block;
-  width: 42%;
+  width: 44%;
   height: 1px;
-  margin-top: 24px;
+  margin-top: 22px;
   background: linear-gradient(90deg, var(--gold-bright), transparent);
-  box-shadow: 0 0 18px rgba(216, 185, 117, 0.24);
+  box-shadow: 0 0 18px rgba(216, 185, 117, 0.22);
 }
 
 .heroTagline {
-  margin: 18px 0 0;
+  margin: 17px 0 0;
   color: var(--gold-bright);
   font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
-  font-size: clamp(1.25rem, 2vw, 1.58rem);
+  font-size: clamp(1.3rem, 2vw, 1.62rem);
   line-height: 1.35;
-  text-shadow: 0 3px 16px rgba(0, 0, 0, 0.85);
+  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.88);
 }
 
 .lead {
-  max-width: 620px;
+  max-width: 590px;
   margin: 18px 0 0;
-  color: #d5d0c7;
-  font-size: clamp(0.98rem, 1.35vw, 1.1rem);
-  line-height: 1.78;
+  color: #ddd7cd;
+  font-size: clamp(0.98rem, 1.25vw, 1.08rem);
+  line-height: 1.76;
   text-wrap: pretty;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.88);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9);
 }
 
 .actions {
@@ -328,14 +338,14 @@ a {
 
 .button.primary {
   color: #18120a;
-  background: linear-gradient(135deg, #f1d8a2, #c39d58);
+  background: linear-gradient(135deg, #f2dba9, #c49c56);
   box-shadow: 0 12px 34px rgba(178, 139, 70, 0.2);
 }
 
 .button.secondary {
-  border-color: rgba(255, 255, 255, 0.14);
-  color: #e6e1d8;
-  background: rgba(9, 12, 16, 0.64);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #ece6dc;
+  background: rgba(9, 12, 16, 0.5);
   backdrop-filter: blur(12px);
 }
 
@@ -348,10 +358,10 @@ a {
 
 .tech span {
   padding: 7px 10px;
-  border: 1px solid rgba(142, 185, 221, 0.18);
+  border: 1px solid rgba(142, 185, 221, 0.2);
   border-radius: 9px;
-  color: #c7def0;
-  background: rgba(55, 94, 128, 0.1);
+  color: #d4e7f4;
+  background: rgba(55, 94, 128, 0.11);
   font-size: 0.68rem;
   font-weight: 750;
 }
@@ -359,11 +369,11 @@ a {
 .heroCaption {
   position: absolute;
   right: 0;
-  bottom: 28px;
-  width: min(330px, 30vw);
+  bottom: 32px;
+  width: min(340px, 28vw);
   padding: 15px 17px;
-  border-left: 1px solid rgba(216, 185, 117, 0.34);
-  background: linear-gradient(90deg, rgba(5, 7, 10, 0.56), transparent);
+  border-right: 1px solid rgba(216, 185, 117, 0.32);
+  background: linear-gradient(270deg, rgba(5, 7, 10, 0.52), transparent);
   text-align: right;
 }
 
@@ -379,7 +389,7 @@ a {
 .heroCaption strong {
   display: block;
   margin-top: 6px;
-  color: #d8d3cb;
+  color: #e0dbd3;
   font-family: Georgia, serif;
   font-size: 0.88rem;
   line-height: 1.4;
@@ -388,13 +398,13 @@ a {
 .scrollCue {
   position: absolute;
   left: 50%;
-  bottom: 22px;
+  bottom: 24px;
   z-index: 3;
   display: inline-flex;
   align-items: center;
   gap: 10px;
   transform: translateX(-50%);
-  color: #7f7c77;
+  color: #96918a;
   font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -406,13 +416,13 @@ a {
   font-style: normal;
 }
 
-/* Twitch strip */
+/* Twitch */
 
 .streamSection {
   position: relative;
-  z-index: 3;
-  margin-top: -26px;
-  padding-bottom: 26px;
+  z-index: 4;
+  margin-top: -28px;
+  padding-bottom: 28px;
 }
 
 .streamBand {
@@ -422,10 +432,10 @@ a {
   align-items: center;
   gap: 28px;
   padding: 20px 22px;
-  border: 1px solid rgba(183, 155, 234, 0.16);
+  border: 1px solid rgba(183, 155, 234, 0.17);
   border-radius: 18px;
-  background: linear-gradient(100deg, rgba(106, 74, 153, 0.13), rgba(10, 13, 18, 0.95) 30%);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(100deg, rgba(106, 74, 153, 0.15), rgba(10, 13, 18, 0.94) 32%);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
   backdrop-filter: blur(20px);
 }
 
@@ -461,18 +471,18 @@ a {
 
 .streamBand p {
   margin: 0;
-  color: #a9a5ae;
-  font-size: 0.8rem;
+  color: #b3afb7;
+  font-size: 0.86rem;
   line-height: 1.6;
 }
 
 .streamStatus {
-  min-width: max-content;
-  padding: 9px 11px;
+  justify-self: end;
+  padding: 8px 11px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 999px;
-  color: #8f8b94;
-  font-size: 0.66rem;
+  color: #a8a3ad;
+  font-size: 0.68rem;
   font-weight: 800;
 }
 
@@ -480,156 +490,116 @@ a {
 
 .section {
   position: relative;
-  padding: 78px 0;
-}
-
-.section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: min(1180px, calc(100% - 40px));
-  height: 1px;
-  transform: translateX(-50%);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  padding: 86px 0;
 }
 
 .sectionHead {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 520px);
+  grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.75fr);
   align-items: end;
-  gap: 52px;
+  justify-content: space-between;
+  gap: 40px;
   margin-bottom: 30px;
 }
 
 .sectionHead > div > span,
 .label {
   color: var(--gold);
-  font-size: 0.66rem;
-  font-weight: 900;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-}
-
-.label {
-  color: var(--blue);
-}
-
-.label.gold {
-  color: var(--gold);
 }
 
 .sectionHead h2,
 .manifesto h2 {
   margin: 9px 0 0;
-  color: #f3eee5;
   font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
-  font-size: clamp(2rem, 4vw, 3.1rem);
-  font-weight: 650;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  font-size: clamp(2rem, 4.2vw, 3.35rem);
+  line-height: 1.06;
   text-wrap: balance;
 }
 
-.sectionHead p {
+.sectionHead p,
+.manifesto p {
   margin: 0;
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: 0.92rem;
   line-height: 1.72;
-  text-wrap: pretty;
 }
 
-/* World cards */
+/* World */
 
 .worldSection {
-  padding-top: 92px;
+  padding-top: 96px;
 }
 
 .worldGrid {
   display: grid;
-  grid-template-columns: 1.16fr 0.84fr;
-  grid-template-rows: repeat(2, minmax(190px, auto));
+  grid-template-columns: 1.35fr 0.65fr;
+  grid-template-rows: repeat(2, minmax(180px, 1fr));
   gap: 16px;
 }
 
-.featureCard,
-.roadCard,
-.participationCard {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.075);
-  border-radius: var(--radius);
-  background: linear-gradient(155deg, rgba(18, 22, 28, 0.82), rgba(7, 9, 13, 0.94));
-  box-shadow: 0 20px 58px rgba(0, 0, 0, 0.24);
-}
-
 .featureCard {
-  min-height: 190px;
+  position: relative;
+  min-height: 210px;
   display: flex;
   align-items: end;
-  padding: 28px;
-}
-
-.featureCard::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 82% 12%, rgba(142, 185, 221, 0.1), transparent 36%);
-  pointer-events: none;
+  overflow: hidden;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 80% 0%, rgba(133, 171, 202, 0.1), transparent 16rem),
+    linear-gradient(160deg, rgba(20, 24, 30, 0.82), rgba(7, 10, 14, 0.94));
+  box-shadow: 0 20px 64px rgba(0, 0, 0, 0.24);
 }
 
 .featureLarge {
-  grid-row: 1 / span 2;
-  min-height: 396px;
+  grid-row: 1 / 3;
+  min-height: 436px;
   background:
-    linear-gradient(180deg, rgba(8, 11, 15, 0.22), rgba(8, 11, 15, 0.94)),
-    var(--scene) 52% 42% / cover no-repeat;
-}
-
-.featureCard > div {
-  position: relative;
-  z-index: 2;
-  max-width: 560px;
+    linear-gradient(180deg, rgba(6, 9, 12, 0.05), rgba(6, 9, 12, 0.92)),
+    var(--scene) center 46% / cover no-repeat;
 }
 
 .featureNumber {
   position: absolute;
-  top: 17px;
-  right: 20px;
-  color: rgba(244, 221, 176, 0.12);
+  top: 19px;
+  right: 21px;
+  color: rgba(255, 255, 255, 0.2);
   font-family: Georgia, serif;
-  font-size: 3.5rem;
-  font-weight: 700;
-  line-height: 1;
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
 }
 
 .featureCard h3 {
-  margin: 8px 0 10px;
+  margin: 8px 0 7px;
   font-family: Georgia, serif;
   font-size: 1.32rem;
 }
 
 .featureLarge h3 {
-  font-size: 2.05rem;
+  font-size: clamp(2rem, 4vw, 3rem);
 }
 
 .featureCard p {
+  max-width: 570px;
   margin: 0;
-  color: #aaa69e;
-  font-size: 0.84rem;
+  color: #b9b5ad;
+  font-size: 0.88rem;
   line-height: 1.68;
 }
 
-.featureLarge p {
-  max-width: 520px;
-  color: #d1ccc2;
-  font-size: 0.9rem;
+.gold {
+  color: var(--gold-bright);
 }
 
 /* Roadmap */
 
 .roadmapSection {
-  background: linear-gradient(180deg, transparent, rgba(12, 15, 20, 0.32), transparent);
+  background: linear-gradient(180deg, transparent, rgba(15, 19, 25, 0.42), transparent);
 }
 
 .roadmap {
@@ -638,58 +608,56 @@ a {
   gap: 16px;
 }
 
-.roadCard {
-  min-height: 245px;
-  padding: 23px;
+.roadCard,
+.participationCard,
+.manifesto {
+  border: 1px solid var(--line);
+  background: linear-gradient(160deg, rgba(18, 22, 28, 0.72), rgba(7, 10, 14, 0.9));
+  box-shadow: 0 20px 64px rgba(0, 0, 0, 0.22);
 }
 
-.roadCard::after {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 1px;
-  background: linear-gradient(180deg, transparent, rgba(216, 185, 117, 0.42), transparent);
+.roadCard {
+  min-height: 250px;
+  padding: 22px;
+  border-radius: 18px;
 }
 
 .roadTop {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 12px;
 }
 
 .roadTop span {
   color: var(--gold);
-  font-size: 0.64rem;
-  font-weight: 900;
-  letter-spacing: 0.09em;
+  font-size: 0.66rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .roadTop small {
-  color: #89857e;
-  font-size: 0.68rem;
-  font-weight: 800;
+  color: #9a958d;
+  font-size: 0.7rem;
 }
 
 .roadCard h3 {
-  min-height: 48px;
-  margin: 22px 0 10px;
+  margin: 32px 0 9px;
   font-family: Georgia, serif;
-  font-size: 1.15rem;
-  line-height: 1.3;
+  font-size: 1.14rem;
+  line-height: 1.35;
 }
 
 .roadCard p {
-  min-height: 65px;
+  min-height: 72px;
   margin: 0 0 22px;
-  color: var(--muted);
-  font-size: 0.79rem;
+  color: #a9a59d;
+  font-size: 0.82rem;
   line-height: 1.62;
 }
 
 .progress {
-  height: 5px;
+  height: 6px;
   overflow: hidden;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.07);
@@ -699,7 +667,8 @@ a {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #668fb3, #d5b774);
+  background: linear-gradient(90deg, #769fc2, #e1c27e);
+  box-shadow: 0 0 16px rgba(216, 185, 117, 0.2);
 }
 
 /* Participation */
@@ -711,65 +680,63 @@ a {
 }
 
 .participationCard {
-  min-height: 286px;
-  padding: 24px 22px;
-  transition: transform 180ms ease, border-color 180ms ease;
+  position: relative;
+  min-height: 290px;
+  padding: 23px;
+  border-radius: 18px;
+  transition: transform 160ms ease, border-color 160ms ease;
 }
 
 .participationCard:hover {
   transform: translateY(-4px);
-  border-color: rgba(216, 185, 117, 0.2);
+  border-color: rgba(216, 185, 117, 0.28);
 }
 
 .participationIndex {
   position: absolute;
-  top: 17px;
-  right: 18px;
-  color: rgba(255, 255, 255, 0.1);
-  font-family: Georgia, serif;
-  font-size: 1.8rem;
-  font-weight: 700;
+  top: 19px;
+  right: 20px;
+  color: #65635f;
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
 }
 
 .participationCard > i {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(216, 185, 117, 0.16);
-  border-radius: 12px;
+  display: block;
+  margin-bottom: 36px;
   color: var(--gold-bright);
-  background: rgba(216, 185, 117, 0.055);
-  font-size: 1.1rem;
+  font-size: 1.55rem;
   font-style: normal;
 }
 
 .participationCard h3 {
-  margin: 24px 0 10px;
+  margin: 0 0 10px;
   font-family: Georgia, serif;
-  font-size: 1.08rem;
+  font-size: 1.12rem;
 }
 
 .participationCard p {
   min-height: 112px;
   margin: 0;
-  color: var(--muted);
-  font-size: 0.8rem;
-  line-height: 1.64;
+  color: #aaa69f;
+  font-size: 0.82rem;
+  line-height: 1.65;
 }
 
 .participationCard a {
   display: inline-flex;
-  gap: 6px;
-  margin-top: 20px;
+  gap: 8px;
+  margin-top: 18px;
   color: var(--gold-bright);
-  font-size: 0.73rem;
-  font-weight: 850;
+  font-size: 0.76rem;
+  font-weight: 800;
 }
 
-/* Manifesto + footer */
+/* Manifesto and footer */
 
 .finalSection {
+  padding-top: 66px;
   padding-bottom: 100px;
 }
 
@@ -777,40 +744,35 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 42px;
+  gap: 34px;
   padding: 34px;
-  border: 1px solid rgba(216, 185, 117, 0.15);
   border-radius: var(--radius);
-  background:
-    radial-gradient(circle at 85% 10%, rgba(216, 185, 117, 0.08), transparent 26rem),
-    linear-gradient(145deg, rgba(17, 20, 26, 0.88), rgba(7, 9, 13, 0.96));
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.manifesto > div {
+  max-width: 790px;
 }
 
 .manifesto h2 {
-  max-width: 760px;
+  font-size: clamp(1.8rem, 3.6vw, 2.75rem);
 }
 
 .manifesto p {
-  max-width: 720px;
-  margin: 14px 0 0;
-  color: var(--muted);
-  font-size: 0.86rem;
-  line-height: 1.7;
+  margin-top: 13px;
 }
 
 footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(4, 6, 9, 0.72);
 }
 
 .footer {
-  min-height: 116px;
+  min-height: 122px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  color: #8e8a83;
+  gap: 26px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  color: #9f9a92;
   font-size: 0.76rem;
 }
 
@@ -819,39 +781,47 @@ footer {
   height: 38px;
 }
 
-.footer p {
-  margin: 0;
-}
-
-.footer > a {
-  color: #b8b3aa;
+.footer a:last-child {
+  color: #d4c6aa;
   font-weight: 750;
 }
 
-/* Responsive composition */
+/* Responsive */
 
-@media (max-width: 980px) {
+@media (max-width: 1020px) {
   .navLinks {
     display: none;
   }
 
   .hero {
-    min-height: 820px;
+    min-height: 850px;
   }
 
   .heroScene {
-    top: 76px;
     right: -120px;
     width: 82vw;
-    opacity: 0.8;
+    opacity: 0.96;
   }
 
   .heroCopy {
-    width: min(630px, 70vw);
+    width: min(590px, 58vw);
   }
 
-  .heroCaption {
-    display: none;
+  .sectionHead {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .sectionHead p {
+    max-width: 650px;
+  }
+
+  .roadmap {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .participation {
+    grid-template-columns: 1fr 1fr;
   }
 
   .streamBand {
@@ -862,25 +832,11 @@ footer {
     grid-column: 1 / -1;
     grid-row: 2;
   }
-
-  .sectionHead {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .roadmap,
-  .participation {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 760px) {
   .shell {
     width: min(100% - 28px, 1180px);
-  }
-
-  .siteHeader {
-    position: absolute;
   }
 
   .nav {
@@ -898,89 +854,71 @@ footer {
   }
 
   .hero {
-    min-height: 820px;
-    align-items: end;
-    padding: 98px 0 76px;
+    min-height: 980px;
+    display: block;
+    padding: 0 0 78px;
   }
 
   .heroScene {
-    top: 48px;
-    right: 50%;
+    top: 68px;
+    left: 0;
+    right: 0;
     bottom: auto;
-    width: 100vw;
-    height: 610px;
-    transform: translateX(50%);
-    background-position: center 20%;
-    background-size: auto 74%;
-    filter: saturate(0.92) contrast(1.05) brightness(0.8);
-    opacity: 0.95;
+    width: 100%;
+    height: min(66vw, 470px);
+    background: var(--scene) center top / 100% auto no-repeat;
+    filter: saturate(1.04) contrast(1.02) brightness(1.02);
+  }
+
+  .heroScene::before {
+    display: none;
   }
 
   .heroScene::after {
-    background:
-      linear-gradient(180deg, rgba(5, 7, 10, 0.1), rgba(5, 7, 10, 0.18) 36%, #05070a 88%),
-      linear-gradient(90deg, rgba(5, 7, 10, 0.3), transparent 30% 70%, rgba(5, 7, 10, 0.3));
+    background: linear-gradient(180deg, transparent 42%, rgba(5, 7, 10, 0.18) 62%, #05070a 100%);
   }
 
   .heroShade {
-    background: linear-gradient(180deg, rgba(5, 7, 10, 0.18), transparent 28%, rgba(5, 7, 10, 0.92) 68%, #05070a);
+    background: linear-gradient(180deg, transparent 0 30%, rgba(5, 7, 10, 0.08) 42%, #05070a 68%, #05070a 100%);
   }
 
   .heroLayout {
-    min-height: 640px;
-    align-items: end;
+    min-height: 0;
+    display: block;
+    padding-top: min(72vw, 520px);
   }
 
   .heroCopy {
     width: 100%;
-    padding-top: 0;
-  }
-
-  .eyebrow {
-    font-size: 0.6rem;
+    padding-top: 44px;
   }
 
   .hero h1 {
-    font-size: clamp(3.35rem, 17vw, 4.75rem);
-    letter-spacing: 0.035em;
-  }
-
-  .hero h1::after {
-    margin-top: 18px;
+    font-size: clamp(3.8rem, 18vw, 5.3rem);
+    line-height: 0.9;
   }
 
   .heroTagline {
-    font-size: 1.12rem;
+    max-width: 520px;
   }
 
   .lead {
-    font-size: 0.92rem;
-    line-height: 1.68;
+    max-width: 560px;
   }
 
-  .actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .button {
-    width: 100%;
-    padding-inline: 13px;
-  }
-
+  .heroCaption,
   .scrollCue {
     display: none;
   }
 
   .streamSection {
     margin-top: 0;
-    padding-top: 14px;
+    padding-top: 0;
   }
 
   .streamBand {
     grid-template-columns: 1fr;
-    gap: 15px;
-    padding: 18px;
+    gap: 17px;
   }
 
   .streamBand p {
@@ -989,11 +927,7 @@ footer {
   }
 
   .streamStatus {
-    width: fit-content;
-  }
-
-  .section {
-    padding: 60px 0;
+    justify-self: start;
   }
 
   .worldGrid {
@@ -1003,7 +937,7 @@ footer {
 
   .featureLarge {
     grid-row: auto;
-    min-height: 330px;
+    min-height: 390px;
   }
 
   .roadmap,
@@ -1011,58 +945,81 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  .roadCard,
-  .participationCard {
-    min-height: auto;
-  }
-
   .roadCard p,
   .participationCard p {
     min-height: auto;
   }
 
-  .manifesto {
+  .manifesto,
+  .footer {
     align-items: flex-start;
     flex-direction: column;
-    padding: 25px;
   }
 
   .footer {
-    min-height: auto;
-    align-items: flex-start;
-    flex-direction: column;
-    padding: 28px 0;
+    min-height: 0;
+    padding: 30px 0;
   }
 }
 
-@media (max-width: 430px) {
-  .hero {
-    min-height: 790px;
+@media (max-width: 480px) {
+  .heroScene {
+    height: 72vw;
   }
 
-  .heroScene {
-    height: 560px;
-    background-size: auto 70%;
+  .heroLayout {
+    padding-top: 78vw;
+  }
+
+  .heroCopy {
+    padding-top: 32px;
+  }
+
+  .eyebrow {
+    max-width: 100%;
+    font-size: 0.59rem;
+    letter-spacing: 0.08em;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.15rem, 18vw, 4.4rem);
   }
 
   .actions {
+    display: grid;
     grid-template-columns: 1fr;
+  }
+
+  .button {
+    width: 100%;
+  }
+
+  .tech {
+    gap: 6px;
+  }
+
+  .section {
+    padding: 70px 0;
   }
 
   .sectionHead h2,
   .manifesto h2 {
     font-size: 2rem;
   }
+
+  .featureCard,
+  .roadCard,
+  .participationCard,
+  .manifesto {
+    border-radius: 16px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  .button,
-  .participationCard,
-  .navLinks a::after {
-    transition: none;
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
   }
 }
