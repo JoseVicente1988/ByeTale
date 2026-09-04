@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { neon } from "../../lib/neon-client";
 import styles from "./account.module.css";
 
@@ -14,7 +13,6 @@ function errorMessage(error: unknown) {
 }
 
 export default function AccountPage() {
-  const searchParams = useSearchParams();
   const session = neon.auth.useSession();
   const user = session.data?.user ?? null;
   const [mode, setMode] = useState<AuthMode>("signup");
@@ -23,8 +21,9 @@ export default function AccountPage() {
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
-    setMode(searchParams.get("mode") === "signin" ? "signin" : "signup");
-  }, [searchParams]);
+    const params = new URLSearchParams(window.location.search);
+    setMode(params.get("mode") === "signin" ? "signin" : "signup");
+  }, []);
 
   async function handleAuth(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -66,8 +65,7 @@ export default function AccountPage() {
     setBusy(true);
     setError("");
     try {
-      const result = await neon.auth.signOut();
-      if (result?.error) throw result.error;
+      await neon.auth.signOut();
       setNotice("Sesión cerrada.");
     } catch (signOutError) {
       setError(errorMessage(signOutError));
