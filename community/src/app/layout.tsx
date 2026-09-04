@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import AccountDock from "./components/account-dock";
 import "./globals.css";
 import "./assets.css";
+import "./world-backgrounds.css";
 
 export const metadata: Metadata = {
   title: {
