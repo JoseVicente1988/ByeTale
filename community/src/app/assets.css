@@ -1,0 +1,10 @@
+/*
+ * First-party visual assets used by the community UI.
+ *
+ * Keeping the binding separate from the design system makes the background
+ * source explicit and lets the main stylesheet keep a remote fallback while
+ * production uses the copy versioned inside /community/public.
+ */
+:root {
+  --scene: url("/byetale-background.jpeg");
+}
