@@ -1,1 +1,0 @@
-Binary source: UI/background_1.jpeg (1088x960) in the same ByeTale repository. The web currently references the canonical repo asset; a binary copy can be made during CI if desired.
