@@ -1,8 +1,12 @@
 /*
  * ByeTale Community backgrounds.
- * The current ByeTale 2D scene is painted DIRECTLY on each section.
- * No full-section pseudo overlay sits between the artwork and the user.
+ * The current ByeTale 2D scene is extracted during build to a real public asset.
+ * This file is imported last, so it deliberately overrides the legacy inline --scene.
  */
+
+:root {
+  --scene: url("/byetale-world.webp");
+}
 
 body {
   background: #152129;
@@ -13,12 +17,12 @@ body::after {
   display: none !important;
 }
 
-/* Hero: show the artwork itself. Keep only the natural dark side behind copy. */
+/* Hero: show the actual ByeTale 2D artwork with no full-screen dark veil. */
 .heroScene {
   right: clamp(-110px, calc((100vw - 1500px) / 2), 10px);
   width: min(82vw, 1180px);
-  background-position: center center;
-  filter: saturate(1.18) contrast(1.03) brightness(1.16);
+  background: var(--scene) center center / contain no-repeat !important;
+  filter: saturate(1.16) contrast(1.02) brightness(1.12);
   opacity: 1;
   transform: scaleX(-1) translateZ(0);
   transform-origin: center;
@@ -30,7 +34,7 @@ body::after {
   display: none !important;
 }
 
-/* Put the actual image on the section, not in ::before. */
+/* Put the actual image on the section, not in an overlay pseudo-element. */
 .worldSection,
 .roadmapSection,
 .participationSection,
@@ -65,7 +69,7 @@ body::after {
   background-position: 18% 42% !important;
 }
 
-/* Kill every full-section layer. Readability comes from cards/text shadows instead. */
+/* Kill full-section layers. Readability comes from cards and local text shadow. */
 .worldSection::before,
 .worldSection::after,
 .roadmapSection::before,
@@ -84,19 +88,19 @@ body::after {
 .participationSection .sectionHead,
 .finalSection .sectionHead,
 .streamSection .sectionHead {
-  text-shadow: 0 2px 16px rgba(0,0,0,.82);
+  text-shadow: 0 2px 16px rgba(0,0,0,.72);
 }
 
-/* Keep cards readable while letting the scene remain obvious around them. */
+/* Keep cards readable while leaving the landscape visible around them. */
 .roadCard,
 .participationCard,
 .manifesto,
 .featureCard,
 .streamBand {
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(7px);
 }
 
-/* Forum: direct scene on page and hero; no pseudo veil. */
+/* Forum: real scene on page and hero; no pseudo veil. */
 .forumPage {
   position: relative;
   background-color: #17252d !important;
@@ -129,20 +133,20 @@ body::after {
 .forumHero > .forumShell {
   position: relative;
   z-index: 1;
-  text-shadow: 0 2px 18px rgba(0,0,0,.88);
+  text-shadow: 0 2px 18px rgba(0,0,0,.78);
 }
 
 .forumSidebar,
 .forumMain {
-  background: rgba(9, 17, 24, .64) !important;
-  backdrop-filter: blur(8px);
+  background: rgba(9, 17, 24, .62) !important;
+  backdrop-filter: blur(7px);
 }
 
 @media (max-width: 760px) {
   .heroScene {
     width: 112vw;
     right: -38vw;
-    filter: saturate(1.14) brightness(1.12);
+    filter: saturate(1.12) brightness(1.08);
   }
 
   .worldSection,
