@@ -3,10 +3,10 @@
   min-height: 100vh;
   padding: 118px 20px 72px;
   overflow: hidden;
-  background-color: #080b0f;
+  background-color: #142129;
   background-image:
-    linear-gradient(90deg, rgba(6, 10, 13, 0.96) 0%, rgba(6, 10, 13, 0.74) 48%, rgba(6, 10, 13, 0.88) 100%),
-    linear-gradient(180deg, rgba(5, 8, 11, 0.28), rgba(5, 8, 11, 0.82) 72%, rgba(5, 8, 11, 0.96)),
+    linear-gradient(90deg, rgba(7, 13, 16, 0.68) 0%, rgba(7, 13, 16, 0.32) 48%, rgba(7, 13, 16, 0.44) 100%),
+    linear-gradient(180deg, rgba(5, 8, 11, 0.04), rgba(5, 8, 11, 0.28) 72%, rgba(5, 8, 11, 0.46)),
     var(--scene);
   background-size: auto, auto, cover;
   background-position: center, center, 64% 48%;
@@ -19,7 +19,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.055;
+  opacity: 0.035;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.22) 1px, transparent 1px);
@@ -34,7 +34,7 @@
   inset: auto -10% -20% 38%;
   height: 58%;
   pointer-events: none;
-  background: radial-gradient(ellipse, rgba(205, 164, 91, 0.12), transparent 66%);
+  background: radial-gradient(ellipse, rgba(224, 184, 104, 0.18), transparent 66%);
   filter: blur(18px);
 }
 
@@ -55,7 +55,7 @@
 }
 
 .eyebrow {
-  color: #d8b975;
+  color: #ead08d;
   font-size: 0.72rem;
   font-weight: 850;
   letter-spacing: 0.14em;
@@ -72,7 +72,7 @@
 .copy p {
   max-width: 650px;
   margin: 0;
-  color: #c5c0b7;
+  color: #e0dbd1;
   font-size: 1rem;
   line-height: 1.8;
 }
@@ -82,9 +82,9 @@
   gap: 12px;
   margin-top: 32px;
   padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: 14px;
-  background: rgba(6, 10, 13, 0.44);
+  background: rgba(8, 14, 17, 0.34);
   backdrop-filter: blur(8px);
 }
 
@@ -93,29 +93,29 @@
   grid-template-columns: 34px 1fr;
   gap: 12px;
   align-items: start;
-  color: #d2ccc2;
+  color: #e0dad0;
   font-size: 0.88rem;
   line-height: 1.55;
 }
 
 .rule b {
-  color: #d8b975;
+  color: #e6c978;
 }
 
 .card {
-  border: 1px solid rgba(232, 201, 132, 0.16);
+  border: 1px solid rgba(232, 201, 132, 0.22);
   border-radius: 20px;
   background:
-    linear-gradient(160deg, rgba(20, 25, 30, 0.89), rgba(7, 10, 13, 0.95)),
-    radial-gradient(circle at 80% 0%, rgba(205, 164, 91, 0.10), transparent 34%);
-  box-shadow: 0 30px 110px rgba(0, 0, 0, 0.58);
-  backdrop-filter: blur(16px);
+    linear-gradient(160deg, rgba(22, 31, 35, 0.79), rgba(8, 14, 17, 0.87)),
+    radial-gradient(circle at 80% 0%, rgba(222, 178, 95, 0.15), transparent 34%);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(14px);
   overflow: hidden;
 }
 
 .cardHead {
   padding: 24px 26px 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cardHead h2 {
@@ -126,7 +126,7 @@
 
 .cardHead p {
   margin: 8px 0 0;
-  color: #a29b91;
+  color: #c2baae;
   font-size: 0.82rem;
   line-height: 1.55;
 }
@@ -141,10 +141,10 @@
 .tab,
 .button {
   min-height: 44px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: 10px;
-  color: #d9d4cb;
-  background: rgba(255, 255, 255, 0.035);
+  color: #e4dfd5;
+  background: rgba(255, 255, 255, 0.055);
   font: inherit;
   font-size: 0.78rem;
   font-weight: 800;
@@ -154,8 +154,8 @@
 .tabActive,
 .primary {
   color: #1b150c;
-  border-color: rgba(232, 201, 132, 0.5);
-  background: linear-gradient(135deg, #eed9a9, #c8a25e);
+  border-color: rgba(232, 201, 132, 0.55);
+  background: linear-gradient(135deg, #f1dcae, #cfaa62);
 }
 
 .form {
@@ -170,7 +170,7 @@
 }
 
 .form label span {
-  color: #b8b2a8;
+  color: #d0c8bc;
   font-size: 0.76rem;
   font-weight: 800;
 }
@@ -179,17 +179,17 @@
   width: 100%;
   min-height: 48px;
   padding: 0 13px;
-  border: 1px solid rgba(255, 255, 255, 0.11);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 10px;
   outline: none;
   color: #f2eee6;
-  background: rgba(0, 0, 0, 0.30);
+  background: rgba(4, 9, 11, 0.24);
   font: inherit;
 }
 
 .form input:focus {
-  border-color: rgba(216, 185, 117, 0.55);
-  box-shadow: 0 0 0 3px rgba(216, 185, 117, 0.08);
+  border-color: rgba(216, 185, 117, 0.62);
+  box-shadow: 0 0 0 3px rgba(216, 185, 117, 0.10);
 }
 
 .button {
@@ -234,9 +234,9 @@
 
 .identity {
   padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .identity strong,
@@ -250,7 +250,7 @@
 
 .identity span {
   margin-top: 5px;
-  color: #a49c91;
+  color: #bbb3a7;
   font-size: 0.8rem;
 }
 
@@ -263,7 +263,7 @@
 .back {
   display: inline-flex;
   margin-top: 24px;
-  color: #d8c27f;
+  color: #ead08d;
   font-size: 0.78rem;
   font-weight: 800;
   text-decoration: none;
