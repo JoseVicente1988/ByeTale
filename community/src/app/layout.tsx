@@ -6,6 +6,7 @@ import "./world-backgrounds.css";
 import "./mobile.css";
 import "./ux.css";
 import "./visual-reference.css";
+import "./visual-fix.css";
 
 export const metadata: Metadata = {
   title: {
