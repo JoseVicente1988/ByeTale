@@ -1,0 +1,1 @@
+This marker proves community/public is deployed from community-web. The actual background is committed as a binary WebP in the same directory.
