@@ -4,8 +4,8 @@
   "private": true,
   "engines": { "node": "22.x" },
   "scripts": {
-    "dev": "node scripts/extract-scene.mjs && next dev",
-    "build": "node scripts/extract-scene.mjs && next build",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit"
   },
