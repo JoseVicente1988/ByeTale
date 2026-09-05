@@ -3,8 +3,7 @@ import AccountDock from "./components/account-dock";
 import "./globals.css";
 import "./mobile.css";
 import "./ux.css";
-import "./pixel-theme.css";
-import "./world-backgrounds.css";
+import "./game-reference-theme.css";
 
 export const metadata: Metadata = {
   title: {
@@ -26,7 +25,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es">
+    <html lang="es">">
       <body>
         {children}
         <AccountDock />
