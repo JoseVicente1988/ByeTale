@@ -3,15 +3,25 @@
   min-height: 100vh;
   padding: 118px 20px 72px;
   overflow: hidden;
-  background-color: #17252d;
+  background-color: #111c23;
   background-image: var(--scene);
-  background-size: cover;
-  background-position: 18% 48%;
+  background-size: min(1672px, 100vw) auto;
+  background-position: center top;
   background-repeat: no-repeat;
+  image-rendering: auto;
   color: #f2eee6;
 }
 
-.page::before,
+.page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(17,28,35,.36) 0%, rgba(17,28,35,.08) 43%, rgba(17,28,35,.30) 100%),
+    linear-gradient(180deg, transparent 60%, #111c23 100%);
+}
+
 .page::after {
   display: none;
 }
@@ -62,7 +72,7 @@
   padding: 18px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 14px;
-  background: rgba(8, 14, 17, 0.30);
+  background: rgba(8, 14, 17, 0.40);
   backdrop-filter: blur(8px);
 }
 
@@ -81,7 +91,7 @@
 .card {
   border: 1px solid rgba(232, 201, 132, 0.24);
   border-radius: 20px;
-  background: rgba(10, 17, 21, 0.74);
+  background: rgba(10, 17, 21, 0.82);
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(12px);
   overflow: hidden;
@@ -157,7 +167,7 @@
   border-radius: 10px;
   outline: none;
   color: #f2eee6;
-  background: rgba(4, 9, 11, 0.34);
+  background: rgba(4, 9, 11, 0.42);
   font: inherit;
 }
 
@@ -240,7 +250,14 @@
 @media (max-width: 820px) {
   .page {
     padding-top: 88px;
-    background-position: 16% 42%;
+    background-size: auto min(70vh, 760px);
+    background-position: 30% top;
+  }
+
+  .page::before {
+    background:
+      linear-gradient(90deg, rgba(17,28,35,.42), rgba(17,28,35,.18)),
+      linear-gradient(180deg, transparent 42%, #111c23 78%);
   }
 
   .shell {
