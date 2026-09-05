@@ -1,11 +1,11 @@
 /*
  * ByeTale Community — environmental artwork treatment.
- * The game paintings are already rendered pixel-art scenes. They must not be
- * stretched as full-screen wallpapers or forced through pixelated scaling.
+ * The current 2D forest/ruins artwork is the canonical visual reference.
+ * Keep the scene visible and apply contrast only where text needs it.
  */
 
 :root {
-  --scene: url("/byetale-world.webp");
+  --scene: url("/byetale-battle.webp");
   --battle-scene: url("/byetale-battle.webp");
   --world-bg: #111b22;
   --world-panel: rgba(9, 15, 20, .76);
@@ -33,7 +33,7 @@ body::after {
   bottom: 42px;
   width: min(58vw, 940px);
   background-image: var(--scene) !important;
-  background-position: left center !important;
+  background-position: center center !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
   filter: none !important;
@@ -50,8 +50,8 @@ body::after {
 .heroShade {
   display: block !important;
   background:
-    linear-gradient(90deg, #15242d 0%, rgba(21,36,45,.96) 25%, rgba(21,36,45,.52) 47%, transparent 67%),
-    linear-gradient(180deg, transparent 72%, #0d151b 100%) !important;
+    linear-gradient(90deg, #15242d 0%, rgba(21,36,45,.84) 24%, rgba(21,36,45,.30) 48%, transparent 72%),
+    linear-gradient(180deg, transparent 76%, #0d151b 100%) !important;
 }
 
 /* SECTIONS — solid surface + one controlled scenic illustration. */
@@ -84,7 +84,7 @@ body::after {
   background-repeat: no-repeat !important;
   background-position: center !important;
   filter: none !important;
-  opacity: .72;
+  opacity: .78;
   image-rendering: auto !important;
   pointer-events: none;
 }
@@ -116,12 +116,12 @@ body::after {
 .worldSection::after,
 .participationSection::after,
 .streamSection::after {
-  background: linear-gradient(90deg, #142229 0 34%, rgba(20,34,41,.90) 44%, rgba(20,34,41,.28) 72%, #142229 100%);
+  background: linear-gradient(90deg, #142229 0 30%, rgba(20,34,41,.72) 43%, rgba(20,34,41,.12) 72%, rgba(20,34,41,.30) 100%);
 }
 
 .roadmapSection::after,
 .finalSection::after {
-  background: linear-gradient(270deg, #142229 0 34%, rgba(20,34,41,.90) 44%, rgba(20,34,41,.28) 72%, #142229 100%);
+  background: linear-gradient(270deg, #142229 0 30%, rgba(20,34,41,.72) 43%, rgba(20,34,41,.12) 72%, rgba(20,34,41,.30) 100%);
 }
 
 .worldSection .shell,
@@ -151,7 +151,7 @@ body::after {
   backdrop-filter: blur(8px);
 }
 
-/* FORUM — no giant fixed wallpaper. Artwork belongs in the hero only. */
+/* FORUM — keep the same current 2D scene in the hero. */
 .forumPage {
   position: relative;
   background: #111c23 !important;
@@ -168,10 +168,10 @@ body::after {
   overflow: hidden;
   background-color: #17272f !important;
   background-image:
-    linear-gradient(90deg, rgba(17,28,35,.98) 0%, rgba(17,28,35,.88) 34%, rgba(17,28,35,.34) 70%, rgba(17,28,35,.58) 100%),
+    linear-gradient(90deg, rgba(17,28,35,.88) 0%, rgba(17,28,35,.68) 32%, rgba(17,28,35,.14) 70%, rgba(17,28,35,.24) 100%),
     var(--battle-scene) !important;
-  background-position: center, right center !important;
-  background-size: auto, min(100%, 1500px) auto !important;
+  background-position: center, center center !important;
+  background-size: auto, cover !important;
   background-repeat: no-repeat !important;
   image-rendering: auto !important;
 }
@@ -194,15 +194,15 @@ body::after {
 
 @media (max-width: 900px) {
   .heroScene {
-    right: -16vw;
-    width: 78vw;
-    opacity: .68 !important;
+    right: -12vw;
+    width: 84vw;
+    opacity: .82 !important;
   }
 
   .heroShade {
     background:
-      linear-gradient(90deg, #15242d 0%, rgba(21,36,45,.94) 45%, rgba(21,36,45,.62) 70%, rgba(21,36,45,.35)),
-      linear-gradient(180deg, transparent 70%, #0d151b 100%) !important;
+      linear-gradient(90deg, #15242d 0%, rgba(21,36,45,.82) 42%, rgba(21,36,45,.38) 68%, rgba(21,36,45,.12)),
+      linear-gradient(180deg, transparent 72%, #0d151b 100%) !important;
   }
 
   .worldSection::before,
@@ -210,10 +210,10 @@ body::after {
   .participationSection::before,
   .finalSection::before,
   .streamSection::before {
-    width: 92vw;
-    right: -28vw;
+    width: 96vw;
+    right: -24vw;
     left: auto;
-    opacity: .46;
+    opacity: .64;
   }
 
   .worldSection::after,
@@ -221,21 +221,21 @@ body::after {
   .participationSection::after,
   .finalSection::after,
   .streamSection::after {
-    background: linear-gradient(90deg, #142229 0 48%, rgba(20,34,41,.82) 72%, rgba(20,34,41,.40) 100%);
+    background: linear-gradient(90deg, #142229 0 42%, rgba(20,34,41,.64) 70%, rgba(20,34,41,.18) 100%);
   }
 }
 
 @media (max-width: 620px) {
   .heroScene {
-    width: 112vw;
-    right: -58vw;
+    width: 120vw;
+    right: -42vw;
     top: 100px;
     bottom: 80px;
-    opacity: .50 !important;
+    opacity: .72 !important;
   }
 
   .forumHero {
-    background-size: auto, auto 100% !important;
-    background-position: center, 64% center !important;
+    background-size: auto, cover !important;
+    background-position: center, center center !important;
   }
 }
