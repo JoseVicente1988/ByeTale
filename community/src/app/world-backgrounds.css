@@ -1,47 +1,51 @@
-/*
- * ByeTale Community — environmental artwork treatment.
- * The current 2D forest/ruins artwork is the canonical visual reference.
- * Keep the scene visible and apply contrast only where text needs it.
- */
+/* ByeTale Community — use the supplied pixel-art key art as the actual site background. */
 
 :root {
-  --scene: url("/byetale-battle.webp");
-  --battle-scene: url("/byetale-battle.webp");
-  --world-bg: #111b22;
-  --world-panel: rgba(9, 15, 20, .76);
+  --world-panel: rgba(8, 16, 23, .72);
+  --world-panel-strong: rgba(7, 14, 21, .82);
+}
+
+html {
+  background: #17324a;
 }
 
 body {
-  background: var(--world-bg);
+  background-color: #17324a !important;
+  background-image: none !important;
 }
 
-body::before,
-body::after {
-  display: none !important;
-}
-
-/* HERO — artwork is an illustration, not a wallpaper. */
-.hero {
-  background:
-    radial-gradient(circle at 70% 35%, rgba(73, 101, 126, .16), transparent 38rem),
-    linear-gradient(180deg, #15242d, #101920 78%, #0d151b) !important;
-}
-
-.heroScene {
-  top: 88px;
-  right: max(20px, calc((100vw - 1500px) / 2));
-  bottom: 42px;
-  width: min(58vw, 940px);
-  background-image: var(--scene) !important;
-  background-position: center center !important;
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
+body::before {
+  content: "" !important;
+  display: block !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: -6 !important;
+  pointer-events: none !important;
+  background: var(--scene) center top / cover no-repeat !important;
   filter: none !important;
   opacity: 1 !important;
   transform: none !important;
-  image-rendering: auto !important;
 }
 
+body::after {
+  content: "" !important;
+  display: block !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: -5 !important;
+  pointer-events: none !important;
+  background: linear-gradient(180deg,
+    rgba(5, 12, 18, .04) 0%,
+    rgba(5, 12, 18, .10) 42%,
+    rgba(5, 12, 18, .24) 72%,
+    rgba(5, 12, 18, .38) 100%) !important;
+}
+
+.hero {
+  background: transparent !important;
+}
+
+.heroScene,
 .heroScene::before,
 .heroScene::after {
   display: none !important;
@@ -50,96 +54,47 @@ body::after {
 .heroShade {
   display: block !important;
   background:
-    linear-gradient(90deg, #15242d 0%, rgba(21,36,45,.84) 24%, rgba(21,36,45,.30) 48%, transparent 72%),
-    linear-gradient(180deg, transparent 76%, #0d151b 100%) !important;
+    linear-gradient(90deg,
+      rgba(6, 14, 21, .58) 0%,
+      rgba(6, 14, 21, .40) 28%,
+      rgba(6, 14, 21, .14) 52%,
+      transparent 72%),
+    linear-gradient(180deg, transparent 70%, rgba(6, 14, 21, .22) 100%) !important;
 }
 
-/* SECTIONS — solid surface + one controlled scenic illustration. */
+.heroCopy,
+.heroCaption,
+.sectionHead {
+  text-shadow: 0 2px 14px rgba(0, 0, 0, .58);
+}
+
 .worldSection,
 .roadmapSection,
 .participationSection,
 .finalSection,
 .streamSection {
   position: relative;
-  overflow: hidden;
   isolation: isolate;
-  background: #142229 !important;
+  overflow: hidden;
+  background: rgba(8, 17, 24, .34) !important;
+}
+
+.roadmapSection,
+.finalSection {
+  background: rgba(9, 18, 26, .42) !important;
 }
 
 .worldSection::before,
+.worldSection::after,
 .roadmapSection::before,
+.roadmapSection::after,
 .participationSection::before,
+.participationSection::after,
 .finalSection::before,
-.streamSection::before {
-  content: "" !important;
-  display: block !important;
-  position: absolute;
-  z-index: -2;
-  top: 50%;
-  width: min(940px, 64vw);
-  aspect-ratio: 1672 / 941;
-  transform: translateY(-50%);
-  background-image: var(--battle-scene) !important;
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-  filter: none !important;
-  opacity: .78;
-  image-rendering: auto !important;
-  pointer-events: none;
-}
-
-.worldSection::after,
-.roadmapSection::after,
-.participationSection::after,
 .finalSection::after,
+.streamSection::before,
 .streamSection::after {
-  content: "" !important;
-  display: block !important;
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.worldSection::before,
-.participationSection::before,
-.streamSection::before {
-  right: -7vw;
-}
-
-.roadmapSection::before,
-.finalSection::before {
-  left: -7vw;
-}
-
-.worldSection::after,
-.participationSection::after,
-.streamSection::after {
-  background: linear-gradient(90deg, #142229 0 30%, rgba(20,34,41,.72) 43%, rgba(20,34,41,.12) 72%, rgba(20,34,41,.30) 100%);
-}
-
-.roadmapSection::after,
-.finalSection::after {
-  background: linear-gradient(270deg, #142229 0 30%, rgba(20,34,41,.72) 43%, rgba(20,34,41,.12) 72%, rgba(20,34,41,.30) 100%);
-}
-
-.worldSection .shell,
-.roadmapSection .shell,
-.participationSection .shell,
-.finalSection .shell,
-.streamSection .shell {
-  position: relative;
-  z-index: 1;
-}
-
-.worldSection .sectionHead,
-.roadmapSection .sectionHead,
-.participationSection .sectionHead,
-.finalSection .sectionHead,
-.streamSection .sectionHead,
-.heroCopy {
-  text-shadow: 0 2px 14px rgba(0,0,0,.48);
+  display: none !important;
 }
 
 .roadCard,
@@ -151,11 +106,10 @@ body::after {
   backdrop-filter: blur(8px);
 }
 
-/* FORUM — keep the same current 2D scene in the hero. */
+/* Forum keeps the same artwork, with contrast only under text. */
 .forumPage {
   position: relative;
-  background: #111c23 !important;
-  image-rendering: auto !important;
+  background: rgba(7, 15, 22, .30) !important;
 }
 
 .forumPage::before,
@@ -166,14 +120,13 @@ body::after {
 .forumHero {
   position: relative;
   overflow: hidden;
-  background-color: #17272f !important;
-  background-image:
-    linear-gradient(90deg, rgba(17,28,35,.88) 0%, rgba(17,28,35,.68) 32%, rgba(17,28,35,.14) 70%, rgba(17,28,35,.24) 100%),
-    var(--battle-scene) !important;
-  background-position: center, center center !important;
-  background-size: auto, cover !important;
-  background-repeat: no-repeat !important;
-  image-rendering: auto !important;
+  background:
+    linear-gradient(90deg,
+      rgba(7, 15, 22, .58) 0%,
+      rgba(7, 15, 22, .34) 34%,
+      rgba(7, 15, 22, .06) 68%,
+      rgba(7, 15, 22, .12) 100%),
+    var(--scene) center 44% / cover no-repeat !important;
 }
 
 .forumHero::after {
@@ -183,59 +136,33 @@ body::after {
 .forumHero > .forumShell {
   position: relative;
   z-index: 1;
-  text-shadow: 0 2px 14px rgba(0,0,0,.55);
+  text-shadow: 0 2px 14px rgba(0,0,0,.58);
 }
 
 .forumSidebar,
 .forumMain {
-  background: rgba(9, 17, 24, .88) !important;
+  background: rgba(7, 15, 22, .78) !important;
   backdrop-filter: blur(8px);
 }
 
-@media (max-width: 900px) {
-  .heroScene {
-    right: -12vw;
-    width: 84vw;
-    opacity: .82 !important;
+@media (max-width: 760px) {
+  body::before {
+    background-position: 50% top !important;
   }
 
   .heroShade {
     background:
-      linear-gradient(90deg, #15242d 0%, rgba(21,36,45,.82) 42%, rgba(21,36,45,.38) 68%, rgba(21,36,45,.12)),
-      linear-gradient(180deg, transparent 72%, #0d151b 100%) !important;
+      linear-gradient(180deg,
+        rgba(6,14,21,.16) 0%,
+        rgba(6,14,21,.30) 46%,
+        rgba(6,14,21,.52) 100%) !important;
   }
 
-  .worldSection::before,
-  .roadmapSection::before,
-  .participationSection::before,
-  .finalSection::before,
-  .streamSection::before {
-    width: 96vw;
-    right: -24vw;
-    left: auto;
-    opacity: .64;
-  }
-
-  .worldSection::after,
-  .roadmapSection::after,
-  .participationSection::after,
-  .finalSection::after,
-  .streamSection::after {
-    background: linear-gradient(90deg, #142229 0 42%, rgba(20,34,41,.64) 70%, rgba(20,34,41,.18) 100%);
-  }
-}
-
-@media (max-width: 620px) {
-  .heroScene {
-    width: 120vw;
-    right: -42vw;
-    top: 100px;
-    bottom: 80px;
-    opacity: .72 !important;
-  }
-
-  .forumHero {
-    background-size: auto, cover !important;
-    background-position: center, center center !important;
+  .worldSection,
+  .roadmapSection,
+  .participationSection,
+  .finalSection,
+  .streamSection {
+    background: rgba(8, 17, 24, .42) !important;
   }
 }
