@@ -44,7 +44,7 @@ jobs:
         run: npm run build
 
       - name: Verify Vercel token
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
@@ -52,7 +52,7 @@ jobs:
           echo "VERCEL_TOKEN is configured"
 
       - name: Ensure Vercel project exists
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
@@ -75,7 +75,7 @@ jobs:
           fi
 
       - name: Configure Vercel project
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
@@ -89,7 +89,7 @@ jobs:
           test "$STATUS" -ge 200 -a "$STATUS" -lt 300
 
       - name: Deploy community-web to production via Vercel REST API
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
@@ -108,7 +108,7 @@ jobs:
           echo "DEPLOYMENT_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
 
       - name: Wait for Vercel production deployment
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
@@ -134,7 +134,7 @@ jobs:
           exit 1
 
       - name: Verify public site, forum and world background
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
         run: |
           for URL in \
             "https://byetale-community.vercel.app/" \
@@ -155,7 +155,7 @@ jobs:
           test "$(wc -c < /tmp/byetale-world.webp)" -gt 1024
 
       - name: Print production URL
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
         run: |
           echo "Production deployment: https://$DEPLOYMENT_URL"
           echo "Stable alias: https://byetale-community.vercel.app"
