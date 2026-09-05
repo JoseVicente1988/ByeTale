@@ -1,28 +1,28 @@
-/* ByeTale Community — the supplied 2D key art is the visible page background. */
+/* ByeTale Community — visible pixel-art world with readable UI over it. */
 
 :root {
-  --world-panel: rgba(9, 18, 26, .66);
-  --world-panel-strong: rgba(8, 16, 24, .76);
+  --world-panel: rgba(10, 20, 28, .60);
+  --world-panel-strong: rgba(9, 18, 26, .70);
 }
 
 html {
-  background: #24445a;
+  background: #476b7e;
 }
 
-/* IMPORTANT: render the artwork ON body. A negative-z pseudo element can sit
-   behind body's own background and become invisible. */
+/* Render the art directly and lift the dark twilight palette with a cool daylight wash. */
 body {
-  background-color: #24445a !important;
+  background-color: #476b7e !important;
   background-image:
     linear-gradient(180deg,
-      rgba(7, 16, 23, .06) 0%,
-      rgba(7, 16, 23, .10) 48%,
-      rgba(7, 16, 23, .22) 100%),
+      rgba(150, 183, 198, .30) 0%,
+      rgba(116, 157, 178, .24) 48%,
+      rgba(92, 137, 154, .22) 100%),
     var(--scene) !important;
   background-position: center top, center top !important;
   background-size: cover, cover !important;
   background-repeat: no-repeat, no-repeat !important;
   background-attachment: fixed, fixed !important;
+  background-blend-mode: screen, normal !important;
 }
 
 body::before,
@@ -30,7 +30,6 @@ body::after {
   display: none !important;
 }
 
-/* Hero leaves most of the key art exposed; shade only the text side. */
 .hero {
   background: transparent !important;
 }
@@ -41,15 +40,16 @@ body::after {
   display: none !important;
 }
 
+/* Shade only the copy area. Most of the landscape stays uncovered. */
 .heroShade {
   display: block !important;
   background:
     linear-gradient(90deg,
-      rgba(6, 14, 21, .50) 0%,
-      rgba(6, 14, 21, .30) 29%,
-      rgba(6, 14, 21, .08) 52%,
-      transparent 70%),
-    linear-gradient(180deg, transparent 78%, rgba(6, 14, 21, .14) 100%) !important;
+      rgba(7, 17, 24, .40) 0%,
+      rgba(7, 17, 24, .22) 28%,
+      rgba(7, 17, 24, .04) 49%,
+      transparent 64%),
+    linear-gradient(180deg, transparent 84%, rgba(7, 17, 24, .09) 100%) !important;
 }
 
 .heroCopy,
@@ -58,7 +58,6 @@ body::after {
   text-shadow: 0 2px 12px rgba(0, 0, 0, .62);
 }
 
-/* Sections are translucent windows over the same world instead of opaque slabs. */
 .worldSection,
 .roadmapSection,
 .participationSection,
@@ -67,12 +66,12 @@ body::after {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: rgba(12, 27, 37, .16) !important;
+  background: rgba(25, 52, 65, .07) !important;
 }
 
 .roadmapSection,
 .finalSection {
-  background: rgba(12, 27, 37, .22) !important;
+  background: rgba(25, 52, 65, .11) !important;
 }
 
 .worldSection::before,
@@ -88,36 +87,36 @@ body::after {
   display: none !important;
 }
 
-/* Content remains readable without hiding the scenery. */
 .roadCard,
 .participationCard,
 .manifesto,
 .featureCard,
 .streamBand {
   background: var(--world-panel) !important;
-  backdrop-filter: blur(6px) saturate(1.08);
+  backdrop-filter: blur(5px) saturate(1.08);
 }
 
 .featureLarge {
   background:
-    linear-gradient(180deg, rgba(7, 15, 22, .03), rgba(7, 15, 22, .52)),
+    linear-gradient(180deg, rgba(7, 15, 22, .01), rgba(7, 15, 22, .42)),
     var(--scene) center 46% / cover no-repeat !important;
 }
 
-/* Forum gets the image directly too — never behind an opaque forum background. */
+/* Forum: same brighter world, directly on the page rather than behind it. */
 .forumPage {
   position: relative;
-  background-color: #24445a !important;
+  background-color: #476b7e !important;
   background-image:
     linear-gradient(180deg,
-      rgba(7, 15, 22, .08),
-      rgba(7, 15, 22, .18) 55%,
-      rgba(7, 15, 22, .28)),
+      rgba(144, 179, 194, .27),
+      rgba(108, 151, 170, .20) 55%,
+      rgba(86, 130, 148, .18)),
     var(--scene) !important;
   background-position: center, center top !important;
   background-size: cover, cover !important;
   background-repeat: no-repeat, no-repeat !important;
   background-attachment: fixed, fixed !important;
+  background-blend-mode: screen, normal !important;
 }
 
 .forumPage::before,
@@ -130,9 +129,9 @@ body::after {
   overflow: hidden;
   background:
     linear-gradient(90deg,
-      rgba(7, 15, 22, .45) 0%,
-      rgba(7, 15, 22, .22) 34%,
-      transparent 68%),
+      rgba(7, 17, 24, .34) 0%,
+      rgba(7, 17, 24, .14) 34%,
+      transparent 62%),
     var(--scene) center 42% / cover no-repeat !important;
 }
 
@@ -148,12 +147,12 @@ body::after {
 
 .forumSidebar,
 .forumMain {
-  background: rgba(8, 17, 25, .70) !important;
-  backdrop-filter: blur(7px) saturate(1.05);
+  background: rgba(8, 18, 26, .64) !important;
+  backdrop-filter: blur(6px) saturate(1.05);
 }
 
 .forumHeader {
-  background: rgba(8, 17, 25, .70) !important;
+  background: rgba(8, 18, 26, .66) !important;
 }
 
 @media (max-width: 760px) {
@@ -166,9 +165,9 @@ body::after {
   .heroShade {
     background:
       linear-gradient(180deg,
-        rgba(6,14,21,.08) 0%,
-        rgba(6,14,21,.18) 44%,
-        rgba(6,14,21,.36) 100%) !important;
+        rgba(7,17,24,.04) 0%,
+        rgba(7,17,24,.11) 44%,
+        rgba(7,17,24,.26) 100%) !important;
   }
 
   .worldSection,
@@ -176,6 +175,6 @@ body::after {
   .participationSection,
   .finalSection,
   .streamSection {
-    background: rgba(12, 27, 37, .20) !important;
+    background: rgba(25, 52, 65, .10) !important;
   }
 }
