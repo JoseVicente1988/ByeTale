@@ -5,6 +5,7 @@ import "./scene-runtime.css";
 import "./world-backgrounds.css";
 import "./mobile.css";
 import "./ux.css";
+import "./visual-reference.css";
 
 export const metadata: Metadata = {
   title: {
