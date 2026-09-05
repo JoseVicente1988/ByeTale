@@ -7,6 +7,7 @@ import "./mobile.css";
 import "./ux.css";
 import "./visual-reference.css";
 import "./visual-fix.css";
+import "./visibility-pass.css";
 
 export const metadata: Metadata = {
   title: {
