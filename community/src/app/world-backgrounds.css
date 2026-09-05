@@ -1,8 +1,12 @@
 /*
  * ByeTale Community backgrounds.
- * Uses the current ByeTale 2D menu scene already embedded in assets.css.
- * No generated public asset, no legacy JPEG, no full-screen black veil.
+ * Uses the real current ByeTale 2D menu artwork committed in public/.
+ * No generated asset, no legacy JPEG and no full-screen black veil.
  */
+
+:root {
+  --scene: url("/byetale-world.webp");
+}
 
 body {
   background: #14242d;
