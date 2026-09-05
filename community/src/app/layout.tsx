@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import AccountDock from "./components/account-dock";
 import "./globals.css";
 import "./scene-runtime.css";
 import "./world-backgrounds.css";
+import "./mobile.css";
 
 export const metadata: Metadata = {
   title: {
@@ -14,6 +15,12 @@ export const metadata: Metadata = {
   icons: {
     icon: "/byetale-icon.svg",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
