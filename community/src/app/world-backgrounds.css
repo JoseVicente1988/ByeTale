@@ -1,15 +1,11 @@
 /*
  * ByeTale Community backgrounds.
- * The current ByeTale 2D scene is extracted during build to a real public asset.
- * This file is imported last, so it deliberately overrides the legacy inline --scene.
+ * Uses the current ByeTale 2D menu scene already embedded in assets.css.
+ * No generated public asset, no legacy JPEG, no full-screen black veil.
  */
 
-:root {
-  --scene: url("/byetale-world.webp");
-}
-
 body {
-  background: #152129;
+  background: #14242d;
 }
 
 body::before,
@@ -17,15 +13,17 @@ body::after {
   display: none !important;
 }
 
-/* Hero: show the actual ByeTale 2D artwork with no full-screen dark veil. */
+.hero {
+  background: #14242d !important;
+}
+
 .heroScene {
-  right: clamp(-110px, calc((100vw - 1500px) / 2), 10px);
-  width: min(82vw, 1180px);
-  background: var(--scene) center center / contain no-repeat !important;
-  filter: saturate(1.16) contrast(1.02) brightness(1.12);
-  opacity: 1;
-  transform: scaleX(-1) translateZ(0);
-  transform-origin: center;
+  right: clamp(-80px, calc((100vw - 1500px) / 2), 12px);
+  width: min(86vw, 1220px);
+  background: var(--scene) 28% center / cover no-repeat !important;
+  filter: saturate(1.12) contrast(1.02) brightness(1.12);
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 .heroScene::before,
@@ -34,7 +32,6 @@ body::after {
   display: none !important;
 }
 
-/* Put the actual image on the section, not in an overlay pseudo-element. */
 .worldSection,
 .roadmapSection,
 .participationSection,
@@ -43,33 +40,18 @@ body::after {
   position: relative;
   overflow: hidden;
   isolation: auto;
-  background-color: #1a2a32 !important;
+  background-color: #1a2d36 !important;
   background-image: var(--scene) !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
 }
 
-.worldSection {
-  background-position: 20% 52% !important;
-}
+.worldSection { background-position: 22% 50% !important; }
+.roadmapSection { background-position: 18% 44% !important; }
+.participationSection { background-position: 24% 58% !important; }
+.finalSection { background-position: 18% 66% !important; }
+.streamSection { background-position: 16% 42% !important; }
 
-.roadmapSection {
-  background-position: 18% 46% !important;
-}
-
-.participationSection {
-  background-position: 20% 58% !important;
-}
-
-.finalSection {
-  background-position: 20% 66% !important;
-}
-
-.streamSection {
-  background-position: 18% 42% !important;
-}
-
-/* Kill full-section layers. Readability comes from cards and local text shadow. */
 .worldSection::before,
 .worldSection::after,
 .roadmapSection::before,
@@ -87,25 +69,25 @@ body::after {
 .roadmapSection .sectionHead,
 .participationSection .sectionHead,
 .finalSection .sectionHead,
-.streamSection .sectionHead {
-  text-shadow: 0 2px 16px rgba(0,0,0,.72);
+.streamSection .sectionHead,
+.heroCopy {
+  text-shadow: 0 2px 16px rgba(0,0,0,.58);
 }
 
-/* Keep cards readable while leaving the landscape visible around them. */
 .roadCard,
 .participationCard,
 .manifesto,
 .featureCard,
 .streamBand {
-  backdrop-filter: blur(7px);
+  background-color: rgba(10, 18, 23, .66) !important;
+  backdrop-filter: blur(6px);
 }
 
-/* Forum: real scene on page and hero; no pseudo veil. */
 .forumPage {
   position: relative;
-  background-color: #17252d !important;
+  background-color: #18303a !important;
   background-image: var(--scene) !important;
-  background-position: 18% 58% !important;
+  background-position: 20% 58% !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
@@ -133,20 +115,21 @@ body::after {
 .forumHero > .forumShell {
   position: relative;
   z-index: 1;
-  text-shadow: 0 2px 18px rgba(0,0,0,.78);
+  text-shadow: 0 2px 16px rgba(0,0,0,.62);
 }
 
 .forumSidebar,
 .forumMain {
-  background: rgba(9, 17, 24, .62) !important;
-  backdrop-filter: blur(7px);
+  background: rgba(9, 17, 24, .68) !important;
+  backdrop-filter: blur(6px);
 }
 
 @media (max-width: 760px) {
   .heroScene {
-    width: 112vw;
-    right: -38vw;
-    filter: saturate(1.12) brightness(1.08);
+    width: 118vw;
+    right: -34vw;
+    background-position: 24% center !important;
+    filter: saturate(1.08) brightness(1.08);
   }
 
   .worldSection,
@@ -156,7 +139,7 @@ body::after {
   .streamSection,
   .forumHero,
   .forumPage {
-    background-position: 16% center !important;
+    background-position: 18% center !important;
   }
 
   .forumPage {
