@@ -1,0 +1,386 @@
+/* ByeTale Community — consolidated pixel/RPG visual layer.
+   This file is intentionally loaded last. */
+:root {
+  --scene: url('/byetale-world-pixel.svg');
+  --pixel-bg: #071016;
+  --pixel-panel: #101923;
+  --pixel-panel-hi: #172431;
+  --pixel-panel-low: #0a1119;
+  --pixel-line: #344858;
+  --pixel-line-hi: #667988;
+  --pixel-gold: #d8aa53;
+  --pixel-gold-hi: #f1d17d;
+  --pixel-red: #782028;
+  --pixel-red-hi: #ad3038;
+  --pixel-cream: #f6ecd4;
+  --pixel-muted: #aeb8bc;
+  --pixel-cut: polygon(0 10px,10px 10px,10px 0,calc(100% - 10px) 0,calc(100% - 10px) 10px,100% 10px,100% calc(100% - 10px),calc(100% - 10px) calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,10px calc(100% - 10px),0 calc(100% - 10px));
+  --pixel-cut-sm: polygon(0 6px,6px 6px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 6px),0 calc(100% - 6px));
+}
+
+html { background: var(--pixel-bg) !important; }
+body {
+  color: var(--pixel-cream) !important;
+  background:
+    linear-gradient(180deg, rgba(5,10,14,.20), rgba(5,10,14,.45) 68%, rgba(5,10,14,.72)),
+    var(--scene) center top / cover fixed no-repeat !important;
+}
+body::before,
+body::after { display: none !important; }
+
+/* Header: hard RPG HUD, no glass pill aesthetic */
+.siteHeader,
+.forumHeader {
+  background: #0a1119f2 !important;
+  border-bottom: 3px solid var(--pixel-red) !important;
+  box-shadow: 0 3px 0 var(--pixel-gold), 0 8px 0 rgba(0,0,0,.34) !important;
+  backdrop-filter: none !important;
+}
+.brandIcon {
+  border: 2px solid var(--pixel-gold) !important;
+  border-radius: 0 !important;
+  clip-path: var(--pixel-cut-sm);
+  box-shadow: 3px 3px 0 #020407 !important;
+  image-rendering: pixelated;
+}
+.brandCopy strong,
+.forumBrand { color: var(--pixel-cream) !important; text-shadow: 2px 2px 0 #000; }
+.brandCopy small,
+.forumBrand small { color: #aeb5b5 !important; }
+.navLinks a,
+.forumNavLinks a {
+  border-radius: 0 !important;
+  color: #d9d8cf !important;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.navLinks a:hover,
+.forumNavLinks a:hover {
+  color: #fff4cf !important;
+  background: var(--pixel-red) !important;
+  box-shadow: inset 0 -2px 0 var(--pixel-gold);
+}
+.navLinks a::after { display: none !important; }
+.streamPill {
+  border: 2px solid #6d536e !important;
+  border-radius: 0 !important;
+  clip-path: var(--pixel-cut-sm);
+  background: #191321 !important;
+  box-shadow: 3px 3px 0 #020407;
+}
+
+/* HERO: full scalable pixel world, no enlarged castle bitmap */
+.hero {
+  min-height: 780px !important;
+  padding: 132px 0 96px !important;
+  background:
+    linear-gradient(90deg, rgba(4,9,13,.72) 0%, rgba(4,9,13,.45) 36%, rgba(4,9,13,.12) 68%, rgba(4,9,13,.30) 100%),
+    linear-gradient(180deg, rgba(3,7,10,.10), transparent 55%, rgba(3,7,10,.64)),
+    var(--scene) center 42% / cover no-repeat !important;
+  border-bottom: 4px solid var(--pixel-red) !important;
+  box-shadow: inset 0 -3px 0 var(--pixel-gold);
+}
+.heroScene,
+.heroShade { display: none !important; }
+.heroLayout { min-height: 560px !important; }
+.heroCopy {
+  width: min(650px, 58vw) !important;
+  padding: 34px 38px 38px !important;
+  border: 2px solid var(--pixel-line-hi);
+  clip-path: var(--pixel-cut);
+  background:
+    linear-gradient(180deg, rgba(25,37,49,.95), rgba(9,16,23,.96));
+  box-shadow:
+    inset 0 0 0 2px #091018,
+    inset 0 5px 0 var(--pixel-red),
+    8px 8px 0 rgba(1,3,5,.68) !important;
+}
+.heroCopy::before {
+  content: '';
+  display: block;
+  width: 92px;
+  height: 4px;
+  margin: -16px 0 20px;
+  background: var(--pixel-gold);
+  box-shadow: 96px 0 0 var(--pixel-red);
+}
+.eyebrow,
+.label,
+.roadTop span,
+.tech span,
+.threadBadge,
+.officialMark {
+  border-radius: 0 !important;
+  clip-path: var(--pixel-cut-sm);
+}
+.eyebrow {
+  border: 1px solid var(--pixel-gold) !important;
+  background: #0c141d !important;
+  color: var(--pixel-gold-hi) !important;
+  backdrop-filter: none !important;
+}
+.hero h1 {
+  color: #fff1c9 !important;
+  text-shadow: 4px 4px 0 #2b0b0f, 7px 7px 0 rgba(0,0,0,.60) !important;
+  letter-spacing: .035em !important;
+}
+.hero h1::after {
+  height: 4px !important;
+  background: linear-gradient(90deg, var(--pixel-red-hi) 0 34%, var(--pixel-gold) 34% 78%, transparent 78%) !important;
+  box-shadow: none !important;
+}
+.heroTagline { color: var(--pixel-gold-hi) !important; text-shadow: 2px 2px 0 #000 !important; }
+.lead { color: #e1ded5 !important; text-shadow: 2px 2px 0 #000 !important; }
+
+/* Buttons and form controls */
+.button,
+.forumButton,
+.tab,
+.modalTabs button,
+.categoryButton,
+.threadBack {
+  border-radius: 0 !important;
+}
+.button,
+.forumButton,
+.tab,
+.modalTabs button {
+  clip-path: var(--pixel-cut-sm);
+  border: 2px solid var(--pixel-line-hi) !important;
+  box-shadow: 4px 4px 0 #030609 !important;
+  transition: transform 90ms linear, filter 90ms linear !important;
+}
+.button:hover,
+.forumButton:hover,
+.tab:hover,
+.modalTabs button:hover { transform: translate(2px,2px) !important; box-shadow: 2px 2px 0 #030609 !important; }
+.button.primary,
+.forumButton.primary,
+.tabActive {
+  color: #fff5d5 !important;
+  border-color: var(--pixel-gold) !important;
+  background: linear-gradient(180deg, var(--pixel-red-hi), var(--pixel-red)) !important;
+  text-shadow: 1px 1px 0 #31090c;
+}
+.button.secondary,
+.forumButton {
+  color: #eee8da !important;
+  background: linear-gradient(180deg, #1b2a37, #111b25) !important;
+}
+
+/* Shared RPG panels */
+.quickCard,
+.featureCard,
+.roadCard,
+.participationCard,
+.streamBand,
+.twitchFrame,
+.manifesto,
+.forumSidebar,
+.forumMain,
+.forumStat,
+.forumModal,
+.threadDetailHead,
+.replyBox,
+.rules,
+.card,
+.identity {
+  border-radius: 0 !important;
+  clip-path: var(--pixel-cut);
+  border: 2px solid var(--pixel-line) !important;
+  background: linear-gradient(180deg, rgba(22,34,45,.97), rgba(9,16,23,.98)) !important;
+  box-shadow: inset 0 0 0 2px #070c12, 6px 6px 0 rgba(0,0,0,.50) !important;
+  backdrop-filter: none !important;
+}
+.quickCard::before,
+.featureCard::before,
+.roadCard::before,
+.participationCard::before,
+.manifesto::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--pixel-red-hi) 0 30%, var(--pixel-gold) 30% 66%, transparent 66%);
+  pointer-events: none;
+}
+.quickCard,
+.featureCard,
+.roadCard,
+.participationCard,
+.manifesto { position: relative; }
+.quickCard:hover,
+.featureCard:hover,
+.roadCard:hover,
+.participationCard:hover {
+  transform: translate(-2px,-2px) !important;
+  border-color: var(--pixel-gold) !important;
+  box-shadow: inset 0 0 0 2px #070c12, 8px 8px 0 rgba(0,0,0,.55) !important;
+}
+
+/* Homepage section backgrounds: scene remains visible, panels carry contrast */
+.quickStart,
+.worldSection,
+.roadmapSection,
+.participationSection,
+.streamSection,
+.finalSection,
+footer {
+  background: rgba(6,12,17,.52) !important;
+}
+.worldSection::before,
+.roadmapSection::before,
+.participationSection::before,
+.streamSection::before,
+.finalSection::before,
+.worldSection::after,
+.roadmapSection::after,
+.participationSection::after,
+.finalSection::after { display: none !important; }
+.section {
+  border-top: 1px solid rgba(216,170,83,.20);
+  border-bottom: 1px solid rgba(120,32,40,.30);
+}
+.sectionHead > div > span,
+.quickIntro small {
+  color: var(--pixel-gold-hi) !important;
+  letter-spacing: .14em;
+}
+.sectionHead h2 { color: #fff0cb !important; text-shadow: 3px 3px 0 rgba(0,0,0,.45); }
+.sectionHead p,
+.featureCard p,
+.roadCard p,
+.participationCard p { color: #bbc5c7 !important; }
+.featureNumber,
+.participationIndex { color: var(--pixel-red-hi) !important; text-shadow: 1px 1px 0 #000; }
+.label.gold,
+.roadTop span { color: var(--pixel-gold-hi) !important; }
+.roadTop { border-bottom: 1px dashed #4a5a65; padding-bottom: 10px; }
+.participationCard i { color: var(--pixel-gold-hi) !important; font-style: normal; }
+.participationCard a { color: var(--pixel-gold-hi) !important; }
+
+/* Twitch frame like a game window */
+.streamBand,
+.twitchFrame { border-color: #584161 !important; }
+.twitchFrame { overflow: hidden; }
+.twitchFooter {
+  border-top: 3px solid var(--pixel-red) !important;
+  background: #0c131c !important;
+}
+.streamStatus { font-weight: 900; text-transform: uppercase; letter-spacing: .10em; }
+
+/* FORUM — same world, same HUD language */
+.forumPage {
+  background:
+    linear-gradient(180deg, rgba(4,9,13,.32), rgba(4,9,13,.64)),
+    var(--scene) center top / cover fixed no-repeat !important;
+}
+.forumPage::before { display: none !important; }
+.forumHero {
+  background:
+    linear-gradient(90deg, rgba(5,10,15,.76), rgba(5,10,15,.34) 55%, rgba(5,10,15,.24)),
+    var(--scene) center 43% / cover no-repeat !important;
+  border-bottom: 4px solid var(--pixel-red) !important;
+  box-shadow: inset 0 -3px 0 var(--pixel-gold);
+}
+.forumHero::after { display:none !important; }
+.forumSidebar,
+.forumMain { border-color: #3d5262 !important; }
+.forumStat {
+  min-width: 110px;
+  padding: 12px 14px !important;
+  border-color: #566573 !important;
+}
+.forumStat b { color: var(--pixel-gold-hi) !important; }
+.forumToolbar { padding-top: 26px !important; }
+.forumSearch input,
+.replyBox textarea,
+.modalForm textarea,
+.modalForm input,
+.modalForm select {
+  border-radius: 0 !important;
+  clip-path: var(--pixel-cut-sm);
+  border: 2px solid #354957 !important;
+  background: #09131c !important;
+  color: #f5efdf !important;
+  box-shadow: inset 2px 2px 0 #030609;
+}
+.categoryButton {
+  border: 1px solid transparent !important;
+  clip-path: var(--pixel-cut-sm);
+}
+.categoryButton:hover,
+.categoryButton.active {
+  border-color: var(--pixel-gold) !important;
+  background: #31151b !important;
+  box-shadow: inset 4px 0 0 var(--pixel-red-hi);
+}
+.categoryIcon,
+.avatar {
+  border-radius: 0 !important;
+  clip-path: var(--pixel-cut-sm);
+  border: 1px solid #556a77 !important;
+  background: #0a141d !important;
+}
+.threadRow { border-top: 1px solid #263744 !important; }
+.threadRow:hover { background: #151f29 !important; }
+.threadTitle { color: #fff0cc !important; }
+.threadDetailHead { border-bottom: 3px solid var(--pixel-red) !important; }
+.post { border-top: 2px solid #233440 !important; }
+.postAuthor { background: #0c151e !important; }
+.postBody { color: #d4dad7 !important; }
+.forumModal { border-color: var(--pixel-gold) !important; }
+.modalHead { border-bottom: 3px solid var(--pixel-red) !important; }
+
+/* Floating account dock */
+[class*='account-dock_dock'] {
+  border-radius: 0 !important;
+  clip-path: var(--pixel-cut-sm);
+  border: 2px solid var(--pixel-gold) !important;
+  background: #101821 !important;
+  box-shadow: 4px 4px 0 #020406 !important;
+}
+
+/* Account route — override module output by stable structural selectors */
+body:has(form) main[class*='account_page'] {
+  background:
+    linear-gradient(90deg, rgba(5,10,14,.46), rgba(5,10,14,.16) 55%, rgba(5,10,14,.38)),
+    var(--scene) center 43% / cover fixed no-repeat !important;
+}
+main[class*='account_page'] section[class*='account_card'],
+main[class*='account_page'] [class*='account_rules'],
+main[class*='account_page'] [class*='account_identity'] {
+  border-radius: 0 !important;
+  clip-path: var(--pixel-cut);
+  border: 2px solid var(--pixel-line-hi) !important;
+  background: linear-gradient(180deg, rgba(22,34,45,.97), rgba(9,16,23,.98)) !important;
+  box-shadow: inset 0 0 0 2px #070c12, 6px 6px 0 rgba(0,0,0,.55) !important;
+  backdrop-filter: none !important;
+}
+main[class*='account_page'] button,
+main[class*='account_page'] a[class*='account_button'] {
+  border-radius: 0 !important;
+  clip-path: var(--pixel-cut-sm);
+  box-shadow: 4px 4px 0 #030609 !important;
+}
+main[class*='account_page'] input {
+  border-radius: 0 !important;
+  border: 2px solid #354957 !important;
+  background: #09131c !important;
+}
+
+@media (max-width: 900px) {
+  body, .forumPage { background-attachment: scroll !important; }
+  .hero { min-height: 720px !important; background-position: 58% 42% !important; }
+  .heroCopy { width: min(680px,100%) !important; padding: 28px !important; }
+  .siteHeader { box-shadow: 0 2px 0 var(--pixel-gold) !important; }
+}
+@media (max-width: 600px) {
+  :root { --pixel-cut: var(--pixel-cut-sm); }
+  .hero { min-height: 660px !important; padding-top: 104px !important; }
+  .heroCopy { padding: 22px 18px 24px !important; box-shadow: inset 0 0 0 2px #091018, inset 0 4px 0 var(--pixel-red), 4px 4px 0 rgba(1,3,5,.68) !important; }
+  .hero h1 { font-size: clamp(3.6rem,20vw,5.3rem) !important; }
+  .quickCard,.featureCard,.roadCard,.participationCard,.streamBand,.twitchFrame,.manifesto,.forumSidebar,.forumMain { box-shadow: inset 0 0 0 1px #070c12, 4px 4px 0 rgba(0,0,0,.45) !important; }
+}
