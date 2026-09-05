@@ -1,0 +1,164 @@
+/* Final visual pass: keep ByeTale atmospheric without burying the 2D artwork in black overlays. */
+
+:root {
+  --bg: #18242b;
+  --bg-soft: #202e36;
+  --panel: rgba(20, 31, 37, 0.74);
+  --panel-strong: rgba(18, 28, 34, 0.86);
+}
+
+html,
+body {
+  background: #18242b !important;
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 78% 8%, rgba(126, 177, 187, 0.22), transparent 34rem),
+    linear-gradient(180deg, #22333b 0%, #19272e 44rem, #142129 100%) !important;
+}
+
+body::before {
+  opacity: .58 !important;
+  filter: blur(38px) saturate(1.02) brightness(.92) !important;
+}
+
+body::after {
+  background: linear-gradient(180deg, rgba(17, 28, 34, .02), rgba(13, 24, 29, .18) 72%, rgba(12, 21, 26, .34) 100%) !important;
+}
+
+.siteHeader {
+  background: linear-gradient(180deg, rgba(18, 29, 35, .76), rgba(18, 29, 35, .48)) !important;
+}
+
+.hero {
+  background: linear-gradient(180deg, rgba(30, 47, 55, .10), rgba(23, 37, 43, .18)) !important;
+  border-bottom-color: rgba(255,255,255,.11) !important;
+}
+
+.heroScene {
+  opacity: 1 !important;
+  filter: saturate(1.14) contrast(1.02) brightness(1.18) !important;
+}
+
+.heroScene::after {
+  background:
+    linear-gradient(90deg, rgba(18, 29, 35, .66) 0%, rgba(18, 29, 35, .34) 18%, rgba(18, 29, 35, .07) 42%, transparent 66%),
+    linear-gradient(180deg, transparent 0 72%, rgba(18, 29, 35, .30) 100%) !important;
+}
+
+.heroShade {
+  background:
+    linear-gradient(90deg, rgba(20, 32, 38, .72) 0%, rgba(20, 32, 38, .48) 22%, rgba(20, 32, 38, .18) 46%, transparent 70%),
+    linear-gradient(180deg, rgba(22, 35, 41, .05), transparent 72%, rgba(17, 28, 34, .38) 100%) !important;
+}
+
+.hero h1,
+.heroTagline,
+.lead {
+  text-shadow: 0 2px 8px rgba(0,0,0,.48), 0 8px 26px rgba(0,0,0,.34) !important;
+}
+
+.quickStart,
+.section,
+.streamSection,
+.roadmapSection,
+.participationSection,
+.finalSection {
+  background-color: transparent !important;
+}
+
+.quickStartInner,
+.streamBand,
+.featureCard,
+.roadmapItem,
+.processCard,
+.participationCard,
+.finalCard {
+  background-color: rgba(19, 31, 37, .70) !important;
+  border-color: rgba(238, 217, 170, .16) !important;
+  box-shadow: 0 18px 50px rgba(5, 10, 13, .18) !important;
+}
+
+.quickCard {
+  background: rgba(29, 44, 51, .72) !important;
+}
+
+.worldSection::before {
+  opacity: .92 !important;
+  filter: saturate(1.08) contrast(1.02) brightness(1.10) !important;
+  background-image:
+    linear-gradient(180deg, rgba(18,31,37,.08), rgba(18,31,37,.14) 58%, rgba(15,27,33,.28)),
+    var(--scene) !important;
+}
+
+.roadmapSection::before {
+  opacity: .88 !important;
+  filter: saturate(1.02) contrast(1.03) brightness(1.06) !important;
+  background-image:
+    radial-gradient(circle at 76% 32%, rgba(128,176,188,.15), transparent 34%),
+    linear-gradient(180deg, rgba(16,29,35,.10), rgba(18,31,37,.20), rgba(14,25,30,.32)),
+    var(--scene) !important;
+}
+
+.participationSection::before {
+  opacity: .90 !important;
+  filter: sepia(.04) saturate(1.06) contrast(1.02) brightness(1.08) !important;
+  background-image:
+    radial-gradient(circle at 24% 38%, rgba(215,178,104,.14), transparent 30%),
+    linear-gradient(90deg, rgba(17,29,34,.22), rgba(17,29,34,.08), rgba(17,29,34,.22)),
+    var(--scene) !important;
+}
+
+.finalSection::before,
+.streamSection::before {
+  opacity: .80 !important;
+  filter: saturate(.98) brightness(1.02) !important;
+}
+
+.forumPage {
+  background: #17242b !important;
+}
+
+.forumPage::before {
+  background:
+    linear-gradient(180deg, rgba(19,31,37,.28), rgba(17,29,35,.22) 50%, rgba(15,26,31,.40)),
+    var(--scene) 45% 65% / cover no-repeat !important;
+  filter: saturate(1.02) brightness(1.04) !important;
+}
+
+.forumHero {
+  background:
+    linear-gradient(90deg, rgba(18,30,36,.68) 0%, rgba(18,30,36,.36) 44%, rgba(18,30,36,.10) 100%),
+    var(--scene) 72% 48% / cover no-repeat !important;
+}
+
+.forumHeader,
+.forumSidebar,
+.forumMain,
+.forumModal {
+  background-color: rgba(18, 30, 36, .86) !important;
+}
+
+@media (max-width: 760px) {
+  body::before {
+    opacity: .66 !important;
+    filter: blur(24px) saturate(1.04) brightness(.98) !important;
+  }
+
+  .heroScene {
+    opacity: .94 !important;
+    filter: saturate(1.12) brightness(1.14) !important;
+  }
+
+  .heroShade {
+    background:
+      linear-gradient(180deg, rgba(20,32,38,.24), rgba(20,32,38,.36) 54%, rgba(17,28,34,.54) 100%) !important;
+  }
+
+  .worldSection::before,
+  .roadmapSection::before,
+  .participationSection::before {
+    opacity: .95 !important;
+  }
+}
