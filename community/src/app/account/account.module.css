@@ -3,29 +3,18 @@
   min-height: 100vh;
   padding: 118px 20px 72px;
   overflow: hidden;
-  background-color: #476b7e;
-  background-image:
-    linear-gradient(180deg, rgba(150,183,198,.30), rgba(104,150,170,.20)),
-    var(--scene);
-  background-size: cover, cover;
-  background-position: center top, center top;
-  background-repeat: no-repeat, no-repeat;
-  background-blend-mode: screen, normal;
-  image-rendering: auto;
+  background-color: #6d8793;
+  background-image: var(--scene);
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
   color: #f2eee6;
 }
 
-.page::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(7,15,22,.20) 0%, rgba(7,15,22,.02) 46%, rgba(7,15,22,.08) 100%),
-    linear-gradient(180deg, transparent 72%, rgba(7,15,22,.14) 100%);
+.page::before,
+.page::after {
+  display: none;
 }
-
-.page::after { display: none; }
 
 .shell {
   position: relative;
@@ -39,8 +28,11 @@
 }
 
 .copy {
-  padding-top: 38px;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.62);
+  padding: 34px 30px 30px;
+  margin-left: -30px;
+  border-radius: 20px;
+  background: linear-gradient(90deg, rgba(7, 16, 23, .58), rgba(7, 16, 23, .28) 70%, transparent);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.68);
 }
 
 .eyebrow {
@@ -73,8 +65,8 @@
   padding: 18px;
   border: 1px solid rgba(255, 255, 255, 0.20);
   border-radius: 14px;
-  background: rgba(8, 16, 23, 0.42);
-  backdrop-filter: blur(7px);
+  background: rgba(8, 16, 23, 0.46);
+  backdrop-filter: blur(6px);
 }
 
 .rule {
@@ -94,11 +86,9 @@
 .card {
   border: 1px solid rgba(232, 201, 132, 0.28);
   border-radius: 20px;
-  background:
-    linear-gradient(160deg, rgba(20, 31, 39, 0.72), rgba(8, 17, 24, 0.82)),
-    radial-gradient(circle at 80% 0%, rgba(205, 164, 91, 0.12), transparent 34%);
-  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(12px);
+  background: rgba(8, 17, 24, 0.72);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.30);
+  backdrop-filter: blur(10px);
   overflow: hidden;
 }
 
@@ -172,7 +162,7 @@
   border-radius: 10px;
   outline: none;
   color: #fffaf1;
-  background: rgba(8, 17, 24, 0.50);
+  background: rgba(8, 17, 24, 0.52);
   font: inherit;
 }
 
@@ -261,7 +251,7 @@
 @media (max-width: 820px) {
   .page {
     padding-top: 88px;
-    background-position: center top, 58% top;
+    background-position: 58% top;
   }
 
   .shell {
@@ -270,6 +260,8 @@
   }
 
   .copy {
-    padding-top: 0;
+    margin-left: 0;
+    padding: 24px 20px;
+    background: rgba(7, 16, 23, .48);
   }
 }
