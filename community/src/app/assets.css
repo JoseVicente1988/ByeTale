@@ -1,5 +1,7 @@
-/* Canonical ByeTale Community background supplied by the project owner. */
+/* Canonical visual scene for ByeTale Community.
+ * Use the inspectable pixel-art landscape so the site never collapses into
+ * an effectively black background. */
 :root {
-  --scene: url("/byetale-world-background.webp");
-  --battle-scene: var(--scene);
+  --scene: url("/byetale-world-pixel.svg");
+  --battle-scene: url("/byetale-battle.webp");
 }
