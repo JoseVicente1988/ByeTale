@@ -3,8 +3,8 @@
   min-height: 100vh;
   padding: 118px 20px 72px;
   overflow: hidden;
-  background-color: #6d8793;
-  background-image: var(--scene);
+  background-color: #79a9c4;
+  background-image: url('/byetale-world-day.svg');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -31,7 +31,7 @@
   padding: 34px 30px 30px;
   margin-left: -30px;
   border-radius: 20px;
-  background: linear-gradient(90deg, rgba(7, 16, 23, .58), rgba(7, 16, 23, .28) 70%, transparent);
+  background: linear-gradient(90deg, rgba(7, 16, 23, .54), rgba(7, 16, 23, .22) 72%, transparent);
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.68);
 }
 
@@ -65,7 +65,7 @@
   padding: 18px;
   border: 1px solid rgba(255, 255, 255, 0.20);
   border-radius: 14px;
-  background: rgba(8, 16, 23, 0.46);
+  background: rgba(8, 16, 23, 0.43);
   backdrop-filter: blur(6px);
 }
 
@@ -86,8 +86,8 @@
 .card {
   border: 1px solid rgba(232, 201, 132, 0.28);
   border-radius: 20px;
-  background: rgba(8, 17, 24, 0.72);
-  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.30);
+  background: rgba(8, 17, 24, 0.68);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(10px);
   overflow: hidden;
 }
@@ -123,7 +123,7 @@
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 10px;
   color: #eee7dc;
-  background: rgba(10, 21, 29, 0.48);
+  background: rgba(10, 21, 29, 0.46);
   font: inherit;
   font-size: 0.78rem;
   font-weight: 800;
@@ -162,7 +162,7 @@
   border-radius: 10px;
   outline: none;
   color: #fffaf1;
-  background: rgba(8, 17, 24, 0.52);
+  background: rgba(8, 17, 24, 0.50);
   font: inherit;
 }
 
@@ -215,7 +215,7 @@
   padding: 16px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
-  background: rgba(8, 17, 24, 0.42);
+  background: rgba(8, 17, 24, 0.40);
 }
 
 .identity strong,
@@ -262,6 +262,6 @@
   .copy {
     margin-left: 0;
     padding: 24px 20px;
-    background: rgba(7, 16, 23, .48);
+    background: rgba(7, 16, 23, .42);
   }
 }
