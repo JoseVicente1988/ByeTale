@@ -1,28 +1,22 @@
-/* ByeTale Community — visible pixel-art world with readable UI over it. */
+/* ByeTale Community — show the 2D game artwork directly. */
 
 :root {
-  --world-panel: rgba(10, 20, 28, .60);
-  --world-panel-strong: rgba(9, 18, 26, .70);
+  --world-panel: rgba(8, 18, 25, .56);
+  --world-panel-strong: rgba(7, 16, 23, .66);
 }
 
 html {
-  background: #476b7e;
+  background: #6d8793;
 }
 
-/* Render the art directly and lift the dark twilight palette with a cool daylight wash. */
+/* The game artwork is the background. No full-screen tint or blend layer in front of it. */
 body {
-  background-color: #476b7e !important;
-  background-image:
-    linear-gradient(180deg,
-      rgba(150, 183, 198, .30) 0%,
-      rgba(116, 157, 178, .24) 48%,
-      rgba(92, 137, 154, .22) 100%),
-    var(--scene) !important;
-  background-position: center top, center top !important;
-  background-size: cover, cover !important;
-  background-repeat: no-repeat, no-repeat !important;
-  background-attachment: fixed, fixed !important;
-  background-blend-mode: screen, normal !important;
+  background-color: #6d8793 !important;
+  background-image: var(--scene) !important;
+  background-position: center top !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
 }
 
 body::before,
@@ -34,28 +28,27 @@ body::after {
   background: transparent !important;
 }
 
+/* Remove the duplicate scene and all full-hero shading. */
 .heroScene,
 .heroScene::before,
-.heroScene::after {
+.heroScene::after,
+.heroShade {
   display: none !important;
 }
 
-/* Shade only the copy area. Most of the landscape stays uncovered. */
-.heroShade {
-  display: block !important;
-  background:
-    linear-gradient(90deg,
-      rgba(7, 17, 24, .40) 0%,
-      rgba(7, 17, 24, .22) 28%,
-      rgba(7, 17, 24, .04) 49%,
-      transparent 64%),
-    linear-gradient(180deg, transparent 84%, rgba(7, 17, 24, .09) 100%) !important;
+/* Readability belongs behind the copy only, not over the landscape. */
+.heroCopy {
+  position: relative;
+  padding: 30px 34px 34px;
+  margin-left: -34px;
+  border-radius: 22px;
+  background: linear-gradient(90deg, rgba(7, 16, 23, .60), rgba(7, 16, 23, .30) 62%, rgba(7, 16, 23, 0));
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .70);
 }
 
-.heroCopy,
 .heroCaption,
 .sectionHead {
-  text-shadow: 0 2px 12px rgba(0, 0, 0, .62);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .70);
 }
 
 .worldSection,
@@ -66,12 +59,7 @@ body::after {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: rgba(25, 52, 65, .07) !important;
-}
-
-.roadmapSection,
-.finalSection {
-  background: rgba(25, 52, 65, .11) !important;
+  background: transparent !important;
 }
 
 .worldSection::before,
@@ -93,30 +81,22 @@ body::after {
 .featureCard,
 .streamBand {
   background: var(--world-panel) !important;
-  backdrop-filter: blur(5px) saturate(1.08);
+  backdrop-filter: blur(4px) saturate(1.05);
 }
 
 .featureLarge {
-  background:
-    linear-gradient(180deg, rgba(7, 15, 22, .01), rgba(7, 15, 22, .42)),
-    var(--scene) center 46% / cover no-repeat !important;
+  background: var(--world-panel) !important;
 }
 
-/* Forum: same brighter world, directly on the page rather than behind it. */
+/* Forum: raw game artwork behind the UI, without a color wash. */
 .forumPage {
   position: relative;
-  background-color: #476b7e !important;
-  background-image:
-    linear-gradient(180deg,
-      rgba(144, 179, 194, .27),
-      rgba(108, 151, 170, .20) 55%,
-      rgba(86, 130, 148, .18)),
-    var(--scene) !important;
-  background-position: center, center top !important;
-  background-size: cover, cover !important;
-  background-repeat: no-repeat, no-repeat !important;
-  background-attachment: fixed, fixed !important;
-  background-blend-mode: screen, normal !important;
+  background-color: #6d8793 !important;
+  background-image: var(--scene) !important;
+  background-position: center top !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
 }
 
 .forumPage::before,
@@ -127,12 +107,7 @@ body::after {
 .forumHero {
   position: relative;
   overflow: hidden;
-  background:
-    linear-gradient(90deg,
-      rgba(7, 17, 24, .34) 0%,
-      rgba(7, 17, 24, .14) 34%,
-      transparent 62%),
-    var(--scene) center 42% / cover no-repeat !important;
+  background: var(--scene) center 42% / cover no-repeat !important;
 }
 
 .forumHero::after {
@@ -142,39 +117,39 @@ body::after {
 .forumHero > .forumShell {
   position: relative;
   z-index: 1;
-  text-shadow: 0 2px 12px rgba(0,0,0,.62);
+  width: min(1240px, calc(100% - 38px));
+  padding: 22px 24px;
+  border-radius: 18px;
+  background: linear-gradient(90deg, rgba(7, 17, 24, .58), rgba(7, 17, 24, .22) 68%, transparent);
+  text-shadow: 0 2px 12px rgba(0,0,0,.72);
 }
 
 .forumSidebar,
 .forumMain {
-  background: rgba(8, 18, 26, .64) !important;
-  backdrop-filter: blur(6px) saturate(1.05);
+  background: rgba(8, 18, 26, .62) !important;
+  backdrop-filter: blur(5px) saturate(1.04);
 }
 
 .forumHeader {
-  background: rgba(8, 18, 26, .66) !important;
+  background: rgba(8, 18, 26, .64) !important;
 }
 
 @media (max-width: 760px) {
   body,
   .forumPage {
-    background-attachment: scroll, scroll !important;
-    background-position: center top, 54% top !important;
+    background-attachment: scroll !important;
+    background-position: 54% top !important;
   }
 
-  .heroShade {
-    background:
-      linear-gradient(180deg,
-        rgba(7,17,24,.04) 0%,
-        rgba(7,17,24,.11) 44%,
-        rgba(7,17,24,.26) 100%) !important;
+  .heroCopy {
+    margin-left: -16px;
+    margin-right: -8px;
+    padding: 24px 18px 28px;
+    background: rgba(7, 16, 23, .48);
   }
 
-  .worldSection,
-  .roadmapSection,
-  .participationSection,
-  .finalSection,
-  .streamSection {
-    background: rgba(25, 52, 65, .10) !important;
+  .forumHero > .forumShell {
+    padding: 18px;
+    background: rgba(7, 17, 24, .48);
   }
 }
