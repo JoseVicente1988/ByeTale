@@ -28,9 +28,7 @@ type TwitchPlayerConstructor = {
 
 declare global {
   interface Window {
-    Twitch?: {
-      Player: TwitchPlayerConstructor;
-    };
+    Twitch?: { Player: TwitchPlayerConstructor };
   }
 }
 
@@ -43,21 +41,21 @@ const roadmap = [
     state: "Proyecto actual",
     meta: "Mundo",
     detail:
-      "Plaza, Campiña de Valdoria, Bosque de los Susurros, Camino Viejo, Puente del Este, Ruinas Antiguas y Fortaleza Goblin forman parte del proyecto Godot actual.",
+      "Plaza, Campiña de Valdoria, Bosque de los Susurros, Camino Viejo, Puente del Este, Ruinas Antiguas y Fortaleza Goblin forman parte del proyecto actual.",
   },
   {
     title: "Combate por carga",
     state: "Build V34.3.12",
     meta: "Combate",
     detail:
-      "Combate 2D con barra de carga manual, acciones explícitas del jugador y heartbeat para que los enemigos mantengan su propio ritmo de acción.",
+      "Combate 2D con barra de carga manual y heartbeat para que los enemigos mantengan su propio ritmo de acción.",
   },
   {
     title: "Sistemas RPG online",
     state: "En evolución",
     meta: "Gameplay",
     detail:
-      "Quests, diálogos, party, profesiones, tiempo del mundo, eventos y sincronización del estado compartido ya tienen sistemas dedicados en el cliente.",
+      "Quests, diálogos, party, profesiones, tiempo del mundo, eventos, inventario, equipo y habilidades siguen evolucionando.",
   },
 ];
 
@@ -66,25 +64,25 @@ const participation = [
     index: "01",
     icon: "✦",
     title: "Ideas",
-    copy: "Propón sistemas, contenido y mejoras para el ByeTale 2D actual. Las propuestas pueden debatirse, recibir apoyo y obtener una respuesta oficial.",
+    copy: "Propón sistemas, contenido y mejoras para el ByeTale 2D actual y debate las propuestas con la comunidad.",
   },
   {
     index: "02",
     icon: "◉",
     title: "Voces y casting",
-    copy: "Convocatorias para personajes, audiciones y feedback vinculados a NPCs, diálogos y contenido narrativo del juego.",
+    copy: "Convocatorias, audiciones y feedback para personajes, NPCs, diálogos y contenido narrativo.",
   },
   {
     index: "03",
     icon: "⌁",
     title: "Bugs y testing",
-    copy: "Reporta problemas de mapas, combate, quests, party o interfaz y sigue el hilo desde la reproducción hasta la corrección.",
+    copy: "Reporta problemas de mapas, combate, quests, party o interfaz y sigue su evolución en un hilo.",
   },
   {
     index: "04",
     icon: "◇",
     title: "Arte y lore",
-    copy: "Pixel art, UI, textos, localización y aportaciones creativas que puedan encajar con la identidad visual y narrativa de ByeTale.",
+    copy: "Pixel art, UI, textos, localización y aportaciones creativas que encajen con la identidad de ByeTale.",
   },
 ];
 
@@ -148,7 +146,7 @@ export default function HomePage() {
     <main>
       <header className="siteHeader">
         <div className="shell nav">
-          <a className="brand" href="#inicio" aria-label="Ir al inicio de ByeTale Community">
+          <a className="brand" href="#inicio" aria-label="Ir al inicio">
             <Image className="brandIcon" src="/byetale-icon.svg" alt="" width={42} height={42} priority unoptimized />
             <span className="brandCopy">
               <strong>ByeTale</strong>
@@ -157,20 +155,18 @@ export default function HomePage() {
           </a>
 
           <nav className="navLinks" aria-label="Navegación principal">
-            <a href="#juego">El juego</a>
+            <a href="#juego">Juego</a>
             <a href="#roadmap">Desarrollo</a>
-            <a href="#participa">Participa</a>
-            <a href="/forum">Foro</a>
+            <a href="#participa">Comunidad</a>
             <a href="#twitch">Twitch</a>
+            <a href="/forum">Foro</a>
+            <a href="/account?mode=signup">Cuenta</a>
           </nav>
 
           <a className="streamPill" href="#twitch" aria-label={`Twitch @${TWITCH_CHANNEL}: ${streamLabel}`}>
             <i
               aria-hidden="true"
-              style={{
-                background: streamColor,
-                boxShadow: `0 0 0 5px ${streamGlow}, 0 0 14px ${streamGlow}`,
-              }}
+              style={{ background: streamColor, boxShadow: `0 0 0 5px ${streamGlow}, 0 0 14px ${streamGlow}` }}
             />
             @{TWITCH_CHANNEL}
           </a>
@@ -180,69 +176,44 @@ export default function HomePage() {
       <section className="hero" id="inicio" aria-labelledby="hero-title">
         <div className="heroScene" aria-hidden="true" />
         <div className="heroShade" aria-hidden="true" />
-
         <div className="shell heroLayout">
           <div className="heroCopy">
             <span className="eyebrow">RPG 2D multijugador · Godot 4</span>
             <h1 id="hero-title">ByeTale</h1>
-            <p className="heroTagline">Un mundo 2D en desarrollo. Una comunidad dentro del proceso.</p>
+            <p className="heroTagline">Un mundo en desarrollo. Una comunidad dentro del proceso.</p>
             <p className="lead">
-              Sigue el ByeTale actual: exploración por mapas 2D, combate por carga,
-              quests, party, profesiones y eventos del mundo. Prueba nuevas builds,
-              aporta ideas y deja feedback mientras el juego evoluciona.
+              Explora el proyecto actual, sigue su desarrollo y participa con ideas, bugs, casting y feedback.
             </p>
             <div className="actions">
               <a className="button primary" href="/forum">Entrar al foro</a>
-              <a className="button secondary" href="#juego">Ver el juego actual</a>
+              <a className="button secondary" href="/account?mode=signup">Crear cuenta</a>
             </div>
-            <div className="tech" aria-label="Pilares actuales del proyecto">
+            <div className="tech" aria-label="Pilares actuales">
               <span>Godot 4</span>
               <span>2D / TileMap</span>
               <span>Combate por carga</span>
-              <span>World Sync</span>
+              <span>Multijugador</span>
             </div>
-          </div>
-          <div className="heroCaption">
-            <span>Arte del proyecto actual</span>
-            <strong>Fondo pixel art utilizado por el ByeTale 2D.</strong>
           </div>
         </div>
-        <a className="scrollCue" href="#juego" aria-label="Continuar hacia la sección del juego">
-          <span>Descubre el proyecto</span><i aria-hidden="true">↓</i>
-        </a>
       </section>
 
-      <section className="streamSection" id="twitch">
-        <div className="shell">
-          <article className="streamBand">
-            <div className="streamIdentity">
-              <span
-                className="streamDot"
-                aria-hidden="true"
-                style={{
-                  background: streamColor,
-                  boxShadow: `0 0 0 6px ${streamGlow}, 0 0 18px ${streamGlow}`,
-                }}
-              />
-              <div>
-                <small>Twitch / desarrollo en directo</small>
-                <strong>@{TWITCH_CHANNEL}</strong>
-              </div>
-            </div>
-            <p>Directos de desarrollo, pruebas y decisiones del ByeTale 2D conectados con la comunidad.</p>
-            <span className="streamStatus" style={{ color: streamColor }}>{streamLabel}</span>
-          </article>
-
-          <div className="twitchFrame">
-            <div
-              id="byetale-twitch-player"
-              className="twitchPlayer"
-              aria-label={`Reproductor de Twitch de ${TWITCH_CHANNEL}`}
-            />
-            <div className="twitchFooter">
-              <span>Twitch oficial de ByeTale</span>
-              <a href={TWITCH_URL} target="_blank" rel="noreferrer">Abrir en Twitch ↗</a>
-            </div>
+      <section className="quickStart" aria-label="Accesos rápidos">
+        <div className="shell quickStartInner">
+          <div className="quickIntro">
+            <small>Empieza aquí</small>
+            <strong>¿Qué quieres hacer?</strong>
+          </div>
+          <div className="quickGrid">
+            <a className="quickCard" href="/forum">
+              <span><small>Comunidad</small><strong>Participar en el foro</strong></span><b>→</b>
+            </a>
+            <a className="quickCard" href="#roadmap">
+              <span><small>Proyecto</small><strong>Ver el desarrollo actual</strong></span><b>↓</b>
+            </a>
+            <a className="quickCard" href="/account?mode=signup">
+              <span><small>Cuenta</small><strong>Crear cuenta o acceder</strong></span><b>→</b>
+            </a>
           </div>
         </div>
       </section>
@@ -251,12 +222,11 @@ export default function HomePage() {
         <div className="shell">
           <div className="sectionHead">
             <div>
-              <span>El juego actual</span>
-              <h2>ByeTale es un RPG 2D multijugador.</h2>
+              <span>El juego</span>
+              <h2>Un RPG 2D multijugador en construcción.</h2>
             </div>
             <p>
-              La web toma como referencia el proyecto Godot 4 actual: sus escenas 2D,
-              mapas, combate, personajes y sistemas de mundo. Esta es la identidad que se mostrará a partir de ahora.
+              Mapas conectados, combate por carga y sistemas RPG que evolucionan build a build.
             </p>
           </div>
 
@@ -267,8 +237,7 @@ export default function HomePage() {
                 <span className="label gold">Combate 2D</span>
                 <h3>Carga manual y ritmo propio de enemigos</h3>
                 <p>
-                  La build actual usa combate por barra de carga y un heartbeat dedicado
-                  para mantener la actividad enemiga sin depender de que el jugador pulse una acción.
+                  La build actual usa barra de carga y heartbeat dedicado para mantener la actividad enemiga.
                 </p>
               </div>
             </article>
@@ -279,8 +248,7 @@ export default function HomePage() {
                 <span className="label">Exploración</span>
                 <h3>Mapas 2D conectados</h3>
                 <p>
-                  Campiña de Valdoria, Bosque de los Susurros, Camino Viejo, Puente del Este,
-                  Ruinas Antiguas, Fortaleza Goblin y zonas de Plaza forman el mundo jugable actual.
+                  Valdoria, Bosque de los Susurros, Camino Viejo, Puente del Este, Ruinas Antiguas y Fortaleza Goblin.
                 </p>
               </div>
             </article>
@@ -291,8 +259,7 @@ export default function HomePage() {
                 <span className="label">Sistemas RPG</span>
                 <h3>Quests, party, profesiones y mundo vivo</h3>
                 <p>
-                  El cliente incluye sistemas dedicados para diálogos y quests, grupos,
-                  profesiones, ciclo horario, eventos del mundo, inventario, equipo y habilidades.
+                  Diálogos, grupos, profesiones, ciclo horario, eventos, inventario, equipo y habilidades.
                 </p>
               </div>
             </article>
@@ -304,13 +271,10 @@ export default function HomePage() {
         <div className="shell">
           <div className="sectionHead">
             <div>
-              <span>Desarrollo público</span>
-              <h2>Estado del ByeTale 2D</h2>
+              <span>Desarrollo</span>
+              <h2>Qué existe hoy y qué sigue evolucionando.</h2>
             </div>
-            <p>
-              Sin porcentajes decorativos: esta vista resume sistemas y contenido que existen
-              en el proyecto actual y qué áreas continúan evolucionando.
-            </p>
+            <p>Sin porcentajes decorativos: estado verificable del proyecto 2D actual.</p>
           </div>
           <div className="roadmap">
             {roadmap.map((item) => (
@@ -328,12 +292,11 @@ export default function HomePage() {
         <div className="shell">
           <div className="sectionHead">
             <div>
-              <span>Entra en el proceso</span>
-              <h2>Ayuda a mejorar el juego que existe hoy.</h2>
+              <span>Comunidad</span>
+              <h2>Entra en el proceso.</h2>
             </div>
             <p>
-              Ideas, casting, bugs y colaboración viven en el foro de ByeTale.
-              Los votos muestran interés; la dirección final del juego sigue perteneciendo a ByeTale.
+              Lee sin cuenta. Para abrir hilos, responder o apoyar propuestas necesitas iniciar sesión.
             </p>
           </div>
           <div className="participation">
@@ -343,9 +306,37 @@ export default function HomePage() {
                 <i aria-hidden="true">{item.icon}</i>
                 <h3>{item.title}</h3>
                 <p>{item.copy}</p>
-                <a href="/forum">Abrir en el foro <span aria-hidden="true">→</span></a>
+                <a href="/forum">Ir al foro <span aria-hidden="true">→</span></a>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="streamSection" id="twitch">
+        <div className="shell">
+          <article className="streamBand">
+            <div className="streamIdentity">
+              <span
+                className="streamDot"
+                aria-hidden="true"
+                style={{ background: streamColor, boxShadow: `0 0 0 6px ${streamGlow}, 0 0 18px ${streamGlow}` }}
+              />
+              <div>
+                <small>Desarrollo en directo</small>
+                <strong>@{TWITCH_CHANNEL}</strong>
+              </div>
+            </div>
+            <p>Directos de desarrollo, pruebas y decisiones del ByeTale 2D.</p>
+            <span className="streamStatus" style={{ color: streamColor }}>{streamLabel}</span>
+          </article>
+
+          <div className="twitchFrame">
+            <div id="byetale-twitch-player" className="twitchPlayer" aria-label={`Twitch de ${TWITCH_CHANNEL}`} />
+            <div className="twitchFooter">
+              <span>Twitch oficial de ByeTale</span>
+              <a href={TWITCH_URL} target="_blank" rel="noreferrer">Abrir en Twitch ↗</a>
+            </div>
           </div>
         </div>
       </section>
@@ -354,14 +345,11 @@ export default function HomePage() {
         <div className="shell">
           <article className="manifesto">
             <div>
-              <span className="label gold">Principio del proyecto</span>
-              <h2>La comunidad participa. ByeTale mantiene su visión.</h2>
-              <p>
-                Desarrollo visible, feedback útil y una identidad 2D coherente con el juego real.
-                Cada sección de la comunidad debe ayudar a mejorar ese proyecto, no otro prototipo anterior.
-              </p>
+              <span className="label gold">Participa</span>
+              <h2>Lee el proyecto. Entra al foro. Deja una aportación útil.</h2>
+              <p>La comunidad participa y ByeTale mantiene la dirección final del juego.</p>
             </div>
-            <a className="button primary" href="/forum">Entrar al foro</a>
+            <a className="button primary" href="/forum">Abrir el foro</a>
           </article>
         </div>
       </section>
@@ -372,8 +360,8 @@ export default function HomePage() {
             <Image className="brandIcon footerIcon" src="/byetale-icon.svg" alt="" width={38} height={38} unoptimized />
             <span className="brandCopy"><strong>ByeTale</strong><small>Community &amp; Development</small></span>
           </div>
-          <p>RPG 2D · Godot 4 · combate · quests · party · world events</p>
-          <a href="https://github.com/JoseVicente1988/ByeTale" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+          <p>RPG 2D · Godot 4 · Comunidad</p>
+          <a href="https://github.com/JoseVicente1988/ByeTale" target="_blank" rel="noreferrer">GitHub ↗</a>
         </div>
       </footer>
     </main>
