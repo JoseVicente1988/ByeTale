@@ -4,6 +4,7 @@ import "./globals.css";
 import "./mobile.css";
 import "./ux.css";
 import "./pixel-theme.css";
+import "./world-backgrounds.css";
 
 export const metadata: Metadata = {
   title: {
