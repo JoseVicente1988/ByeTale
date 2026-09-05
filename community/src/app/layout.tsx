@@ -1,13 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import AccountDock from "./components/account-dock";
 import "./globals.css";
-import "./scene-runtime.css";
-import "./world-backgrounds.css";
 import "./mobile.css";
 import "./ux.css";
-import "./visual-reference.css";
-import "./visual-fix.css";
-import "./visibility-pass.css";
+import "./pixel-theme.css";
 
 export const metadata: Metadata = {
   title: {
