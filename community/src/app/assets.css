@@ -1,7 +1,5 @@
-/* Canonical visual scene for ByeTale Community.
- * Use the inspectable pixel-art landscape so the site never collapses into
- * an effectively black background. */
+/* Canonical visual scene for ByeTale Community. */
 :root {
-  --scene: url("/byetale-world-pixel.svg");
+  --scene: url("/byetale-world-dawn.svg");
   --battle-scene: url("/byetale-battle.webp");
 }
