@@ -267,3 +267,92 @@
 
   .copy { padding-top: 0; }
 }
+
+@media (max-width: 560px) {
+  .page {
+    padding: calc(74px + env(safe-area-inset-top)) 14px calc(86px + env(safe-area-inset-bottom));
+    background-size: auto min(58vh, 560px);
+    background-position: 38% top;
+  }
+
+  .page::before {
+    background:
+      linear-gradient(180deg, rgba(17,28,35,.06) 0%, rgba(17,28,35,.28) 34%, #111c23 62%);
+  }
+
+  .shell {
+    gap: 24px;
+  }
+
+  .copy h1 {
+    margin-top: 9px;
+    font-size: clamp(2.5rem, 14vw, 3.5rem);
+  }
+
+  .copy p {
+    font-size: 0.92rem;
+    line-height: 1.62;
+  }
+
+  .rules {
+    gap: 10px;
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .rule {
+    grid-template-columns: 28px 1fr;
+    gap: 8px;
+    font-size: 0.81rem;
+  }
+
+  .card {
+    border-radius: 16px;
+  }
+
+  .cardHead {
+    padding: 19px 17px 15px;
+  }
+
+  .tabs {
+    padding: 14px 14px 0;
+  }
+
+  .form {
+    gap: 13px;
+    padding: 16px 14px 18px;
+  }
+
+  .form input {
+    min-height: 50px;
+    font-size: 16px;
+  }
+
+  .tab,
+  .button {
+    min-height: 46px;
+  }
+
+  .error,
+  .notice {
+    margin: 0 14px 14px;
+  }
+
+  .session {
+    padding: 16px 14px 18px;
+  }
+
+  .sessionActions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .sessionActions .button {
+    width: 100%;
+  }
+
+  .back {
+    margin-top: 16px;
+  }
+}
