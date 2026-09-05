@@ -133,7 +133,7 @@ jobs:
           cat /tmp/vercel-status.json
           exit 1
 
-      - name: Verify public site, forum and exact pixel-art background
+      - name: Verify public site, forum and active daytime background
         if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
         run: |
           for URL in \
@@ -147,14 +147,14 @@ jobs:
             grep -qi "ByeTale" /tmp/page.html
           done
 
-          ASSET_URL="https://byetale-community.vercel.app/byetale-world-pixel.svg"
+          ASSET_URL="https://byetale-community.vercel.app/byetale-world-day.svg"
           echo "Checking $ASSET_URL"
-          CODE=$(curl -sS -L --retry 6 --retry-delay 5 -o /tmp/byetale-world-pixel.svg -w "%{http_code}" "$ASSET_URL")
+          CODE=$(curl -sS -L --retry 6 --retry-delay 5 -o /tmp/byetale-world-day.svg -w "%{http_code}" "$ASSET_URL")
           echo "HTTP $CODE"
           test "$CODE" = "200"
-          grep -q '<svg' /tmp/byetale-world-pixel.svg
-          grep -q '#415363' /tmp/byetale-world-pixel.svg
-          test "$(wc -c < /tmp/byetale-world-pixel.svg)" -gt 4096
+          grep -q '<svg' /tmp/byetale-world-day.svg
+          grep -q '#79a9c4' /tmp/byetale-world-day.svg
+          test "$(wc -c < /tmp/byetale-world-day.svg)" -gt 4096
 
           CSS_URLS=$(grep -oE 'href="[^"]+\.css[^"]*"' /tmp/page.html | cut -d'"' -f2 || true)
           FOUND_SCENE=0
@@ -164,9 +164,9 @@ jobs:
               *) CSS_URL="https://byetale-community.vercel.app$CSS_PATH" ;;
             esac
             curl -sS -L "$CSS_URL" -o /tmp/chunk.css
-            if grep -q 'byetale-world-pixel.svg' /tmp/chunk.css; then
+            if grep -q 'byetale-world-day.svg' /tmp/chunk.css; then
               FOUND_SCENE=1
-              echo "Found deployed scene reference in $CSS_URL"
+              echo "Found active daytime scene reference in $CSS_URL"
               break
             fi
           done
@@ -200,4 +200,4 @@ jobs:
           echo "Stable alias: https://byetale-community.vercel.app"
           echo "Forum: https://byetale-community.vercel.app/forum"
           echo "Account: https://byetale-community.vercel.app/account"
-          echo "World background: https://byetale-community.vercel.app/byetale-world-pixel.svg"
+          echo "World background: https://byetale-community.vercel.app/byetale-world-day.svg"
