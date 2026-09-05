@@ -1,18 +1,18 @@
-/* ByeTale Community — show the 2D game artwork directly. */
+/* ByeTale Community — bright 2D world background, no full-screen dark veil. */
 
 :root {
-  --world-panel: rgba(8, 18, 25, .56);
-  --world-panel-strong: rgba(7, 16, 23, .66);
+  --world-scene: url('/byetale-world-day.svg');
+  --world-panel: rgba(8, 18, 25, .52);
+  --world-panel-strong: rgba(7, 16, 23, .62);
 }
 
 html {
-  background: #6d8793;
+  background: #79a9c4;
 }
 
-/* The game artwork is the background. No full-screen tint or blend layer in front of it. */
 body {
-  background-color: #6d8793 !important;
-  background-image: var(--scene) !important;
+  background-color: #79a9c4 !important;
+  background-image: var(--world-scene) !important;
   background-position: center top !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
@@ -28,7 +28,6 @@ body::after {
   background: transparent !important;
 }
 
-/* Remove the duplicate scene and all full-hero shading. */
 .heroScene,
 .heroScene::before,
 .heroScene::after,
@@ -36,19 +35,19 @@ body::after {
   display: none !important;
 }
 
-/* Readability belongs behind the copy only, not over the landscape. */
+/* Only the text gets a local backing. The world itself stays uncovered. */
 .heroCopy {
   position: relative;
-  padding: 30px 34px 34px;
+  padding: 28px 34px 32px;
   margin-left: -34px;
   border-radius: 22px;
-  background: linear-gradient(90deg, rgba(7, 16, 23, .60), rgba(7, 16, 23, .30) 62%, rgba(7, 16, 23, 0));
-  text-shadow: 0 2px 12px rgba(0, 0, 0, .70);
+  background: linear-gradient(90deg, rgba(7, 16, 23, .56), rgba(7, 16, 23, .24) 70%, transparent);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .72);
 }
 
 .heroCaption,
 .sectionHead {
-  text-shadow: 0 2px 12px rgba(0, 0, 0, .70);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .72);
 }
 
 .worldSection,
@@ -88,11 +87,10 @@ body::after {
   background: var(--world-panel) !important;
 }
 
-/* Forum: raw game artwork behind the UI, without a color wash. */
 .forumPage {
   position: relative;
-  background-color: #6d8793 !important;
-  background-image: var(--scene) !important;
+  background-color: #79a9c4 !important;
+  background-image: var(--world-scene) !important;
   background-position: center top !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
@@ -107,7 +105,7 @@ body::after {
 .forumHero {
   position: relative;
   overflow: hidden;
-  background: var(--scene) center 42% / cover no-repeat !important;
+  background: var(--world-scene) center 42% / cover no-repeat !important;
 }
 
 .forumHero::after {
@@ -120,18 +118,18 @@ body::after {
   width: min(1240px, calc(100% - 38px));
   padding: 22px 24px;
   border-radius: 18px;
-  background: linear-gradient(90deg, rgba(7, 17, 24, .58), rgba(7, 17, 24, .22) 68%, transparent);
+  background: linear-gradient(90deg, rgba(7, 17, 24, .54), rgba(7, 17, 24, .18) 70%, transparent);
   text-shadow: 0 2px 12px rgba(0,0,0,.72);
 }
 
 .forumSidebar,
 .forumMain {
-  background: rgba(8, 18, 26, .62) !important;
+  background: rgba(8, 18, 26, .60) !important;
   backdrop-filter: blur(5px) saturate(1.04);
 }
 
 .forumHeader {
-  background: rgba(8, 18, 26, .64) !important;
+  background: rgba(8, 18, 26, .62) !important;
 }
 
 @media (max-width: 760px) {
@@ -145,11 +143,11 @@ body::after {
     margin-left: -16px;
     margin-right: -8px;
     padding: 24px 18px 28px;
-    background: rgba(7, 16, 23, .48);
+    background: rgba(7, 16, 23, .44);
   }
 
   .forumHero > .forumShell {
     padding: 18px;
-    background: rgba(7, 17, 24, .48);
+    background: rgba(7, 17, 24, .44);
   }
 }
