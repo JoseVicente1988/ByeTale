@@ -321,7 +321,6 @@ export default function HomePage() {
             <span className="brandCopy"><strong>ByeTale</strong><small>Community &amp; Development</small></span>
           </div>
           <p>RPG 2D · Godot 4 · Comunidad</p>
-          <a href="https://github.com/JoseVicente1988/ByeTale" target="_blank" rel="noreferrer">GitHub ↗</a>
         </div>
       </footer>
     </main>
