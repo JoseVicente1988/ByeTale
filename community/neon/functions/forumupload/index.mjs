@@ -8,7 +8,7 @@ const MAX_BYTES = 3 * 1024 * 1024;
 function cors(origin) {
   return {
     "Access-Control-Allow-Origin": ALLOWED_ORIGINS.has(origin) ? origin : "https://byetale-community.vercel.app",
-    "Access-Control-Allow-Headers": "content-type,x-upload-token",
+    "Access-Control-Allow-Headers": "authorization,content-type,x-upload-token",
     "Access-Control-Allow-Methods": "POST,OPTIONS",
     "Access-Control-Max-Age": "86400",
     Vary: "Origin",
@@ -52,9 +52,9 @@ function detectImage(bytes, declaredType) {
   return null;
 }
 
-async function validToken(token) {
+async function validToken(token, authorization) {
   const url = `${process.env.NEON_DATA_API_URL}/community_valid_upload_tokens?token=eq.${encodeURIComponent(token)}&select=token&limit=1`;
-  const response = await fetch(url, { headers: { Accept: "application/json" } });
+  const response = await fetch(url, { headers: { Accept: "application/json", Authorization: authorization } });
   if (!response.ok) return false;
   const rows = await response.json();
   return Array.isArray(rows) && rows.length === 1;
@@ -107,9 +107,12 @@ export default {
     if (!ALLOWED_ORIGINS.has(origin)) return json({ error: "Origen no permitido." }, 403, origin);
 
     const token = request.headers.get("x-upload-token") || "";
+    const authorization = request.headers.get("authorization") || "";
+    if (!/^Bearer\s+\S+$/i.test(authorization))
+      return json({ error: "Debes iniciar sesión para subir una imagen." }, 401, origin);
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(token))
       return json({ error: "Autorización de subida inválida." }, 401, origin);
-    if (!(await validToken(token))) return json({ error: "La autorización ha caducado." }, 401, origin);
+    if (!(await validToken(token, authorization))) return json({ error: "La autorización ha caducado." }, 401, origin);
 
     const declaredType = (request.headers.get("content-type") || "").split(";")[0].toLowerCase();
     const body = new Uint8Array(await request.arrayBuffer());
