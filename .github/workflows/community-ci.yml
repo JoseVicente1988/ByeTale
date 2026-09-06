@@ -59,7 +59,6 @@ jobs:
           STATUS=$(curl -sS -o /tmp/vercel-project.json -w "%{http_code}" \
             -H "Authorization: Bearer $VERCEL_TOKEN" \
             "https://api.vercel.com/v9/projects/byetale-community?teamId=team_XyjNhaZz7oxusZTQoGYgywKS")
-
           if [ "$STATUS" = "404" ]; then
             CREATE_STATUS=$(curl -sS -o /tmp/vercel-create.json -w "%{http_code}" \
               -X POST \
@@ -133,7 +132,7 @@ jobs:
           cat /tmp/vercel-status.json
           exit 1
 
-      - name: Verify public site, forum and active daytime background
+      - name: Verify public site, forum and real game artwork
         if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
         run: |
           for URL in \
@@ -147,30 +146,28 @@ jobs:
             grep -qi "ByeTale" /tmp/page.html
           done
 
-          ASSET_URL="https://byetale-community.vercel.app/byetale-world-day.svg"
-          echo "Checking $ASSET_URL"
-          CODE=$(curl -sS -L --retry 6 --retry-delay 5 -o /tmp/byetale-world-day.svg -w "%{http_code}" "$ASSET_URL")
-          echo "HTTP $CODE"
-          test "$CODE" = "200"
-          grep -q '<svg' /tmp/byetale-world-day.svg
-          grep -q '#79a9c4' /tmp/byetale-world-day.svg
-          test "$(wc -c < /tmp/byetale-world-day.svg)" -gt 4096
+          for ASSET in byetale-menu-reference.webp byetale-battle-reference.webp byetale-banner-reference.webp; do
+            ASSET_URL="https://byetale-community.vercel.app/$ASSET"
+            echo "Checking $ASSET_URL"
+            CODE=$(curl -sS -L --retry 6 --retry-delay 5 -o "/tmp/$ASSET" -w "%{http_code}" "$ASSET_URL")
+            test "$CODE" = "200"
+            test "$(wc -c < "/tmp/$ASSET")" -gt 8000
+          done
 
           CSS_URLS=$(grep -oE 'href="[^"]+\.css[^"]*"' /tmp/page.html | cut -d'"' -f2 || true)
-          FOUND_SCENE=0
+          FOUND_REAL=0
+          FOUND_SYNTHETIC=0
           for CSS_PATH in $CSS_URLS; do
             case "$CSS_PATH" in
               http*) CSS_URL="$CSS_PATH" ;;
               *) CSS_URL="https://byetale-community.vercel.app$CSS_PATH" ;;
             esac
             curl -sS -L "$CSS_URL" -o /tmp/chunk.css
-            if grep -q 'byetale-world-day.svg' /tmp/chunk.css; then
-              FOUND_SCENE=1
-              echo "Found active daytime scene reference in $CSS_URL"
-              break
-            fi
+            grep -q 'byetale-menu-reference.webp' /tmp/chunk.css && FOUND_REAL=1
+            if grep -Eq 'byetale-world-(pixel|day|dawn)\.svg' /tmp/chunk.css; then FOUND_SYNTHETIC=1; fi
           done
-          test "$FOUND_SCENE" = "1"
+          test "$FOUND_REAL" = "1"
+          test "$FOUND_SYNTHETIC" = "0"
 
       - name: Capture production homepage screenshot
         if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
@@ -200,4 +197,6 @@ jobs:
           echo "Stable alias: https://byetale-community.vercel.app"
           echo "Forum: https://byetale-community.vercel.app/forum"
           echo "Account: https://byetale-community.vercel.app/account"
-          echo "World background: https://byetale-community.vercel.app/byetale-world-day.svg"
+          echo "Menu reference: https://byetale-community.vercel.app/byetale-menu-reference.webp"
+          echo "Battle reference: https://byetale-community.vercel.app/byetale-battle-reference.webp"
+          echo "Banner reference: https://byetale-community.vercel.app/byetale-banner-reference.webp"
