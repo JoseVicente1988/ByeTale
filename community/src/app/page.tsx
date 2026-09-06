@@ -38,51 +38,47 @@ const TWITCH_URL = `https://www.twitch.tv/${TWITCH_CHANNEL}`;
 const roadmap = [
   {
     title: "Exploración y mapas 2D",
-    state: "Proyecto actual",
+    state: "Ahora",
     meta: "Mundo",
     detail:
-      "Plaza, Campiña de Valdoria, Bosque de los Susurros, Camino Viejo, Puente del Este, Ruinas Antiguas y Fortaleza Goblin forman parte del proyecto actual.",
+      "Plaza, Campiña de Valdoria, Bosque de los Susurros, Camino Viejo, Puente del Este, Ruinas Antiguas y Fortaleza Goblin ya forman parte del proyecto actual.",
   },
   {
     title: "Combate por carga",
     state: "Build V34.3.12",
     meta: "Combate",
     detail:
-      "Combate 2D con barra de carga manual y heartbeat para que los enemigos mantengan su propio ritmo de acción.",
+      "La base actual usa carga manual y heartbeat para que los enemigos mantengan su propio ritmo de acción.",
   },
   {
     title: "Sistemas RPG online",
-    state: "En evolución",
+    state: "En marcha",
     meta: "Gameplay",
     detail:
-      "Quests, diálogos, party, profesiones, tiempo del mundo, eventos, inventario, equipo y habilidades siguen evolucionando.",
+      "Quests, diálogos, party, profesiones, tiempo del mundo, eventos, inventario, equipo y habilidades siguen creciendo junto al resto del juego.",
   },
 ];
 
 const participation = [
   {
     index: "01",
-    icon: "✦",
     title: "Ideas",
-    copy: "Propón sistemas, contenido y mejoras para el ByeTale 2D actual y debate las propuestas con la comunidad.",
+    copy: "Propuestas de sistemas, contenido y mejoras para el ByeTale 2D actual.",
   },
   {
     index: "02",
-    icon: "◉",
     title: "Voces y casting",
-    copy: "Convocatorias, audiciones y feedback para personajes, NPCs, diálogos y contenido narrativo.",
+    copy: "Convocatorias, audiciones y feedback para personajes, NPCs y diálogos.",
   },
   {
     index: "03",
-    icon: "⌁",
     title: "Bugs y testing",
-    copy: "Reporta problemas de mapas, combate, quests, party o interfaz y sigue su evolución en un hilo.",
+    copy: "Problemas de mapas, combate, quests, party o interfaz, con seguimiento en hilo.",
   },
   {
     index: "04",
-    icon: "◇",
     title: "Arte y lore",
-    copy: "Pixel art, UI, textos, localización y aportaciones creativas que encajen con la identidad de ByeTale.",
+    copy: "Pixel art, UI, textos, localización y aportaciones creativas que encajen con ByeTale.",
   },
 ];
 
@@ -182,38 +178,13 @@ export default function HomePage() {
             <h1 id="hero-title">ByeTale</h1>
             <p className="heroTagline">Un mundo en desarrollo. Una comunidad dentro del proceso.</p>
             <p className="lead">
-              Explora el proyecto actual, sigue su desarrollo y participa con ideas, bugs, casting y feedback.
+              El juego se está haciendo en público. Aquí puedes ver qué existe, qué estoy tocando y dónde tiene sentido aportar.
             </p>
             <div className="actions">
               <a className="button primary" href="/forum">Entrar al foro</a>
-              <a className="button secondary" href="/account?mode=signup">Crear cuenta</a>
+              <a className="textLink" href="#roadmap">Ver desarrollo →</a>
             </div>
-            <div className="tech" aria-label="Pilares actuales">
-              <span>Godot 4</span>
-              <span>2D / TileMap</span>
-              <span>Combate por carga</span>
-              <span>Multijugador</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="quickStart" aria-label="Accesos rápidos">
-        <div className="shell quickStartInner">
-          <div className="quickIntro">
-            <small>Empieza aquí</small>
-            <strong>¿Qué quieres hacer?</strong>
-          </div>
-          <div className="quickGrid">
-            <a className="quickCard" href="/forum">
-              <span><small>Comunidad</small><strong>Participar en el foro</strong></span><b>→</b>
-            </a>
-            <a className="quickCard" href="#roadmap">
-              <span><small>Proyecto</small><strong>Ver el desarrollo actual</strong></span><b>↓</b>
-            </a>
-            <a className="quickCard" href="/account?mode=signup">
-              <span><small>Cuenta</small><strong>Crear cuenta o acceder</strong></span><b>→</b>
-            </a>
+            <p className="projectLine">Godot 4 · RPG 2D · Multijugador · Desarrollo abierto</p>
           </div>
         </div>
       </section>
@@ -223,11 +194,9 @@ export default function HomePage() {
           <div className="sectionHead">
             <div>
               <span>El juego</span>
-              <h2>Un RPG 2D multijugador en construcción.</h2>
+              <h2>Lo que ya puedes reconocer como ByeTale.</h2>
             </div>
-            <p>
-              Mapas conectados, combate por carga y sistemas RPG que evolucionan build a build.
-            </p>
+            <p>Mapas conectados, combate por carga y sistemas RPG que cambian build a build.</p>
           </div>
 
           <div className="worldGrid">
@@ -236,9 +205,7 @@ export default function HomePage() {
               <div>
                 <span className="label gold">Combate 2D</span>
                 <h3>Carga manual y ritmo propio de enemigos</h3>
-                <p>
-                  La build actual usa barra de carga y heartbeat dedicado para mantener la actividad enemiga.
-                </p>
+                <p>La build actual usa barra de carga y heartbeat dedicado para mantener la actividad enemiga.</p>
               </div>
             </article>
 
@@ -247,9 +214,7 @@ export default function HomePage() {
               <div>
                 <span className="label">Exploración</span>
                 <h3>Mapas 2D conectados</h3>
-                <p>
-                  Valdoria, Bosque de los Susurros, Camino Viejo, Puente del Este, Ruinas Antiguas y Fortaleza Goblin.
-                </p>
+                <p>Valdoria, Bosque de los Susurros, Camino Viejo, Puente del Este, Ruinas Antiguas y Fortaleza Goblin.</p>
               </div>
             </article>
 
@@ -258,9 +223,7 @@ export default function HomePage() {
               <div>
                 <span className="label">Sistemas RPG</span>
                 <h3>Quests, party, profesiones y mundo vivo</h3>
-                <p>
-                  Diálogos, grupos, profesiones, ciclo horario, eventos, inventario, equipo y habilidades.
-                </p>
+                <p>Diálogos, grupos, profesiones, ciclo horario, eventos, inventario, equipo y habilidades.</p>
               </div>
             </article>
           </div>
@@ -272,9 +235,9 @@ export default function HomePage() {
           <div className="sectionHead">
             <div>
               <span>Desarrollo</span>
-              <h2>Qué existe hoy y qué sigue evolucionando.</h2>
+              <h2>Estado del proyecto, sin barras de progreso inventadas.</h2>
             </div>
-            <p>Sin porcentajes decorativos: estado verificable del proyecto 2D actual.</p>
+            <p>Esto es lo que hay hoy. Cuando cambie, cambia aquí.</p>
           </div>
           <div className="roadmap">
             {roadmap.map((item) => (
@@ -295,18 +258,15 @@ export default function HomePage() {
               <span>Comunidad</span>
               <h2>Entra en el proceso.</h2>
             </div>
-            <p>
-              Lee sin cuenta. Para abrir hilos, responder o apoyar propuestas necesitas iniciar sesión.
-            </p>
+            <p>Leer es público. Escribir, responder y votar requiere cuenta.</p>
           </div>
           <div className="participation">
             {participation.map((item) => (
               <article className="participationCard" key={item.title}>
                 <span className="participationIndex">{item.index}</span>
-                <i aria-hidden="true">{item.icon}</i>
                 <h3>{item.title}</h3>
                 <p>{item.copy}</p>
-                <a href="/forum">Ir al foro <span aria-hidden="true">→</span></a>
+                <a href="/forum">Abrir foro <span aria-hidden="true">→</span></a>
               </article>
             ))}
           </div>
@@ -345,11 +305,11 @@ export default function HomePage() {
         <div className="shell">
           <article className="manifesto">
             <div>
-              <span className="label gold">Participa</span>
-              <h2>Lee el proyecto. Entra al foro. Deja una aportación útil.</h2>
-              <p>La comunidad participa y ByeTale mantiene la dirección final del juego.</p>
+              <span className="label gold">Comunidad</span>
+              <h2>¿Tienes algo concreto que aportar?</h2>
+              <p>Abre un hilo. Si sirve al juego, queda ahí para discutirlo y seguirlo.</p>
             </div>
-            <a className="button primary" href="/forum">Abrir el foro</a>
+            <a className="textLink manifestoLink" href="/forum">Ir al foro →</a>
           </article>
         </div>
       </section>
