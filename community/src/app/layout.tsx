@@ -4,6 +4,7 @@ import "./globals.css";
 import "./mobile.css";
 import "./ux.css";
 import "./game-reference-theme.css";
+import "./authored.css";
 
 export const metadata: Metadata = {
   title: {
