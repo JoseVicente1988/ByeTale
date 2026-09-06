@@ -22,9 +22,11 @@ WITH CHECK (
 GRANT INSERT (token, profile_id) ON public.forum_upload_tokens TO authenticated;
 
 CREATE VIEW public.community_valid_upload_tokens WITH (security_barrier=true) AS
-SELECT token, expires_at
-FROM public.forum_upload_tokens
-WHERE expires_at > now();
+SELECT t.token, t.expires_at
+FROM public.forum_upload_tokens t
+JOIN public.profiles p ON p.id = t.profile_id
+WHERE t.expires_at > now()
+  AND p.auth_user_id = (current_setting('request.jwt.claims', true)::jsonb ->> 'sub');
 
 GRANT SELECT ON public.community_valid_upload_tokens TO anonymous, authenticated;
 
