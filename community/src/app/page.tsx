@@ -155,6 +155,7 @@ export default function HomePage() {
             <a href="#roadmap">Desarrollo</a>
             <a href="#participa">Comunidad</a>
             <a href="#twitch">Twitch</a>
+            <a href="#apoyar">Apoyar</a>
             <a href="/forum">Foro</a>
             <a href="/account?mode=signup">Cuenta</a>
           </nav>
@@ -298,6 +299,19 @@ export default function HomePage() {
               <a href={TWITCH_URL} target="_blank" rel="noreferrer">Abrir en Twitch ↗</a>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section finalSection" id="apoyar">
+        <div className="shell">
+          <article className="manifesto">
+            <div>
+              <span className="label gold">Apoya el proyecto</span>
+              <h2>Ayuda a que ByeTale siga creciendo.</h2>
+              <p>Si te gusta el proyecto, puedes apoyar voluntariamente su desarrollo mediante PayPal.</p>
+            </div>
+            <a className="button primary" href="https://paypal.me/byetale" target="_blank" rel="noreferrer">Apoyar en PayPal ↗</a>
+          </article>
         </div>
       </section>
 
