@@ -177,9 +177,9 @@ export default function HomePage() {
           <div className="heroCopy">
             <span className="eyebrow">RPG 2D multijugador · Godot 4</span>
             <h1 id="hero-title">ByeTale</h1>
-            <p className="heroTagline">Un mundo en desarrollo. Una comunidad dentro del proceso.</p>
+            <p className="heroTagline">Un RPG hecho a mano, build a build.</p>
             <p className="lead">
-              El juego se está haciendo en público. Aquí puedes ver qué existe, qué estoy tocando y dónde tiene sentido aportar.
+              Estoy construyendo ByeTale en público. Comparto lo que funciona, lo que estoy cambiando y las decisiones en las que la comunidad puede aportar de verdad.
             </p>
             <div className="actions">
               <a className="button primary" href="/forum">Entrar al foro</a>
@@ -195,9 +195,9 @@ export default function HomePage() {
           <div className="sectionHead">
             <div>
               <span>El juego</span>
-              <h2>Lo que ya puedes reconocer como ByeTale.</h2>
+              <h2>Lo que ya existe dentro del juego.</h2>
             </div>
-            <p>Mapas conectados, combate por carga y sistemas RPG que cambian build a build.</p>
+            <p>No es una lista de promesas: son partes del proyecto que ya estoy trabajando.</p>
           </div>
 
           <div className="worldGrid">
@@ -236,9 +236,9 @@ export default function HomePage() {
           <div className="sectionHead">
             <div>
               <span>Desarrollo</span>
-              <h2>Estado del proyecto, sin barras de progreso inventadas.</h2>
+              <h2>Notas del desarrollo actual.</h2>
             </div>
-            <p>Esto es lo que hay hoy. Cuando cambie, cambia aquí.</p>
+            <p>Lo iré actualizando conforme avance el juego.</p>
           </div>
           <div className="roadmap">
             {roadmap.map((item) => (
@@ -257,9 +257,9 @@ export default function HomePage() {
           <div className="sectionHead">
             <div>
               <span>Comunidad</span>
-              <h2>Entra en el proceso.</h2>
+              <h2>Hay varias formas de echar una mano.</h2>
             </div>
-            <p>Leer es público. Escribir, responder y votar requiere cuenta.</p>
+            <p>El foro se puede leer sin cuenta. Para participar, responder o votar sí necesitas registrarte.</p>
           </div>
           <div className="participation">
             {participation.map((item) => (
@@ -307,8 +307,8 @@ export default function HomePage() {
           <article className="manifesto">
             <div>
               <span className="label gold">Apoya el proyecto</span>
-              <h2>Ayuda a que ByeTale siga creciendo.</h2>
-              <p>Si te gusta el proyecto, puedes apoyar voluntariamente su desarrollo mediante PayPal.</p>
+              <h2>Si quieres apoyar el tiempo que dedico a ByeTale.</h2>
+              <p>El apoyo es completamente voluntario y va directamente a ayudarme mientras continúo desarrollando el juego. No desbloquea ventajas ni contenido exclusivo.</p>
             </div>
             <a className="button primary" href="https://paypal.me/byetale" target="_blank" rel="noreferrer">Apoyar en PayPal ↗</a>
           </article>
@@ -320,8 +320,8 @@ export default function HomePage() {
           <article className="manifesto">
             <div>
               <span className="label gold">Comunidad</span>
-              <h2>¿Tienes algo concreto que aportar?</h2>
-              <p>Abre un hilo. Si sirve al juego, queda ahí para discutirlo y seguirlo.</p>
+              <h2>¿Tienes una idea, un fallo o algo que enseñar?</h2>
+              <p>Déjalo en el foro. Lo leeré y, si encaja con ByeTale, podremos trabajarlo entre todos.</p>
             </div>
             <a className="textLink manifestoLink" href="/forum">Ir al foro →</a>
           </article>
