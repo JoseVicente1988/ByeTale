@@ -1953,3 +1953,53 @@ main {
     gap: 0;
   }
 }
+
+
+/* The layered layout carries the page: remove the competing wallpaper artwork. */
+body::before,
+.heroScene {
+  display: none;
+}
+
+.hero {
+  min-height: 690px;
+  background:
+    radial-gradient(circle at 78% 26%, rgba(142, 185, 221, 0.1), transparent 30rem),
+    linear-gradient(180deg, #090c11, #07090c);
+}
+
+.heroShade {
+  background:
+    radial-gradient(circle at 68% 36%, rgba(216, 185, 117, 0.055), transparent 28rem),
+    linear-gradient(180deg, rgba(5, 7, 10, 0.06), #07090c 96%);
+}
+
+.heroLayout {
+  min-height: 510px;
+}
+
+.heroCopy {
+  width: min(720px, 70vw);
+}
+
+.featureLarge {
+  background:
+    radial-gradient(circle at 78% 10%, rgba(142, 185, 221, 0.1), transparent 20rem),
+    rgba(6, 8, 11, 0.48);
+}
+
+@media (max-width: 760px) {
+  .hero {
+    min-height: 720px;
+    padding-top: 100px;
+  }
+
+  .heroLayout {
+    min-height: 540px;
+    padding-top: 0;
+  }
+
+  .heroCopy {
+    width: 100%;
+  }
+}
