@@ -1,0 +1,43 @@
+.dock {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 80;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 14px;
+  border: 1px solid rgba(216, 185, 117, 0.26);
+  border-radius: 999px;
+  color: #f0e8d8;
+  background: rgba(10, 13, 18, 0.9);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(14px);
+  text-decoration: none;
+  font-size: 0.74rem;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d8b975;
+  box-shadow: 0 0 0 5px rgba(216, 185, 117, 0.08);
+}
+
+.online {
+  background: #48d17c;
+  box-shadow: 0 0 0 5px rgba(72, 209, 124, 0.08);
+}
+
+@media (max-width: 640px) {
+  .dock {
+    right: 12px;
+    bottom: 12px;
+    min-height: 40px;
+    padding: 0 12px;
+  }
+}

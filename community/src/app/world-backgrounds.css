@@ -1,0 +1,174 @@
+/* ByeTale Community — bright 2D world background, loaded AFTER pixel-theme.css. */
+
+:root {
+  --world-scene: url('/byetale-world-day.svg');
+  --world-panel: rgba(8, 18, 25, .50);
+  --world-panel-strong: rgba(7, 16, 23, .60);
+}
+
+html {
+  background: #79a9c4 !important;
+}
+
+body {
+  background-color: #79a9c4 !important;
+  background-image: var(--world-scene) !important;
+  background-position: center top !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+body::before,
+body::after {
+  display: none !important;
+}
+
+/* No dark full-screen hero overlays. */
+.hero {
+  background: transparent !important;
+}
+
+.heroScene,
+.heroScene::before,
+.heroScene::after,
+.heroShade {
+  display: none !important;
+}
+
+/* Contrast belongs behind text only. */
+.heroCopy {
+  position: relative;
+  background: linear-gradient(90deg, rgba(7,16,23,.52), rgba(7,16,23,.20) 72%, transparent) !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,.72);
+}
+
+.heroCaption,
+.sectionHead {
+  text-shadow: 0 2px 12px rgba(0,0,0,.72);
+}
+
+/* Keep the world visible between UI panels. */
+.quickStart,
+.worldSection,
+.roadmapSection,
+.participationSection,
+.finalSection,
+.streamSection,
+footer {
+  background: transparent !important;
+}
+
+.worldSection,
+.roadmapSection,
+.participationSection,
+.finalSection,
+.streamSection {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.worldSection::before,
+.worldSection::after,
+.roadmapSection::before,
+.roadmapSection::after,
+.participationSection::before,
+.participationSection::after,
+.finalSection::before,
+.finalSection::after,
+.streamSection::before,
+.streamSection::after {
+  display: none !important;
+}
+
+.quickCard,
+.roadCard,
+.participationCard,
+.manifesto,
+.featureCard,
+.streamBand {
+  background: var(--world-panel) !important;
+  backdrop-filter: blur(4px) saturate(1.05) !important;
+}
+
+.featureLarge {
+  background: var(--world-panel) !important;
+}
+
+/* Forum: same bright world, no tint layer over it. */
+.forumPage {
+  position: relative;
+  background-color: #79a9c4 !important;
+  background-image: var(--world-scene) !important;
+  background-position: center top !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+.forumPage::before,
+.forumPage::after {
+  display: none !important;
+}
+
+.forumHero {
+  position: relative;
+  overflow: hidden;
+  background: var(--world-scene) center 42% / cover no-repeat !important;
+}
+
+.forumHero::after {
+  display: none !important;
+}
+
+.forumHero > .forumShell {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(7,17,24,.48), rgba(7,17,24,.14) 72%, transparent) !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,.72);
+}
+
+.forumSidebar,
+.forumMain {
+  background: rgba(8,18,26,.58) !important;
+  backdrop-filter: blur(5px) saturate(1.04) !important;
+}
+
+.forumHeader {
+  background: rgba(8,18,26,.66) !important;
+}
+
+/* Account route: pixel-theme previously reintroduced another full-screen dark gradient here. */
+body:has(form) main[class*='account_page'] {
+  background-color: #79a9c4 !important;
+  background-image: var(--world-scene) !important;
+  background-position: center top !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+main[class*='account_page'] section[class*='account_card'],
+main[class*='account_page'] [class*='account_rules'],
+main[class*='account_page'] [class*='account_identity'] {
+  background: rgba(8,18,26,.64) !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+@media (max-width: 760px) {
+  body,
+  .forumPage,
+  body:has(form) main[class*='account_page'] {
+    background-attachment: scroll !important;
+    background-position: 54% top !important;
+  }
+
+  .heroCopy {
+    background: rgba(7,16,23,.42) !important;
+  }
+
+  .forumHero > .forumShell {
+    background: rgba(7,17,24,.42) !important;
+  }
+}
