@@ -143,7 +143,7 @@ export default function HomePage() {
       <header className="siteHeader">
         <div className="shell nav">
           <a className="brand" href="#inicio" aria-label="Ir al inicio">
-            <Image className="brandIcon" src="/byetale-icon.svg" alt="" width={42} height={42} priority unoptimized />
+            <Image className="brandIcon" src="/byetale-game-icon.png" alt="" width={42} height={42} priority unoptimized />
             <span className="brandCopy">
               <strong>ByeTale</strong>
               <small>Community &amp; Development</small>
@@ -317,7 +317,7 @@ export default function HomePage() {
       <footer>
         <div className="shell footer">
           <div className="brand">
-            <Image className="brandIcon footerIcon" src="/byetale-icon.svg" alt="" width={38} height={38} unoptimized />
+            <Image className="brandIcon footerIcon" src="/byetale-game-icon.png" alt="" width={38} height={38} unoptimized />
             <span className="brandCopy"><strong>ByeTale</strong><small>Community &amp; Development</small></span>
           </div>
           <p>RPG 2D · Godot 4 · Comunidad</p>

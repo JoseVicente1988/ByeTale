@@ -14,7 +14,10 @@ export const metadata: Metadata = {
   description:
     "Comunidad y desarrollo de ByeTale, RPG 2D multijugador en Godot 4: mapas, combate, quests, testing, ideas y directos.",
   icons: {
-    icon: "/byetale-icon.svg",
+    icon: [
+      { url: "/byetale-game-icon.png", type: "image/png" },
+    ],
+    apple: "/byetale-game-icon.png",
   },
 };
 
