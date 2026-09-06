@@ -237,9 +237,16 @@ export default function ForumPage() {
     const tokenResult = await neon.from("forum_upload_tokens").insert({ token, profile_id: profile.id });
     if (tokenResult.error) throw tokenResult.error;
 
+    const jwt = session.data?.session?.token;
+    if (!jwt) throw new Error("Tu sesión ha caducado. Vuelve a iniciar sesión para adjuntar la imagen.");
+
     const response = await fetch(FORUM_UPLOAD_URL, {
       method: "POST",
-      headers: { "Content-Type": file.type, "x-upload-token": token },
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": file.type,
+        "x-upload-token": token,
+      },
       body: file,
     });
     const payload = (await response.json()) as { url?: string; error?: string };
