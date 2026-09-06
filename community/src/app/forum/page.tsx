@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { neon } from "../../lib/neon-client";
+import { authenticateWithEmail, authErrorMessage, type AuthMode } from "../../lib/auth";
 import "./forum.css";
 
 type Category = {
@@ -64,11 +65,6 @@ const typeLabels: Record<string, string> = {
   announcement: "Anuncio",
 };
 
-function errorMessage(error: unknown) {
-  if (error && typeof error === "object" && "message" in error) return String(error.message);
-  return "Ha ocurrido un error inesperado.";
-}
-
 function dateLabel(value: string) {
   return new Intl.DateTimeFormat("es-ES", {
     day: "2-digit",
@@ -114,7 +110,7 @@ export default function ForumPage() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [authOpen, setAuthOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  const [authMode, setAuthMode] = useState<AuthMode>("signin");
   const [composerOpen, setComposerOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [replyBody, setReplyBody] = useState("");
@@ -264,18 +260,11 @@ export default function ForumPage() {
     const password = String(form.get("password") ?? "");
     const name = String(form.get("name") ?? "").trim();
     try {
-      if (authMode === "signup") {
-        const result = await neon.auth.signUp.email({ email, password, name: name || email.split("@")[0] });
-        if (result.error) throw result.error;
-        setNotice("Cuenta creada. Ya puedes entrar en el foro.");
-      } else {
-        const result = await neon.auth.signIn.email({ email, password });
-        if (result.error) throw result.error;
-        setNotice("Sesión iniciada.");
-      }
+      await authenticateWithEmail(authMode, email, password, name);
+      setNotice(authMode === "signup" ? "Cuenta creada. Ya puedes entrar en el foro." : "Sesión iniciada.");
       setAuthOpen(false);
     } catch (authError) {
-      setError(errorMessage(authError));
+      setError(authErrorMessage(authError));
     } finally {
       setBusy(false);
     }
@@ -346,8 +335,8 @@ export default function ForumPage() {
     } catch (createError) {
       setError(
         newThreadId
-          ? `El hilo llegó a crearse, pero una operación secundaria falló: ${errorMessage(createError)}`
-          : errorMessage(createError),
+          ? `El hilo llegó a crearse, pero una operación secundaria falló: ${authErrorMessage(createError)}`
+          : authErrorMessage(createError),
       );
       if (newThreadId) {
         await loadForum();
@@ -386,7 +375,7 @@ export default function ForumPage() {
       setNotice("Respuesta publicada.");
       await Promise.all([loadPosts(selectedThread.id), loadForum()]);
     } catch (replyError) {
-      setError(errorMessage(replyError));
+      setError(authErrorMessage(replyError));
     } finally {
       setBusy(false);
     }
@@ -423,7 +412,7 @@ export default function ForumPage() {
       }
       await loadForum();
     } catch (voteError) {
-      setError(errorMessage(voteError));
+      setError(authErrorMessage(voteError));
     } finally {
       setBusy(false);
     }

@@ -3,14 +3,8 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { neon } from "../../lib/neon-client";
+import { authenticateWithEmail, authErrorMessage, type AuthMode } from "../../lib/auth";
 import styles from "./account.module.css";
-
-type AuthMode = "signin" | "signup";
-
-function errorMessage(error: unknown) {
-  if (error && typeof error === "object" && "message" in error) return String(error.message);
-  return "Ha ocurrido un error inesperado.";
-}
 
 export default function AccountPage() {
   const session = neon.auth.useSession();
@@ -37,25 +31,16 @@ export default function AccountPage() {
     const name = String(form.get("name") ?? "").trim();
 
     try {
-      if (mode === "signup") {
-        const result = await neon.auth.signUp.email({
-          email,
-          password,
-          name: name || email.split("@")[0],
-        });
-        if (result.error) throw result.error;
-        setNotice("Cuenta creada. Tu sesión ya puede usarse para publicar en el foro.");
-      } else {
-        const result = await neon.auth.signIn.email({ email, password });
-        if (result.error) throw result.error;
-        setNotice("Sesión iniciada correctamente.");
-      }
+      await authenticateWithEmail(mode, email, password, name);
+      setNotice(mode === "signup"
+        ? "Cuenta creada. Tu sesión ya puede usarse para publicar en el foro."
+        : "Sesión iniciada correctamente.");
 
       window.setTimeout(() => {
         window.location.assign("/forum");
       }, 350);
     } catch (authError) {
-      setError(errorMessage(authError));
+      setError(authErrorMessage(authError));
     } finally {
       setBusy(false);
     }
@@ -68,7 +53,7 @@ export default function AccountPage() {
       await neon.auth.signOut();
       setNotice("Sesión cerrada.");
     } catch (signOutError) {
-      setError(errorMessage(signOutError));
+      setError(authErrorMessage(signOutError));
     } finally {
       setBusy(false);
     }

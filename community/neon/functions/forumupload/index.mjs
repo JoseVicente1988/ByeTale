@@ -52,9 +52,13 @@ function detectImage(bytes, declaredType) {
   return null;
 }
 
-async function validToken(token, authorization) {
-  const url = `${process.env.NEON_DATA_API_URL}/community_valid_upload_tokens?token=eq.${encodeURIComponent(token)}&select=token&limit=1`;
-  const response = await fetch(url, { headers: { Accept: "application/json", Authorization: authorization } });
+async function consumeToken(token, authorization) {
+  const expiresAfter = encodeURIComponent(new Date().toISOString());
+  const url = `${process.env.NEON_DATA_API_URL}/forum_upload_tokens?token=eq.${encodeURIComponent(token)}&expires_at=gt.${expiresAfter}&select=token`;
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: { Accept: "application/json", Authorization: authorization, Prefer: "return=representation" },
+  });
   if (!response.ok) return false;
   const rows = await response.json();
   return Array.isArray(rows) && rows.length === 1;
@@ -112,13 +116,12 @@ export default {
       return json({ error: "Debes iniciar sesión para subir una imagen." }, 401, origin);
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(token))
       return json({ error: "Autorización de subida inválida." }, 401, origin);
-    if (!(await validToken(token, authorization))) return json({ error: "La autorización ha caducado." }, 401, origin);
-
     const declaredType = (request.headers.get("content-type") || "").split(";")[0].toLowerCase();
     const body = new Uint8Array(await request.arrayBuffer());
     if (!body.length || body.length > MAX_BYTES) return json({ error: "La imagen debe ocupar como máximo 3 MB." }, 413, origin);
     const image = detectImage(body, declaredType);
     if (!image) return json({ error: "Solo se admiten imágenes PNG, JPG o WEBP válidas." }, 415, origin);
+    if (!(await consumeToken(token, authorization))) return json({ error: "La autorización ha caducado." }, 401, origin);
 
     try {
       const url = await uploadToStorage(`forum/${token}.${image.ext}`, body, image.type);

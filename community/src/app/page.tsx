@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import Script from "next/script";
+import { useCallback, useRef, useState } from "react";
 
 type StreamStatus = "checking" | "live" | "offline";
 
@@ -84,48 +85,27 @@ const participation = [
 
 export default function HomePage() {
   const [streamStatus, setStreamStatus] = useState<StreamStatus>("checking");
+  const playerMounted = useRef(false);
+  const playerHost = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    let cancelled = false;
+  const mountPlayer = useCallback(() => {
+    if (playerMounted.current || !window.Twitch?.Player || !playerHost.current) return;
+    playerMounted.current = true;
+    playerHost.current.replaceChildren();
 
-    const mountPlayer = () => {
-      if (cancelled || !window.Twitch?.Player) return;
-      const host = document.getElementById("byetale-twitch-player");
-      if (!host) return;
-      host.innerHTML = "";
+    const TwitchPlayer = window.Twitch.Player;
+    const player = new TwitchPlayer("byetale-twitch-player", {
+      width: "100%",
+      height: "100%",
+      channel: TWITCH_CHANNEL,
+      parent: [window.location.hostname],
+      autoplay: false,
+      muted: true,
+    });
 
-      const TwitchPlayer = window.Twitch.Player;
-      const player = new TwitchPlayer("byetale-twitch-player", {
-        width: "100%",
-        height: "100%",
-        channel: TWITCH_CHANNEL,
-        parent: [window.location.hostname],
-        autoplay: false,
-        muted: true,
-      });
-
-      player.addEventListener(TwitchPlayer.ONLINE, () => setStreamStatus("live"));
-      player.addEventListener(TwitchPlayer.PLAYING, () => setStreamStatus("live"));
-      player.addEventListener(TwitchPlayer.OFFLINE, () => setStreamStatus("offline"));
-    };
-
-    const existingScript = document.getElementById("twitch-player-api") as HTMLScriptElement | null;
-    if (existingScript) {
-      if (window.Twitch?.Player) mountPlayer();
-      else existingScript.addEventListener("load", mountPlayer, { once: true });
-    } else {
-      const script = document.createElement("script");
-      script.id = "twitch-player-api";
-      script.src = "https://player.twitch.tv/js/embed/v1.js";
-      script.async = true;
-      script.addEventListener("load", mountPlayer, { once: true });
-      script.addEventListener("error", () => setStreamStatus("offline"), { once: true });
-      document.body.appendChild(script);
-    }
-
-    return () => {
-      cancelled = true;
-    };
+    player.addEventListener(TwitchPlayer.ONLINE, () => setStreamStatus("live"));
+    player.addEventListener(TwitchPlayer.PLAYING, () => setStreamStatus("live"));
+    player.addEventListener(TwitchPlayer.OFFLINE, () => setStreamStatus("offline"));
   }, []);
 
   const streamLabel =
@@ -140,6 +120,14 @@ export default function HomePage() {
 
   return (
     <main>
+      <Script
+        id="twitch-player-api"
+        src="https://player.twitch.tv/js/embed/v1.js"
+        strategy="afterInteractive"
+        onLoad={mountPlayer}
+        onReady={mountPlayer}
+        onError={() => setStreamStatus("offline")}
+      />
       <header className="siteHeader">
         <div className="shell nav">
           <a className="brand" href="#inicio" aria-label="Ir al inicio">
@@ -293,7 +281,7 @@ export default function HomePage() {
           </article>
 
           <div className="twitchFrame">
-            <div id="byetale-twitch-player" className="twitchPlayer" aria-label={`Twitch de ${TWITCH_CHANNEL}`} />
+            <div ref={playerHost} id="byetale-twitch-player" className="twitchPlayer" aria-label={`Twitch de ${TWITCH_CHANNEL}`} />
             <div className="twitchFooter">
               <span>Twitch oficial de ByeTale</span>
               <a href={TWITCH_URL} target="_blank" rel="noreferrer">Abrir en Twitch ↗</a>

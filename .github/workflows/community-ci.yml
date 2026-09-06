@@ -33,7 +33,11 @@ jobs:
 
       - name: Install dependencies
         working-directory: community
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
+
+      - name: Dependency security audit
+        working-directory: community
+        run: npm audit --audit-level=high
 
       - name: Typecheck
         working-directory: community
