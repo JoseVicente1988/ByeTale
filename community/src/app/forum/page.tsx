@@ -38,6 +38,7 @@ type ForumPost = {
   author: string;
   avatar_url: string | null;
   is_official: boolean;
+  image_url: string | null;
 };
 
 type Proposal = {
@@ -50,6 +51,8 @@ type Proposal = {
 type Stats = { threads: number; posts: number; members: number };
 
 type Profile = { id: string; display_name: string };
+
+const FORUM_UPLOAD_URL = "https://br-lively-unit-aygkh67q-forumupload.compute.c-5.us-east-2.aws.neon.tech/";
 
 const typeLabels: Record<string, string> = {
   discussion: "Discusión",
@@ -115,6 +118,7 @@ export default function ForumPage() {
   const [composerOpen, setComposerOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [replyBody, setReplyBody] = useState("");
+  const [replyImage, setReplyImage] = useState<File | null>(null);
 
   const loadForum = useCallback(async () => {
     setLoading(true);
@@ -157,7 +161,7 @@ export default function ForumPage() {
     setError("");
     const result = await neon
       .from("community_public_posts")
-      .select("id,thread_id,body,created_at,edited_at,author,avatar_url,is_official")
+      .select("id,thread_id,body,created_at,edited_at,author,avatar_url,is_official,image_url")
       .eq("thread_id", threadId)
       .order("created_at", { ascending: true });
     if (result.error) setError(result.error.message);
@@ -222,6 +226,27 @@ export default function ForumPage() {
     return created.data as Profile;
   }
 
+  async function uploadForumImage(profile: Profile, file: File | null) {
+    if (!file) return null;
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+      throw new Error("La imagen debe ser PNG, JPG o WEBP.");
+    }
+    if (file.size > 3 * 1024 * 1024) throw new Error("La imagen no puede superar los 3 MB.");
+
+    const token = crypto.randomUUID();
+    const tokenResult = await neon.from("forum_upload_tokens").insert({ token, profile_id: profile.id });
+    if (tokenResult.error) throw tokenResult.error;
+
+    const response = await fetch(FORUM_UPLOAD_URL, {
+      method: "POST",
+      headers: { "Content-Type": file.type, "x-upload-token": token },
+      body: file,
+    });
+    const payload = (await response.json()) as { url?: string; error?: string };
+    if (!response.ok || !payload.url) throw new Error(payload.error || "No se pudo adjuntar la imagen.");
+    return payload.url;
+  }
+
   async function handleAuth(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
@@ -265,12 +290,15 @@ export default function ForumPage() {
       const categoryId = String(form.get("category") ?? "");
       const title = String(form.get("title") ?? "").trim();
       const body = String(form.get("body") ?? "").trim();
+      const imageEntry = form.get("image");
+      const imageFile = imageEntry instanceof File && imageEntry.size > 0 ? imageEntry : null;
       const category = categories.find((item) => item.id === categoryId);
       if (!category || category.is_read_only) throw new Error("Esa categoría no admite nuevos hilos.");
       if (title.length < 6 || title.length > 120) throw new Error("El título debe tener entre 6 y 120 caracteres.");
       if (body.length < 20 || body.length > 10000) throw new Error("El mensaje debe tener entre 20 y 10.000 caracteres.");
 
       const profile = await ensureProfile();
+      const imageUrl = await uploadForumImage(profile, imageFile);
       const threadType = typeForCategory(category.slug);
       const threadResult = await neon
         .from("threads")
@@ -290,6 +318,7 @@ export default function ForumPage() {
         thread_id: newThreadId,
         author_id: profile.id,
         body,
+        image_url: imageUrl,
       });
       if (postResult.error) throw postResult.error;
 
@@ -329,21 +358,24 @@ export default function ForumPage() {
       return;
     }
     const body = replyBody.trim();
-    if (body.length < 2 || body.length > 10000) {
-      setError("La respuesta debe tener entre 2 y 10.000 caracteres.");
+    if ((!body && !replyImage) || body.length > 10000) {
+      setError("Escribe una respuesta o adjunta una imagen. El texto admite hasta 10.000 caracteres.");
       return;
     }
     setBusy(true);
     setError("");
     try {
       const profile = await ensureProfile();
+      const imageUrl = await uploadForumImage(profile, replyImage);
       const result = await neon.from("posts").insert({
         thread_id: selectedThread.id,
         author_id: profile.id,
-        body,
+        body: body || "Imagen adjunta.",
+        image_url: imageUrl,
       });
       if (result.error) throw result.error;
       setReplyBody("");
+      setReplyImage(null);
       setNotice("Respuesta publicada.");
       await Promise.all([loadPosts(selectedThread.id), loadForum()]);
     } catch (replyError) {
@@ -530,7 +562,15 @@ export default function ForumPage() {
                           </div>
                           {post.is_official && <span className="officialMark">Oficial</span>}
                         </aside>
-                        <div className="postBody">{post.body}</div>
+                        <div className="postBody">
+                          <p>{post.body}</p>
+                          {post.image_url && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <a href={post.image_url} target="_blank" rel="noreferrer" className="postImageLink">
+                              <img className="postImage" src={post.image_url} alt={`Imagen adjunta por ${post.author}`} loading="lazy" />
+                            </a>
+                          )}
+                        </div>
                       </article>
                     ))}
                   </div>
@@ -547,10 +587,22 @@ export default function ForumPage() {
                       disabled={!user || busy}
                       maxLength={10000}
                     />
+                    <div className="attachmentRow">
+                      <label className="attachmentButton">
+                        <span>Adjuntar imagen</span>
+                        <input
+                          type="file"
+                          accept="image/png,image/jpeg,image/webp"
+                          onChange={(event) => setReplyImage(event.target.files?.[0] ?? null)}
+                          disabled={!user || busy}
+                        />
+                      </label>
+                      {replyImage && <span className="attachmentName">{replyImage.name} · {(replyImage.size / 1024 / 1024).toFixed(1)} MB</span>}
+                    </div>
                     <div className="replyActions">
                       {!user && <button type="button" className="forumButton" onClick={() => setAuthOpen(true)}>Acceder</button>}
-                      <button className="forumButton primary" disabled={!user || busy || replyBody.trim().length < 2}>
-                        Publicar respuesta
+                      <button className="forumButton primary" disabled={!user || busy || (!replyBody.trim() && !replyImage)}>
+                        {busy ? "Publicando…" : "Publicar respuesta"}
                       </button>
                     </div>
                   </form>
@@ -630,6 +682,7 @@ export default function ForumPage() {
                 <label><span>Categoría</span><select name="category" defaultValue={categories.find((c) => c.slug === selectedCategory && !c.is_read_only)?.id ?? categories.find((c) => !c.is_read_only)?.id} required>{categories.filter((category) => !category.is_read_only).map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
                 <label><span>Título</span><input name="title" minLength={6} maxLength={120} required placeholder="¿De qué quieres hablar?" /></label>
                 <label><span>Primer mensaje</span><textarea name="body" minLength={20} maxLength={10000} required placeholder="Contexto, propuesta, pasos para reproducir el bug, detalles del casting…" /></label>
+                <label className="fileField"><span>Imagen opcional</span><input name="image" type="file" accept="image/png,image/jpeg,image/webp" /><small>PNG, JPG o WEBP · máximo 3 MB</small></label>
                 <div className="modalFooter"><button type="button" className="forumButton" onClick={() => setComposerOpen(false)}>Cancelar</button><button className="forumButton primary" disabled={busy}>{busy ? "Publicando…" : "Publicar"}</button></div>
               </form>
             </div>
