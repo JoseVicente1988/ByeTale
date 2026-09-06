@@ -190,7 +190,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section worldSection" id="juego">
+      <section className="section worldSection sheetPage sheetPageLeft" id="juego" data-folio="01">
         <div className="shell">
           <div className="sectionHead">
             <div>
@@ -231,7 +231,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section roadmapSection" id="roadmap">
+      <section className="section roadmapSection sheetPage sheetPageRight" id="roadmap" data-folio="02">
         <div className="shell">
           <div className="sectionHead">
             <div>
@@ -252,7 +252,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section participationSection" id="participa">
+      <section className="section participationSection sheetPage sheetPageLeft" id="participa" data-folio="03">
         <div className="shell">
           <div className="sectionHead">
             <div>
@@ -274,7 +274,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="streamSection" id="twitch">
+      <section className="streamSection sheetPage sheetPageRight" id="twitch" data-folio="04">
         <div className="shell">
           <article className="streamBand">
             <div className="streamIdentity">
@@ -302,7 +302,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section finalSection" id="apoyar">
+      <section className="section finalSection supportPage sheetPage sheetPageLeft" id="apoyar" data-folio="05">
         <div className="shell">
           <article className="manifesto">
             <div>
@@ -315,7 +315,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section finalSection">
+      <section className="section finalSection communityPage sheetPage sheetPageRight" data-folio="06">
         <div className="shell">
           <article className="manifesto">
             <div>
