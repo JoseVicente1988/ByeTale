@@ -13,10 +13,13 @@ export default function AccountPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [nextPath, setNextPath] = useState("/forum");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setMode(params.get("mode") === "signin" ? "signin" : "signup");
+    const next = params.get("next");
+    if (next?.startsWith("/") && !next.startsWith("//")) setNextPath(next);
   }, []);
 
   async function handleAuth(event: FormEvent<HTMLFormElement>) {
@@ -37,7 +40,7 @@ export default function AccountPage() {
         : "Sesión iniciada correctamente.");
 
       window.setTimeout(() => {
-        window.location.assign("/forum");
+        window.location.assign(nextPath);
       }, 350);
     } catch (authError) {
       setError(authErrorMessage(authError));
@@ -92,7 +95,7 @@ export default function AccountPage() {
                 <span>{user.email}</span>
               </div>
               <div className={styles.sessionActions}>
-                <Link className={`${styles.button} ${styles.primary}`} href="/forum">Ir al foro</Link>
+                <Link className={`${styles.button} ${styles.primary}`} href={nextPath}>Continuar</Link>
                 <button className={styles.button} onClick={() => void signOut()} disabled={busy}>Cerrar sesión</button>
               </div>
             </div>

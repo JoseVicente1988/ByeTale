@@ -17,6 +17,8 @@ No crear proyectos Vercel alternativos para cada iteración. Los fallos de build
 
 La integración funcional seguirá utilizando el proyecto Neon existente **ByeTale Community**. Las credenciales deben vivir exclusivamente en variables de entorno de Vercel/Neon y nunca dentro del repositorio.
 
+La integración del juego con el centro de bugs está documentada en [docs/GODOT_BUG_REPORTING_API.md](docs/GODOT_BUG_REPORTING_API.md).
+
 ## Desarrollo
 
 ```bash

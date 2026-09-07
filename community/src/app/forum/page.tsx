@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { neon } from "../../lib/neon-client";
 import { authenticateWithEmail, authErrorMessage, type AuthMode } from "../../lib/auth";
+import { ensureForumProfile, slugifyForumTitle, uploadForumImage } from "../../lib/forum-client";
 import "./forum.css";
 
 type Category = {
@@ -51,10 +52,6 @@ type Proposal = {
 
 type Stats = { threads: number; posts: number; members: number };
 
-type Profile = { id: string; display_name: string };
-
-const FORUM_UPLOAD_URL = "https://br-lively-unit-aygkh67q-forumupload.compute.c-5.us-east-2.aws.neon.tech/";
-
 const typeLabels: Record<string, string> = {
   discussion: "Discusión",
   proposal: "Propuesta",
@@ -73,17 +70,6 @@ function dateLabel(value: string) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(value));
-}
-
-function slugify(title: string) {
-  const base = title
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 70) || "hilo";
-  return `${base}-${crypto.randomUUID().replaceAll("-", "").slice(0, 8)}`;
 }
 
 function typeForCategory(slug: string) {
@@ -197,59 +183,6 @@ export default function ForumPage() {
     return threads.filter((thread) => thread.category_slug === slug).length;
   }
 
-  async function ensureProfile(): Promise<Profile> {
-    if (!user) throw new Error("Debes iniciar sesión.");
-    const existing = await neon
-      .from("profiles")
-      .select("id,display_name")
-      .eq("auth_user_id", user.id)
-      .limit(1);
-    if (existing.error) throw existing.error;
-    if (existing.data?.[0]) return existing.data[0] as Profile;
-
-    const displayName = (user.name || user.email?.split("@")[0] || "Miembro ByeTale").slice(0, 40);
-    const created = await neon
-      .from("profiles")
-      .insert({
-        auth_user_id: user.id,
-        email: user.email,
-        display_name: displayName,
-        avatar_url: user.image ?? null,
-      })
-      .select("id,display_name")
-      .single();
-    if (created.error || !created.data) throw created.error ?? new Error("No se pudo crear el perfil.");
-    return created.data as Profile;
-  }
-
-  async function uploadForumImage(profile: Profile, file: File | null) {
-    if (!file) return null;
-    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
-      throw new Error("La imagen debe ser PNG, JPG o WEBP.");
-    }
-    if (file.size > 3 * 1024 * 1024) throw new Error("La imagen no puede superar los 3 MB.");
-
-    const token = crypto.randomUUID();
-    const tokenResult = await neon.from("forum_upload_tokens").insert({ token, profile_id: profile.id });
-    if (tokenResult.error) throw tokenResult.error;
-
-    const jwt = session.data?.session?.token;
-    if (!jwt) throw new Error("Tu sesión ha caducado. Vuelve a iniciar sesión para adjuntar la imagen.");
-
-    const response = await fetch(FORUM_UPLOAD_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        "Content-Type": file.type,
-        "x-upload-token": token,
-      },
-      body: file,
-    });
-    const payload = (await response.json()) as { url?: string; error?: string };
-    if (!response.ok || !payload.url) throw new Error(payload.error || "No se pudo adjuntar la imagen.");
-    return payload.url;
-  }
-
   async function handleAuth(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
@@ -293,8 +226,8 @@ export default function ForumPage() {
       if (title.length < 6 || title.length > 120) throw new Error("El título debe tener entre 6 y 120 caracteres.");
       if (body.length < 20 || body.length > 10000) throw new Error("El mensaje debe tener entre 20 y 10.000 caracteres.");
 
-      const profile = await ensureProfile();
-      const imageUrl = await uploadForumImage(profile, imageFile);
+      const profile = await ensureForumProfile(user);
+      const imageUrl = await uploadForumImage(profile, imageFile, session.data?.session?.token);
       const threadType = typeForCategory(category.slug);
       const threadResult = await neon
         .from("threads")
@@ -303,7 +236,7 @@ export default function ForumPage() {
           author_id: profile.id,
           type: threadType,
           title,
-          slug: slugify(title),
+          slug: slugifyForumTitle(title),
         })
         .select("id,slug")
         .single();
@@ -361,8 +294,8 @@ export default function ForumPage() {
     setBusy(true);
     setError("");
     try {
-      const profile = await ensureProfile();
-      const imageUrl = await uploadForumImage(profile, replyImage);
+      const profile = await ensureForumProfile(user);
+      const imageUrl = await uploadForumImage(profile, replyImage, session.data?.session?.token);
       const result = await neon.from("posts").insert({
         thread_id: selectedThread.id,
         author_id: profile.id,
@@ -389,7 +322,7 @@ export default function ForumPage() {
     setBusy(true);
     setError("");
     try {
-      const profile = await ensureProfile();
+      const profile = await ensureForumProfile(user);
       const currentVote = await neon
         .from("proposal_votes")
         .select("thread_id,profile_id")
@@ -436,6 +369,7 @@ export default function ForumPage() {
             <Link href="/">Inicio</Link>
             <Link href="/#roadmap">Roadmap</Link>
             <Link href="/#participa">Entra en el proceso</Link>
+            <Link href="/forum/reportar">Reportar bug</Link>
           </nav>
           <div className="forumUser">
             {user ? (
