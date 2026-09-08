@@ -1,6 +1,6 @@
 # API de reportes de bugs para Godot 4
 
-El cliente Godot envía un reporte manual con diagnóstico técnico sanitizado. El servidor publica el reporte directamente en el foro **Bugs** y devuelve los identificadores de correlación. No existe ya una segunda confirmación web obligatoria.
+ByeTale utiliza el mismo canal de publicación para reportes manuales, errores automáticos y crashes recuperados en el siguiente arranque. El servidor publica directamente en el foro **Bugs** y GitHub mantiene un espejo técnico automático.
 
 ## Endpoint de publicación
 
@@ -8,20 +8,22 @@ El cliente Godot envía un reporte manual con diagnóstico técnico sanitizado. 
 
 Cabecera: `Content-Type: application/json`.
 
-No hay claves de GitHub ni secretos del foro dentro del juego. Una credencial compilada en el cliente sería extraíble.
+No hay claves de GitHub ni secretos del foro dentro del cliente.
 
-## Payload
+## Payload de transporte
+
+El contrato HTTP continúa siendo compatible con schema 1:
 
 ```json
 {
   "schema_version": 1,
-  "installation_id": "6bb678ef-c19f-4b67-9a50-217bb91f2630",
-  "error_code": "PLAYER_INVENTORY_DESYNC",
-  "message": "El inventario local no coincide con el servidor",
-  "game_version": "0.3.0-dev.42",
+  "installation_id": "uuid-local",
+  "error_code": "AUTO_SCRIPT_ERROR",
+  "message": "SCRIPT ERROR: ...",
+  "game_version": "v35.0.8-auto-crash-correlation",
   "platform": "Linux",
   "scene": "res://maps/plaza.tscn",
-  "stack_trace": "InventorySync.gd:184 <- Player.gd:92",
+  "stack_trace": "[BYETALE_INCIDENT_V2] ...",
   "metadata": {
     "renderer": "gl_compatibility",
     "locale": "es_ES",
@@ -33,18 +35,56 @@ No hay claves de GitHub ni secretos del foro dentro del juego. Una credencial co
 }
 ```
 
-Límites principales:
+La correlación avanzada viaja dentro del campo técnico `stack_trace` para mantener compatibilidad con el servidor actual.
 
-- `error_code`: 64 caracteres.
-- `message`: 1000 caracteres.
-- `game_version`: 40 caracteres.
-- `platform`: 80 caracteres.
-- `scene`: 160 caracteres.
-- `stack_trace`: 6000 caracteres.
-- petición completa: 24 KiB.
-- rate limit: 5 reportes por instalación cada 10 minutos.
+### Sección `BYETALE_INCIDENT_V2`
 
-El servidor elimina o evita patrones sensibles como correo, rutas locales y claves conocidas. No deben enviarse contraseñas, tokens, IP, chat ni nombres reales.
+```text
+[BYETALE_INCIDENT_V2]
+incident_id=<uuid>
+session_id=<uuid>
+report_kind=automatic_script_error|automatic_runtime|automatic_crash|manual
+account_id=<id técnico de cuenta>
+username=<usuario del juego>
+character_id=<id técnico del personaje>
+character_name=<nombre del personaje>
+```
+
+### Sección `ERROR_TRACE`
+
+Contiene el stack/backtrace/log recuperado cuando existe.
+
+### Sección `BYETALE_RUNTIME_CONTEXT_V2`
+
+Incluye, según disponibilidad:
+
+- timestamp UTC;
+- escena/mapa;
+- posición del personaje;
+- display server;
+- tamaño de ventana y pantalla;
+- modo de ventana y VSync;
+- sistema operativo y versión;
+- arquitectura;
+- CPU y número de hilos;
+- RAM estática actual/pico;
+- GPU, fabricante y API;
+- renderer;
+- versión de Godot;
+- locale;
+- FPS;
+- uptime;
+- modo de red.
+
+## IDs
+
+- `report_id`: un envío concreto, generado en SQL.
+- `thread_id`: hilo creado en el foro para ese envío.
+- `incident_id`: problema real correlacionable. Un automático y un manual posterior pueden compartirlo.
+- `session_id`: ejecución concreta del cliente.
+- `account_id` / `character_id`: permiten localizar el usuario/personaje involucrado sin enviar tokens ni correo.
+
+El reporte manual reutiliza el último `incident_id` automático durante una ventana de 15 minutos. Al publicarse correctamente el manual, esa correlación activa se cierra.
 
 ## Respuesta correcta
 
@@ -58,71 +98,58 @@ HTTP `201`:
 }
 ```
 
-El cliente solo debe considerar el reporte publicado cuando:
+## Errores automáticos durante ejecución
 
-- `report_id` sea válido;
-- `thread_id` sea válido;
-- `published` sea `true`.
+`BugReporter.report_runtime_error(code, message, trace)`:
 
-## Flujo servidor
+1. conserva el `push_error()` local;
+2. captura backtraces de script cuando están disponibles;
+3. genera `incident_id`;
+4. adjunta identidad técnica + contexto runtime;
+5. encola el reporte automático.
 
-La publicación se realiza en servidor y debe mantener correlación entre:
+Además, `BugReporter` vigila `user://logs/byetale.log` y detecta nuevas líneas `SCRIPT ERROR:`/`FATAL:`. Hay deduplicación y un máximo local de 3 automáticos por 10 minutos.
 
-1. `game_bug_intake` — diagnóstico recibido.
-2. `threads` — hilo visible del foro.
-3. `posts` — primer mensaje del hilo.
-4. `bug_reports` — metadata de bug.
-5. `report_id` ↔ `thread_id` — relación de trazabilidad.
+## Crash duro
 
-El usuario técnico del foro para publicaciones automáticas es `Reporte del juego`.
+Un proceso muerto no puede hacer HTTP. Por eso:
 
-## Errores
+1. cada ejecución escribe `user://bug_runtime_session.json` con `clean_exit=false`;
+2. `_exit_tree()` marca `clean_exit=true` en cierres normales;
+3. Godot mantiene file logging en `user://logs/byetale.log`;
+4. si el siguiente arranque encuentra una sesión no limpia, lee el log rotado anterior;
+5. publica `AUTO_CRASH_PREVIOUS_SESSION` cuando encuentra marcador de crash/fatal, o `AUTO_UNCLEAN_EXIT` fuera del editor;
+6. conserva el crash en `user://bug_pending_crash.json` hasta recibir HTTP 201;
+7. mantiene su `incident_id` para correlacionarlo con un manual posterior.
 
-- `400 invalid_request` — payload inválido.
-- `413 payload_too_large` — reporte demasiado grande.
-- `415 content_type_required` — formato incorrecto.
-- `429 rate_limited` — esperar `retry_after_seconds`.
-- `500 internal_error` — fallo del servicio; el cliente puede reintentar una sola vez.
+En builds release está activo `debug/settings/gdscript/always_track_call_stacks` para que los errores GDScript tengan stacks accionables.
 
-## Espejo técnico en GitHub
+## GitHub
 
-Los reportes publicados se reflejan automáticamente en:
+Los reportes publicados se sincronizan automáticamente a:
 
 `community/docs/bug-reports/`
 
 Componentes:
 
-- Neon Function `buglogexport`: exportación de solo lectura y sanitizada.
-- `.github/workflows/bug-log-sync.yml`: sincronización cada 5 minutos.
-- `community/scripts/sync_bug_logs.py`: generador de Markdown e índice.
-- `community/docs/bug-reports/INDEX.md`: agrupación por fingerprint.
-- `community/docs/bug-reports/<report_id>.md`: registro técnico individual.
+- Neon Function `buglogexport`;
+- `.github/workflows/bug-log-sync.yml` cada 5 minutos;
+- `community/scripts/sync_bug_logs.py`;
+- `INDEX.md`, agrupado por `incident_id` y fingerprint;
+- `<report_id>.md`, expediente individual.
 
-GitHub no es la fuente primaria. El foro/SQL conservan el reporte original; GitHub sirve como histórico técnico, correlación entre builds y análisis de recurrencia.
+GitHub Actions utiliza `GITHUB_TOKEN`; el juego no contiene ninguna credencial de GitHub.
 
-El cliente nunca recibe una credencial de GitHub. El workflow utiliza el `GITHUB_TOKEN` efímero de GitHub Actions.
+## Privacidad
 
-## Datos del espejo
+Para la correlación solicitada se incluyen identidad **del juego** (`account_id`, username, `character_id`, nombre del personaje). No se envían:
 
-Cada archivo intenta conservar todos los datos técnicos sanitizados disponibles:
+- access/session tokens;
+- contraseña;
+- correo;
+- IP;
+- chat;
+- identificadores físicos únicos del hardware;
+- rutas locales del sistema.
 
-- `report_id`;
-- `thread_id` y enlace del foro cuando la correlación existe;
-- fingerprint de incidencia;
-- mensaje del jugador;
-- código de error;
-- versión/build;
-- plataforma;
-- escena/mapa;
-- stack trace/contexto técnico;
-- metadata de runtime;
-- timestamps;
-- representación JSON sanitizada para análisis automático.
-
-No se exportan `installation_id`, hashes de instalación, credenciales, correo, IP, chat ni tokens.
-
-## Reportes manuales
-
-El menú del juego debe mostrar al jugador qué diagnóstico se enviará y solicitar consentimiento antes del POST.
-
-Los cierres abruptos/crash dumps requieren un flujo separado; no deben convertirse en reportes automáticos en bucle sin consentimiento y controles adicionales.
+El reporte manual muestra estos datos antes de pedir consentimiento. Los reportes automáticos se limitan al contexto técnico y a la identidad del juego necesaria para correlación.
