@@ -1,12 +1,16 @@
 # API de reportes de bugs para Godot 4
 
-El juego envía un diagnóstico privado, recibe una URL temporal y la abre para que el jugador añada una nota y una captura. Solo al confirmar se crea el hilo en **Bugs**. Los informes sin confirmar caducan en 24 horas.
+El cliente Godot envía un reporte manual con diagnóstico técnico sanitizado. El servidor publica el reporte directamente en el foro **Bugs** y devuelve los identificadores de correlación. No existe ya una segunda confirmación web obligatoria.
 
-## Endpoint
+## Endpoint de publicación
 
 `POST https://br-lively-unit-aygkh67q-bugreport.compute.c-5.us-east-2.aws.neon.tech/`
 
-Cabecera: `Content-Type: application/json`. No hay clave secreta dentro del juego: una clave compilada sería extraíble. El límite es 5 informes por instalación cada 10 minutos y 24 KiB por petición.
+Cabecera: `Content-Type: application/json`.
+
+No hay claves de GitHub ni secretos del foro dentro del juego. Una credencial compilada en el cliente sería extraíble.
+
+## Payload
 
 ```json
 {
@@ -16,88 +20,109 @@ Cabecera: `Content-Type: application/json`. No hay clave secreta dentro del jueg
   "message": "El inventario local no coincide con el servidor",
   "game_version": "0.3.0-dev.42",
   "platform": "Linux",
-  "scene": "res://world/godspire_citadel.tscn",
+  "scene": "res://maps/plaza.tscn",
   "stack_trace": "InventorySync.gd:184 <- Player.gd:92",
-  "metadata": {"renderer":"gl_compatibility","locale":"es_ES","build_channel":"testing","network_mode":"client","uptime_seconds":1420,"fps":59.8}
+  "metadata": {
+    "renderer": "gl_compatibility",
+    "locale": "es_ES",
+    "build_channel": "testing",
+    "network_mode": "client",
+    "uptime_seconds": 1420,
+    "fps": 59.8
+  }
 }
 ```
 
-Límites: `error_code` 64 caracteres (`A-Z`, `a-z`, números, `. _ : -`), `message` 1000, `game_version` 40, `platform` 80, `scene` 160 y `stack_trace` 6000. Solo se conservan las claves de `metadata` mostradas arriba. No envíes contraseñas, claves, chats, IP, nombres reales ni archivos. La API elimina patrones de correo, rutas locales y claves conocidas.
+Límites principales:
 
-Respuesta `201`:
+- `error_code`: 64 caracteres.
+- `message`: 1000 caracteres.
+- `game_version`: 40 caracteres.
+- `platform`: 80 caracteres.
+- `scene`: 160 caracteres.
+- `stack_trace`: 6000 caracteres.
+- petición completa: 24 KiB.
+- rate limit: 5 reportes por instalación cada 10 minutos.
+
+El servidor elimina o evita patrones sensibles como correo, rutas locales y claves conocidas. No deben enviarse contraseñas, tokens, IP, chat ni nombres reales.
+
+## Respuesta correcta
+
+HTTP `201`:
 
 ```json
-{"report_id":"uuid","report_token":"token-temporal","report_url":"https://byetale-community.vercel.app/forum/reportar?report=uuid#token=token-temporal","expires_at":"fecha ISO"}
+{
+  "report_id": "uuid",
+  "thread_id": "uuid",
+  "published": true
+}
 ```
 
-No registres `report_token`. Viaja en el fragmento `#`, que no se manda en el `Referer`.
+El cliente solo debe considerar el reporte publicado cuando:
 
-Errores: `400 invalid_request`, `413 payload_too_large`, `415 content_type_required`, `429 rate_limited` (esperar `retry_after_seconds`) y `500 internal_error` (ofrecer reporte manual y reintentar como máximo una vez).
+- `report_id` sea válido;
+- `thread_id` sea válido;
+- `published` sea `true`.
 
-## Cliente listo para copiar
+## Flujo servidor
 
-Guárdalo como `bug_reporter.gd` y añádelo como autoload `BugReporter`.
+La publicación se realiza en servidor y debe mantener correlación entre:
 
-```gdscript
-extends Node
+1. `game_bug_intake` — diagnóstico recibido.
+2. `threads` — hilo visible del foro.
+3. `posts` — primer mensaje del hilo.
+4. `bug_reports` — metadata de bug.
+5. `report_id` ↔ `thread_id` — relación de trazabilidad.
 
-const API_URL := "https://br-lively-unit-aygkh67q-bugreport.compute.c-5.us-east-2.aws.neon.tech/"
-const ID_FILE := "user://bug_report_installation_id.txt"
-var request_node: HTTPRequest
+El usuario técnico del foro para publicaciones automáticas es `Reporte del juego`.
 
-func _ready() -> void:
-    request_node = HTTPRequest.new()
-    request_node.timeout = 12.0
-    add_child(request_node)
-    request_node.request_completed.connect(_completed)
+## Errores
 
-func report_bug(code: String, message: String, scene := "", trace := "") -> void:
-    if request_node.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
-        return
-    var payload := {
-        "schema_version": 1,
-        "installation_id": _installation_id(),
-        "error_code": code.left(64),
-        "message": message.left(1000),
-        "game_version": ProjectSettings.get_setting("application/config/version", "dev"),
-        "platform": OS.get_name(),
-        "scene": scene.left(160),
-        "stack_trace": trace.left(6000),
-        "metadata": {
-            "renderer": RenderingServer.get_video_adapter_name().left(120),
-            "locale": TranslationServer.get_locale().left(120),
-            "build_channel": "testing",
-            "uptime_seconds": int(Time.get_ticks_msec() / 1000.0)
-        }
-    }
-    request_node.request(API_URL, PackedStringArray(["Content-Type: application/json"]), HTTPClient.METHOD_POST, JSON.stringify(payload))
+- `400 invalid_request` — payload inválido.
+- `413 payload_too_large` — reporte demasiado grande.
+- `415 content_type_required` — formato incorrecto.
+- `429 rate_limited` — esperar `retry_after_seconds`.
+- `500 internal_error` — fallo del servicio; el cliente puede reintentar una sola vez.
 
-func _completed(result: int, status: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
-    var data = JSON.parse_string(body.get_string_from_utf8())
-    if result == HTTPRequest.RESULT_SUCCESS and status == 201 and data is Dictionary:
-        OS.shell_open(str(data.report_url))
-    else:
-        OS.shell_open("https://byetale-community.vercel.app/forum/reportar")
+## Espejo técnico en GitHub
 
-func _installation_id() -> String:
-    if FileAccess.file_exists(ID_FILE):
-        var saved := FileAccess.get_file_as_string(ID_FILE).strip_edges()
-        if saved.is_valid_uuid(): return saved
-    var bytes := Crypto.new().generate_random_bytes(16)
-    bytes[6] = (bytes[6] & 0x0f) | 0x40
-    bytes[8] = (bytes[8] & 0x3f) | 0x80
-    var value := bytes.hex_encode()
-    value = "%s-%s-%s-%s-%s" % [value.substr(0,8),value.substr(8,4),value.substr(12,4),value.substr(16,4),value.substr(20,12)]
-    var file := FileAccess.open(ID_FILE, FileAccess.WRITE)
-    if file: file.store_string(value)
-    return value
-```
+Los reportes publicados se reflejan automáticamente en:
 
-Botón manual:
+`community/docs/bug-reports/`
 
-```gdscript
-func _on_report_bug_pressed() -> void:
-    BugReporter.report_bug("PLAYER_MANUAL_REPORT", "Reporte abierto manualmente", get_tree().current_scene.scene_file_path)
-```
+Componentes:
 
-Antes de enviarlo, muestra consentimiento y los datos incluidos. Evita reportes automáticos en bucle; los cierres abruptos requieren otro sistema de crash dumps y consentimiento explícito.
+- Neon Function `buglogexport`: exportación de solo lectura y sanitizada.
+- `.github/workflows/bug-log-sync.yml`: sincronización cada 5 minutos.
+- `community/scripts/sync_bug_logs.py`: generador de Markdown e índice.
+- `community/docs/bug-reports/INDEX.md`: agrupación por fingerprint.
+- `community/docs/bug-reports/<report_id>.md`: registro técnico individual.
+
+GitHub no es la fuente primaria. El foro/SQL conservan el reporte original; GitHub sirve como histórico técnico, correlación entre builds y análisis de recurrencia.
+
+El cliente nunca recibe una credencial de GitHub. El workflow utiliza el `GITHUB_TOKEN` efímero de GitHub Actions.
+
+## Datos del espejo
+
+Cada archivo intenta conservar todos los datos técnicos sanitizados disponibles:
+
+- `report_id`;
+- `thread_id` y enlace del foro cuando la correlación existe;
+- fingerprint de incidencia;
+- mensaje del jugador;
+- código de error;
+- versión/build;
+- plataforma;
+- escena/mapa;
+- stack trace/contexto técnico;
+- metadata de runtime;
+- timestamps;
+- representación JSON sanitizada para análisis automático.
+
+No se exportan `installation_id`, hashes de instalación, credenciales, correo, IP, chat ni tokens.
+
+## Reportes manuales
+
+El menú del juego debe mostrar al jugador qué diagnóstico se enviará y solicitar consentimiento antes del POST.
+
+Los cierres abruptos/crash dumps requieren un flujo separado; no deben convertirse en reportes automáticos en bucle sin consentimiento y controles adicionales.
