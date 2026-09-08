@@ -1,0 +1,247 @@
+name: Sync game bug logs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/bug-log-sync.yml'
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: byetale-bug-log-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout community-web
+        uses: actions/checkout@v4
+        with:
+          ref: community-web
+          fetch-depth: 0
+
+      - name: Export published bug reports
+        env:
+          BUG_EXPORT_URL: https://br-lively-unit-aygkh67q-buglogexport.compute.c-5.us-east-2.aws.neon.tech/
+        run: |
+          python - <<'PY'
+          import datetime as dt
+          import hashlib
+          import html
+          import json
+          import os
+          import pathlib
+          import re
+          import urllib.request
+
+          base = pathlib.Path('community/docs/bug-reports')
+          base.mkdir(parents=True, exist_ok=True)
+
+          request = urllib.request.Request(
+              os.environ['BUG_EXPORT_URL'] + '?limit=500',
+              headers={'User-Agent': 'ByeTale-GitHub-Bug-Sync/1.0'},
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              payload = json.load(response)
+
+          if not payload.get('ok'):
+              raise SystemExit(f"bug export failed: {payload}")
+
+          reports = payload.get('reports') or []
+          if not isinstance(reports, list):
+              raise SystemExit('bug export returned an invalid reports array')
+
+          uuid_re = re.compile(r'\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b', re.I)
+          hex_re = re.compile(r'\b0x[0-9a-f]+\b', re.I)
+          num_re = re.compile(r'\b\d+\b')
+
+          def text(value):
+              return '' if value is None else str(value)
+
+          def esc(value):
+              return html.escape(text(value), quote=False)
+
+          def normalize(value):
+              value = text(value).lower().strip()
+              value = uuid_re.sub('<uuid>', value)
+              value = hex_re.sub('<hex>', value)
+              value = num_re.sub('<n>', value)
+              value = re.sub(r'\s+', ' ', value)
+              return value[:500]
+
+          def fingerprint(report):
+              trace = text(report.get('stack_trace'))
+              first_trace = next((line.strip() for line in trace.splitlines() if line.strip()), '')
+              parts = [
+                  normalize(report.get('error_code')),
+                  normalize(report.get('scene')),
+                  normalize(first_trace),
+              ]
+              if text(report.get('error_code')) == 'PLAYER_MANUAL_REPORT':
+                  parts.append(normalize(report.get('message')))
+              raw = '|'.join(parts).encode('utf-8')
+              return hashlib.sha256(raw).hexdigest()[:16]
+
+          def code_block(value):
+              lines = text(value).splitlines() or ['']
+              return '\n'.join('    ' + line for line in lines)
+
+          def iso(value):
+              return text(value) or 'desconocido'
+
+          indexed = []
+          for report in reports:
+              report_id = text(report.get('report_id')).strip()
+              if not report_id:
+                  continue
+              fp = fingerprint(report)
+              report['fingerprint'] = fp
+              indexed.append(report)
+
+              metadata = report.get('metadata') if isinstance(report.get('metadata'), dict) else {}
+              thread_id = text(report.get('thread_id')) or 'sin-correlacion'
+              forum_url = text(report.get('forum_url'))
+              thread_slug = text(report.get('thread_slug'))
+              raw_record = {
+                  'report_id': report_id,
+                  'thread_id': report.get('thread_id'),
+                  'thread_slug': report.get('thread_slug'),
+                  'fingerprint': fp,
+                  'error_code': report.get('error_code'),
+                  'message': report.get('message'),
+                  'game_version': report.get('game_version'),
+                  'platform': report.get('platform'),
+                  'scene': report.get('scene'),
+                  'stack_trace': report.get('stack_trace'),
+                  'metadata': metadata,
+                  'created_at': report.get('created_at'),
+                  'published_at': report.get('published_at'),
+              }
+
+              metadata_rows = '\n'.join(
+                  f"| `{esc(key)}` | `{esc(value)}` |"
+                  for key, value in sorted(metadata.items())
+              ) or '| _sin metadata adicional_ | — |'
+
+              forum_line = f"[{esc(thread_slug or thread_id)}]({forum_url})" if forum_url else '_sin URL correlacionada_'
+              stack = text(report.get('stack_trace')).strip() or '(sin stack trace/contexto técnico adicional en esta captura)'
+
+              body = f"""<!-- AUTO-GENERATED by .github/workflows/bug-log-sync.yml. Do not store secrets here. -->
+# Bug report `{report_id}`
+
+> Registro técnico generado automáticamente a partir de un reporte ya sanitizado por el servidor de ByeTale.
+
+## Correlación
+
+| Campo | Valor |
+| --- | --- |
+| Report ID | `{esc(report_id)}` |
+| Thread ID | `{esc(thread_id)}` |
+| Hilo del foro | {forum_line} |
+| Fingerprint | `{fp}` |
+| Recibido | `{esc(iso(report.get('created_at')))}` |
+| Publicado | `{esc(iso(report.get('published_at')))}` |
+
+## Problema indicado por el jugador
+
+{esc(report.get('message')) or '_sin descripción_'}
+
+## Contexto del cliente
+
+| Campo | Valor |
+| --- | --- |
+| Error code | `{esc(report.get('error_code'))}` |
+| Versión | `{esc(report.get('game_version'))}` |
+| Plataforma | `{esc(report.get('platform'))}` |
+| Escena / mapa | `{esc(report.get('scene'))}` |
+
+## Stack trace / contexto técnico
+
+{code_block(stack)}
+
+## Metadata de runtime
+
+| Clave | Valor |
+| --- | --- |
+{metadata_rows}
+
+## Registro sanitizado para análisis
+
+```json
+{json.dumps(raw_record, ensure_ascii=False, indent=2, sort_keys=True)}
+```
+
+## Privacidad
+
+Este espejo no contiene `installation_id`, hashes de instalación, tokens, correo, IP, chat ni credenciales. El servidor elimina o evita esos datos antes de que el reporte llegue a este registro.
+"""
+              (base / f'{report_id}.md').write_text(body, encoding='utf-8')
+
+          groups = {}
+          for report in indexed:
+              fp = report['fingerprint']
+              groups.setdefault(fp, []).append(report)
+
+          def sort_key(report):
+              return text(report.get('created_at'))
+
+          summary_rows = []
+          for fp, items in groups.items():
+              items.sort(key=sort_key)
+              latest = items[-1]
+              versions = sorted({text(x.get('game_version')) for x in items if text(x.get('game_version'))})
+              summary_rows.append((
+                  text(latest.get('created_at')),
+                  fp,
+                  len(items),
+                  text(latest.get('error_code')),
+                  text(latest.get('scene')),
+                  ', '.join(versions[-5:]),
+                  text(latest.get('report_id')),
+              ))
+          summary_rows.sort(reverse=True)
+
+          now = dt.datetime.now(dt.timezone.utc).isoformat()
+          index = [
+              '# ByeTale · Bug report index',
+              '',
+              f'_Sincronizado automáticamente: `{now}` · {len(indexed)} reportes · {len(groups)} fingerprints._',
+              '',
+              '## Grupos de incidencias',
+              '',
+              '| Fingerprint | Ocurrencias | Error | Escena | Versiones recientes | Último reporte |',
+              '| --- | ---: | --- | --- | --- | --- |',
+          ]
+          for _created, fp, count, code, scene, versions, report_id in summary_rows:
+              index.append(
+                  f'| `{fp}` | {count} | `{esc(code)}` | `{esc(scene)}` | {esc(versions)} | [{report_id}]({report_id}.md) |'
+              )
+
+          index += ['', '## Reportes recientes', '']
+          for report in sorted(indexed, key=sort_key, reverse=True)[:100]:
+              rid = text(report.get('report_id'))
+              index.append(
+                  f"- [{rid}]({rid}.md) · `{esc(report.get('game_version'))}` · `{esc(report.get('error_code'))}` · {esc(report.get('scene'))}"
+              )
+
+          (base / 'INDEX.md').write_text('\n'.join(index) + '\n', encoding='utf-8')
+          print(f"Exported {len(indexed)} published reports into {base}")
+          PY
+
+      - name: Commit synchronized logs
+        run: |
+          git config user.name "byetale-bug-bot"
+          git config user.email "byetale-bug-bot@users.noreply.github.com"
+          git add community/docs/bug-reports
+          if git diff --cached --quiet; then
+            echo "No bug log changes"
+            exit 0
+          fi
+          git commit -m "docs(bugs): sync game reports [skip ci]"
+          git push origin HEAD:community-web
