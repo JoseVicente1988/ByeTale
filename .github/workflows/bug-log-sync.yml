@@ -16,6 +16,9 @@ concurrency:
   group: byetale-bug-log-sync
   cancel-in-progress: false
 
+env:
+  SYNC_SCHEMA: '4'
+
 jobs:
   sync:
     runs-on: ubuntu-latest
