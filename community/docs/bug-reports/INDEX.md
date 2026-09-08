@@ -1,8 +1,15 @@
 # ByeTale · Bug report index
 
-_Sincronizado automáticamente: `2026-09-08T17:14:49.856217+00:00` · 1 reportes · 1 fingerprints._
+_Sincronizado automáticamente: `2026-09-08T17:36:25.617263+00:00` · 1 reportes · 0 incidentes correlacionados · 1 fingerprints._
 
-## Grupos de incidencias
+## Incidentes correlacionados
+
+Un `incident_id` agrupa el evento automático (error/crash) y el reporte manual posterior cuando pertenecen al mismo caso.
+
+| Incident ID | Eventos | Usuario | Personaje | Tipos | Versiones | Último reporte |
+| --- | ---: | --- | --- | --- | --- | --- |
+
+## Grupos por fingerprint
 
 | Fingerprint | Ocurrencias | Error | Escena | Versiones recientes | Último reporte |
 | --- | ---: | --- | --- | --- | --- |
@@ -10,4 +17,4 @@ _Sincronizado automáticamente: `2026-09-08T17:14:49.856217+00:00` · 1 reportes
 
 ## Reportes recientes
 
-- [5e872d9e-49a6-4133-a1c1-c766fdf775cd](5e872d9e-49a6-4133-a1c1-c766fdf775cd.md) · `v35.0.6-direct-bug-report` · `PLAYER_MANUAL_REPORT` · res://maps/plaza.tscn
+- [5e872d9e-49a6-4133-a1c1-c766fdf775cd](5e872d9e-49a6-4133-a1c1-c766fdf775cd.md) · `legacy` · incident `—` · `v35.0.6-direct-bug-report` · `PLAYER_MANUAL_REPORT` · res://maps/plaza.tscn
