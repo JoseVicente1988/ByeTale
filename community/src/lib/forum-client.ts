@@ -26,11 +26,18 @@ export async function ensureForumProfile(user: CommunityUser): Promise<ForumProf
   return created.data as ForumProfile;
 }
 
-export async function uploadForumImage(profile: ForumProfile, file: File | null, jwt?: string | null) {
+export async function uploadForumImage(
+  profile: ForumProfile,
+  file: File | null,
+  _legacySessionToken?: string | null,
+) {
   if (!file) return null;
   if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) throw new Error("La imagen debe ser PNG, JPG o WEBP.");
   if (file.size > 3 * 1024 * 1024) throw new Error("La imagen no puede superar los 3 MB.");
+
+  const jwt = await neon.auth.getJWTToken();
   if (!jwt) throw new Error("Tu sesión ha caducado.");
+
   const token = crypto.randomUUID();
   const saved = await neon.from("forum_upload_tokens").insert({ token, profile_id: profile.id });
   if (saved.error) throw saved.error;
