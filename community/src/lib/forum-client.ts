@@ -27,7 +27,7 @@ export async function ensureForumProfile(user: CommunityUser): Promise<ForumProf
 }
 
 export async function uploadForumImage(
-  profile: ForumProfile,
+  _profile: ForumProfile,
   file: File | null,
   _legacySessionToken?: string | null,
 ) {
@@ -39,16 +39,11 @@ export async function uploadForumImage(
   const jwt = authSession.data?.session?.token ?? null;
   if (!jwt) throw new Error("Tu sesión ha caducado. Vuelve a iniciar sesión.");
 
-  const token = crypto.randomUUID();
-  const saved = await neon.from("forum_upload_tokens").insert({ token, profile_id: profile.id });
-  if (saved.error) throw saved.error;
-
   const response = await fetch(UPLOAD_URL, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${jwt}`,
       "Content-Type": file.type,
-      "x-upload-token": token,
     },
     body: file,
   });
