@@ -35,15 +35,27 @@ export async function uploadForumImage(
   if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) throw new Error("La imagen debe ser PNG, JPG o WEBP.");
   if (file.size > 3 * 1024 * 1024) throw new Error("La imagen no puede superar los 3 MB.");
 
-  const jwt = await neon.auth.getJWTToken();
-  if (!jwt) throw new Error("Tu sesión ha caducado.");
+  // neon-js injects the authenticated JWT into session.token when getSession()
+  // succeeds. Use the public, typed Better Auth API exposed by neon.auth rather
+  // than the internal getJWTToken() helper, which is not part of ReactAuthClient.
+  const authSession = await neon.auth.getSession();
+  const jwt = authSession.data?.session?.token ?? null;
+  if (!jwt) throw new Error("Tu sesión ha caducado. Vuelve a iniciar sesión.");
 
   const token = crypto.randomUUID();
   const saved = await neon.from("forum_upload_tokens").insert({ token, profile_id: profile.id });
   if (saved.error) throw saved.error;
-  const response = await fetch(UPLOAD_URL, { method: "POST", headers: {
-    Authorization: `Bearer ${jwt}`, "Content-Type": file.type, "x-upload-token": token,
-  }, body: file });
+
+  const response = await fetch(UPLOAD_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+      "Content-Type": file.type,
+      "x-upload-token": token,
+    },
+    body: file,
+  });
+
   const payload = await response.json() as { url?: string; error?: string };
   if (!response.ok || !payload.url) throw new Error(payload.error || "No se pudo adjuntar la imagen.");
   return payload.url;
