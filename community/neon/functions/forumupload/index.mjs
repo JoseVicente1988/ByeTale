@@ -1,18 +1,29 @@
-const ALLOWED_ORIGINS = new Set([
+const EXACT_ALLOWED_ORIGINS = new Set([
   "https://byetale-community.vercel.app",
+  "https://byetale-community-josevicente1988s-projects.vercel.app",
 ]);
+
+// Vercel creates a different preview hostname for each deployment. Only accept
+// previews belonging to the ByeTale Community project in this Vercel team.
+const BYETALE_VERCEL_PREVIEW_ORIGIN =
+  /^https:\/\/byetale-community(?:-[a-z0-9-]+)?-josevicente1988s-projects\.vercel\.app$/i;
 
 const BUCKET = "byetale-community-assets";
 const MAX_BYTES = 3 * 1024 * 1024;
 
+function isAllowedOrigin(origin) {
+  return EXACT_ALLOWED_ORIGINS.has(origin) || BYETALE_VERCEL_PREVIEW_ORIGIN.test(origin);
+}
+
 function cors(origin) {
-  return {
-    "Access-Control-Allow-Origin": ALLOWED_ORIGINS.has(origin) ? origin : "https://byetale-community.vercel.app",
+  const headers = {
     "Access-Control-Allow-Headers": "authorization,content-type,x-upload-token",
     "Access-Control-Allow-Methods": "POST,OPTIONS",
     "Access-Control-Max-Age": "86400",
     Vary: "Origin",
   };
+  if (isAllowedOrigin(origin)) headers["Access-Control-Allow-Origin"] = origin;
+  return headers;
 }
 
 function json(body, status, origin) {
@@ -106,9 +117,12 @@ async function uploadToStorage(key, body, contentType) {
 export default {
   async fetch(request) {
     const origin = request.headers.get("origin") || "";
-    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(origin) });
+    if (request.method === "OPTIONS") {
+      if (!isAllowedOrigin(origin)) return json({ error: "Origen no permitido." }, 403, origin);
+      return new Response(null, { status: 204, headers: cors(origin) });
+    }
     if (request.method !== "POST") return json({ error: "Método no permitido." }, 405, origin);
-    if (!ALLOWED_ORIGINS.has(origin)) return json({ error: "Origen no permitido." }, 403, origin);
+    if (!isAllowedOrigin(origin)) return json({ error: "Origen no permitido." }, 403, origin);
 
     const token = request.headers.get("x-upload-token") || "";
     const authorization = request.headers.get("authorization") || "";
