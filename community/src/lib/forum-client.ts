@@ -35,9 +35,6 @@ export async function uploadForumImage(
   if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) throw new Error("La imagen debe ser PNG, JPG o WEBP.");
   if (file.size > 3 * 1024 * 1024) throw new Error("La imagen no puede superar los 3 MB.");
 
-  // neon-js injects the authenticated JWT into session.token when getSession()
-  // succeeds. Use the public, typed Better Auth API exposed by neon.auth rather
-  // than the internal getJWTToken() helper, which is not part of ReactAuthClient.
   const authSession = await neon.auth.getSession();
   const jwt = authSession.data?.session?.token ?? null;
   if (!jwt) throw new Error("Tu sesión ha caducado. Vuelve a iniciar sesión.");
@@ -57,6 +54,9 @@ export async function uploadForumImage(
   });
 
   const payload = await response.json() as { url?: string; error?: string };
-  if (!response.ok || !payload.url) throw new Error(payload.error || "No se pudo adjuntar la imagen.");
+  if (!response.ok || !payload.url) {
+    console.error("ByeTale forum image upload failed", response.status, payload.error);
+    return null;
+  }
   return payload.url;
 }
