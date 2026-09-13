@@ -1,0 +1,39 @@
+import type { Metadata, Viewport } from "next";
+import AccountDock from "./components/account-dock";
+import "./globals.css";
+import "./mobile.css";
+import "./ux.css";
+import "./game-reference-theme.css";
+import "./authored.css";
+
+export const metadata: Metadata = {
+  title: {
+    default: "ByeTale Community",
+    template: "%s · ByeTale",
+  },
+  description:
+    "Comunidad y desarrollo de ByeTale, RPG 2D multijugador en Godot 4: mapas, combate, quests, testing, ideas y directos.",
+  icons: {
+    icon: [
+      { url: "/byetale-game-icon.png", type: "image/png" },
+    ],
+    apple: "/byetale-game-icon.png",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="es">
+      <body>
+        {children}
+        <AccountDock />
+      </body>
+    </html>
+  );
+}
