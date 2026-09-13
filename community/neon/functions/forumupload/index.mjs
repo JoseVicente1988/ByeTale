@@ -3,8 +3,6 @@ const EXACT_ALLOWED_ORIGINS = new Set([
   "https://byetale-community-josevicente1988s-projects.vercel.app",
 ]);
 
-// Vercel creates a different preview hostname for each deployment. Only accept
-// previews belonging to the ByeTale Community project in this Vercel team.
 const BYETALE_VERCEL_PREVIEW_ORIGIN =
   /^https:\/\/byetale-community(?:-[a-z0-9-]+)?-josevicente1988s-projects\.vercel\.app$/i;
 
@@ -63,12 +61,10 @@ function detectImage(bytes, declaredType) {
   return null;
 }
 
-async function consumeToken(token, authorization) {
-  const expiresAfter = encodeURIComponent(new Date().toISOString());
-  const url = `${process.env.NEON_DATA_API_URL}/forum_upload_tokens?token=eq.${encodeURIComponent(token)}&expires_at=gt.${expiresAfter}&select=token`;
+async function validateAuthenticatedProfile(authorization) {
+  const url = `${process.env.NEON_DATA_API_URL}/profiles?select=id&limit=1`;
   const response = await fetch(url, {
-    method: "DELETE",
-    headers: { Accept: "application/json", Authorization: authorization, Prefer: "return=representation" },
+    headers: { Accept: "application/json", Authorization: authorization },
   });
   if (!response.ok) return false;
   const rows = await response.json();
@@ -124,21 +120,22 @@ export default {
     if (request.method !== "POST") return json({ error: "Método no permitido." }, 405, origin);
     if (!isAllowedOrigin(origin)) return json({ error: "Origen no permitido." }, 403, origin);
 
-    const token = request.headers.get("x-upload-token") || "";
     const authorization = request.headers.get("authorization") || "";
     if (!/^Bearer\s+\S+$/i.test(authorization))
       return json({ error: "Debes iniciar sesión para subir una imagen." }, 401, origin);
-    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(token))
-      return json({ error: "Autorización de subida inválida." }, 401, origin);
+
     const declaredType = (request.headers.get("content-type") || "").split(";")[0].toLowerCase();
     const body = new Uint8Array(await request.arrayBuffer());
     if (!body.length || body.length > MAX_BYTES) return json({ error: "La imagen debe ocupar como máximo 3 MB." }, 413, origin);
     const image = detectImage(body, declaredType);
     if (!image) return json({ error: "Solo se admiten imágenes PNG, JPG o WEBP válidas." }, 415, origin);
-    if (!(await consumeToken(token, authorization))) return json({ error: "La autorización ha caducado." }, 401, origin);
+
+    if (!(await validateAuthenticatedProfile(authorization)))
+      return json({ error: "Tu sesión no es válida para subir imágenes." }, 401, origin);
 
     try {
-      const url = await uploadToStorage(`forum/${token}.${image.ext}`, body, image.type);
+      const key = `forum/${crypto.randomUUID()}.${image.ext}`;
+      const url = await uploadToStorage(key, body, image.type);
       return json({ url }, 201, origin);
     } catch (error) {
       console.error(error);
