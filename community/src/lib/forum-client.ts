@@ -75,11 +75,20 @@ export async function uploadForumAttachment(
   });
 
   const payload = await response.json() as { url?: string; kind?: ForumAttachmentKind; mime?: string; error?: string };
-  if (!response.ok || !payload.url || !payload.kind || !payload.mime) {
+  if (!response.ok || !payload.url) {
     console.error("ByeTale forum attachment upload failed", response.status, payload.error);
     throw new Error(payload.error || "No se pudo subir el archivo.");
   }
-  return { url: payload.url, kind: payload.kind, mime: payload.mime };
+
+  // Compatibilidad de despliegue: las primeras versiones de forumupload
+  // devolvían únicamente { url }. La identidad del archivo ya fue validada
+  // localmente, así que podemos completar los metadatos sin bloquear la
+  // publicación mientras frontend y función se actualizan de forma independiente.
+  return {
+    url: payload.url,
+    kind: payload.kind ?? rule.kind,
+    mime: payload.mime ?? file.type,
+  };
 }
 
 // Compatibilidad con código anterior que solo adjuntaba imágenes.
