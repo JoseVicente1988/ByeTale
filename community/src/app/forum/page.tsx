@@ -4,8 +4,14 @@ import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { neon } from "../../lib/neon-client";
 import { authenticateWithEmail, authErrorMessage, type AuthMode } from "../../lib/auth";
-import { ensureForumProfile, slugifyForumTitle, uploadForumImage } from "../../lib/forum-client";
+import {
+  ensureForumProfile,
+  slugifyForumTitle,
+  uploadForumAttachment,
+  type ForumAttachment,
+} from "../../lib/forum-client";
 import "./forum.css";
+import "./media.css";
 
 type Category = {
   id: string;
@@ -41,6 +47,9 @@ type ForumPost = {
   avatar_url: string | null;
   is_official: boolean;
   image_url: string | null;
+  media_url: string | null;
+  media_kind: "video" | "audio" | null;
+  media_mime: string | null;
 };
 
 type Proposal = {
@@ -62,6 +71,8 @@ const typeLabels: Record<string, string> = {
   announcement: "Anuncio",
 };
 
+const attachmentAccept = "image/png,image/jpeg,image/webp,video/mp4,video/webm,audio/mpeg,audio/ogg,audio/wav,audio/mp4";
+
 function dateLabel(value: string) {
   return new Intl.DateTimeFormat("es-ES", {
     day: "2-digit",
@@ -77,6 +88,15 @@ function typeForCategory(slug: string) {
   if (slug === "bugs") return "bug";
   if (slug === "voices") return "casting";
   return "discussion";
+}
+
+function attachmentColumns(attachment: ForumAttachment | null) {
+  return {
+    image_url: attachment?.kind === "image" ? attachment.url : null,
+    media_url: attachment && attachment.kind !== "image" ? attachment.url : null,
+    media_kind: attachment && attachment.kind !== "image" ? attachment.kind : null,
+    media_mime: attachment && attachment.kind !== "image" ? attachment.mime : null,
+  };
 }
 
 export default function ForumPage() {
@@ -100,7 +120,7 @@ export default function ForumPage() {
   const [composerOpen, setComposerOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [replyBody, setReplyBody] = useState("");
-  const [replyImage, setReplyImage] = useState<File | null>(null);
+  const [replyAttachment, setReplyAttachment] = useState<File | null>(null);
 
   const loadForum = useCallback(async () => {
     setLoading(true);
@@ -143,7 +163,7 @@ export default function ForumPage() {
     setError("");
     const result = await neon
       .from("community_public_posts")
-      .select("id,thread_id,body,created_at,edited_at,author,avatar_url,is_official,image_url")
+      .select("id,thread_id,body,created_at,edited_at,author,avatar_url,is_official,image_url,media_url,media_kind,media_mime")
       .eq("thread_id", threadId)
       .order("created_at", { ascending: true });
     if (result.error) setError(result.error.message);
@@ -219,15 +239,15 @@ export default function ForumPage() {
       const categoryId = String(form.get("category") ?? "");
       const title = String(form.get("title") ?? "").trim();
       const body = String(form.get("body") ?? "").trim();
-      const imageEntry = form.get("image");
-      const imageFile = imageEntry instanceof File && imageEntry.size > 0 ? imageEntry : null;
+      const attachmentEntry = form.get("attachment");
+      const attachmentFile = attachmentEntry instanceof File && attachmentEntry.size > 0 ? attachmentEntry : null;
       const category = categories.find((item) => item.id === categoryId);
       if (!category || category.is_read_only) throw new Error("Esa categoría no admite nuevos hilos.");
       if (title.length < 6 || title.length > 120) throw new Error("El título debe tener entre 6 y 120 caracteres.");
       if (body.length < 20 || body.length > 10000) throw new Error("El mensaje debe tener entre 20 y 10.000 caracteres.");
 
       const profile = await ensureForumProfile(user);
-      const imageUrl = await uploadForumImage(profile, imageFile, session.data?.session?.token);
+      const attachment = await uploadForumAttachment(profile, attachmentFile, session.data?.session?.token);
       const threadType = typeForCategory(category.slug);
       const threadResult = await neon
         .from("threads")
@@ -247,7 +267,7 @@ export default function ForumPage() {
         thread_id: newThreadId,
         author_id: profile.id,
         body,
-        image_url: imageUrl,
+        ...attachmentColumns(attachment),
       });
       if (postResult.error) throw postResult.error;
 
@@ -287,24 +307,24 @@ export default function ForumPage() {
       return;
     }
     const body = replyBody.trim();
-    if ((!body && !replyImage) || body.length > 10000) {
-      setError("Escribe una respuesta o adjunta una imagen. El texto admite hasta 10.000 caracteres.");
+    if ((!body && !replyAttachment) || body.length > 10000) {
+      setError("Escribe una respuesta o adjunta una imagen, vídeo o audio. El texto admite hasta 10.000 caracteres.");
       return;
     }
     setBusy(true);
     setError("");
     try {
       const profile = await ensureForumProfile(user);
-      const imageUrl = await uploadForumImage(profile, replyImage, session.data?.session?.token);
+      const attachment = await uploadForumAttachment(profile, replyAttachment, session.data?.session?.token);
       const result = await neon.from("posts").insert({
         thread_id: selectedThread.id,
         author_id: profile.id,
-        body: body || "Imagen adjunta.",
-        image_url: imageUrl,
+        body: body || "Archivo multimedia adjunto.",
+        ...attachmentColumns(attachment),
       });
       if (result.error) throw result.error;
       setReplyBody("");
-      setReplyImage(null);
+      setReplyAttachment(null);
       setNotice("Respuesta publicada.");
       await Promise.all([loadPosts(selectedThread.id), loadForum()]);
     } catch (replyError) {
@@ -500,6 +520,18 @@ export default function ForumPage() {
                               <img className="postImage" src={post.image_url} alt={`Imagen adjunta por ${post.author}`} loading="lazy" />
                             </a>
                           )}
+                          {post.media_url && post.media_kind === "video" && (
+                            <video className="postMedia postVideo" controls preload="metadata">
+                              <source src={post.media_url} type={post.media_mime || undefined} />
+                              Tu navegador no puede reproducir este vídeo.
+                            </video>
+                          )}
+                          {post.media_url && post.media_kind === "audio" && (
+                            <audio className="postMedia postAudio" controls preload="metadata">
+                              <source src={post.media_url} type={post.media_mime || undefined} />
+                              Tu navegador no puede reproducir este audio.
+                            </audio>
+                          )}
                         </div>
                       </article>
                     ))}
@@ -519,19 +551,25 @@ export default function ForumPage() {
                     />
                     <div className="attachmentRow">
                       <label className="attachmentButton">
-                        <span>Adjuntar imagen</span>
+                        <span>Adjuntar multimedia</span>
                         <input
                           type="file"
-                          accept="image/png,image/jpeg,image/webp"
-                          onChange={(event) => setReplyImage(event.target.files?.[0] ?? null)}
+                          accept={attachmentAccept}
+                          onChange={(event) => setReplyAttachment(event.target.files?.[0] ?? null)}
                           disabled={!user || busy}
                         />
                       </label>
-                      {replyImage && <span className="attachmentName">{replyImage.name} · {(replyImage.size / 1024 / 1024).toFixed(1)} MB</span>}
+                      {replyAttachment && (
+                        <span className="attachmentName">
+                          <strong>{replyAttachment.type.startsWith("video/") ? "Vídeo" : replyAttachment.type.startsWith("audio/") ? "Audio" : "Imagen"}</strong>
+                          {" · "}{replyAttachment.name} · {(replyAttachment.size / 1024 / 1024).toFixed(1)} MB
+                        </span>
+                      )}
                     </div>
+                    <span className="attachmentHelp">Imágenes hasta 3 MB · audio hasta 12 MB · vídeo hasta 25 MB.</span>
                     <div className="replyActions">
                       {!user && <button type="button" className="forumButton" onClick={() => setAuthOpen(true)}>Acceder</button>}
-                      <button className="forumButton primary" disabled={!user || busy || (!replyBody.trim() && !replyImage)}>
+                      <button className="forumButton primary" disabled={!user || busy || (!replyBody.trim() && !replyAttachment)}>
                         {busy ? "Publicando…" : "Publicar respuesta"}
                       </button>
                     </div>
@@ -612,7 +650,11 @@ export default function ForumPage() {
                 <label><span>Categoría</span><select name="category" defaultValue={categories.find((c) => c.slug === selectedCategory && !c.is_read_only)?.id ?? categories.find((c) => !c.is_read_only)?.id} required>{categories.filter((category) => !category.is_read_only).map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
                 <label><span>Título</span><input name="title" minLength={6} maxLength={120} required placeholder="¿De qué quieres hablar?" /></label>
                 <label><span>Primer mensaje</span><textarea name="body" minLength={20} maxLength={10000} required placeholder="Contexto, propuesta, pasos para reproducir el bug, detalles del casting…" /></label>
-                <label className="fileField"><span>Imagen opcional</span><input name="image" type="file" accept="image/png,image/jpeg,image/webp" /><small>PNG, JPG o WEBP · máximo 3 MB</small></label>
+                <label className="fileField">
+                  <span>Multimedia opcional</span>
+                  <input name="attachment" type="file" accept={attachmentAccept} />
+                  <small>PNG/JPG/WEBP ≤ 3 MB · MP3/OGG/WAV/M4A ≤ 12 MB · MP4/WEBM ≤ 25 MB</small>
+                </label>
                 <div className="modalFooter"><button type="button" className="forumButton" onClick={() => setComposerOpen(false)}>Cancelar</button><button className="forumButton primary" disabled={busy}>{busy ? "Publicando…" : "Publicar"}</button></div>
               </form>
             </div>
