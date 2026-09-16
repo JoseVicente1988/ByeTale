@@ -1,0 +1,8 @@
+{
+  "version": "v35.0.110-android-mobile-professions-updater",
+  "version_code": 35110,
+  "required": false,
+  "apk_url": "",
+  "sha256": "",
+  "notes": "Canal beta Android de ByeTale. Cuando haya una build nueva, sube el APK a una GitHub Release y actualiza apk_url, sha256 y version_code."
+}
