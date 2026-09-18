@@ -1,8 +1,8 @@
 {
-  "version": "v35.0.111-mobile-test-closure",
-  "version_code": 35111,
+  "version": "35.0.120",
+  "version_code": 35120,
   "required": false,
-  "apk_url": "",
-  "sha256": "",
-  "notes": "Canal beta Android de ByeTale. Esta es la versión actualmente publicada. Para una actualización real, publica un APK firmado con version_code superior y rellena apk_url y sha256."
+  "apk_url": "https://github.com/JoseVicente1988/ByeTale/releases/download/android-v35.0.120/ByeTale-35.0.120-35120.apk",
+  "sha256": "ab13e03cca15ef9568f2f8d938cedea206fd7da0c31f0ce38b494d7e9e5b951c",
+  "notes": "V35.0.120: scroll táctil corregido en tiendas para comprar y vender objetos fuera de la zona visible inicial. Primera actualización estable mediante updater."
 }
