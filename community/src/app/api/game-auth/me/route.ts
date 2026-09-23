@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   }
 
   const backend = await gameBackendFetch(
-    "/api/auth/me",
+    "/api/web-auth/me",
     {
       headers: { Authorization: `Bearer ${token}` },
     },
@@ -42,7 +42,6 @@ export async function GET(request: Request) {
     account: payload.account,
     character: payload.character ?? null,
     needs_character_creation: Boolean(payload.needs_character_creation),
-    world_position: payload.world_position ?? null,
     session: payload.session ?? null,
   });
 }
