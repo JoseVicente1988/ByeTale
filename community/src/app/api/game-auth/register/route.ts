@@ -43,10 +43,10 @@ export async function POST(request: Request) {
     );
   }
 
-  // Tras registrar, iniciamos sesión automáticamente para que la web quede
-  // enlazada con la misma cuenta que utilizará el cliente de ByeTale.
+  // La cuenta es exactamente la del juego. Para la web usamos una sesión
+  // separada, de modo que no sustituimos la sesión activa del cliente Godot.
   const login = await gameBackendFetch(
-    "/api/auth/login",
+    "/api/web-auth/login",
     {
       method: "POST",
       body: JSON.stringify({ username, password }),
@@ -72,11 +72,8 @@ export async function POST(request: Request) {
       ok: true,
       registered: true,
       signed_in: true,
-      message: "Cuenta de ByeTale creada. Ya puedes usarla también en el juego.",
+      message: "Cuenta de ByeTale creada. Ya puedes usar estas credenciales en el juego.",
       account: loginPayload.account,
-      character: loginPayload.character ?? null,
-      needs_character_creation: Boolean(loginPayload.needs_character_creation),
-      world_position: loginPayload.world_position ?? null,
       expires_at: loginPayload.expires_at ?? null,
     },
     { status: 201 },
