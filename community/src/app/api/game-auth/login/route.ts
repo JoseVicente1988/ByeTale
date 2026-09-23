@@ -16,8 +16,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Usuario y contraseña son obligatorios." }, { status: 400 });
   }
 
+  // Sesión exclusiva de la web. No usa auth_sessions del cliente Godot,
+  // así que entrar aquí no expulsa al jugador de una partida activa.
   const backend = await gameBackendFetch(
-    "/api/auth/login",
+    "/api/web-auth/login",
     {
       method: "POST",
       body: JSON.stringify({ username, password }),
@@ -36,9 +38,6 @@ export async function POST(request: Request) {
   const response = NextResponse.json({
     ok: true,
     account: payload.account,
-    character: payload.character ?? null,
-    needs_character_creation: Boolean(payload.needs_character_creation),
-    world_position: payload.world_position ?? null,
     expires_at: payload.expires_at ?? null,
   });
 
