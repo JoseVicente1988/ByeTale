@@ -2,9 +2,23 @@
 
 import Image from "next/image";
 import Script from "next/script";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type StreamStatus = "checking" | "live" | "offline";
+
+type ReleaseInfo = {
+  available: boolean;
+  version?: string | null;
+  tag?: string | null;
+  published_at?: string | null;
+  notes?: string;
+  release_url?: string | null;
+  download_url?: string | null;
+  file_name?: string | null;
+  size_bytes?: number;
+  download_count?: number;
+  error?: string;
+};
 
 type TwitchPlayerInstance = {
   addEventListener: (event: string, callback: () => void) => void;
@@ -83,10 +97,50 @@ const participation = [
   },
 ];
 
+function formatBytes(bytes = 0) {
+  if (!Number.isFinite(bytes) || bytes <= 0) return "—";
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function formatReleaseDate(value?: string | null) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
+
 export default function HomePage() {
   const [streamStatus, setStreamStatus] = useState<StreamStatus>("checking");
+  const [release, setRelease] = useState<ReleaseInfo | null>(null);
+  const [releaseLoading, setReleaseLoading] = useState(true);
   const playerMounted = useRef(false);
   const playerHost = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    fetch("/api/release/latest", { cache: "no-store" })
+      .then((response) => response.json())
+      .then((data: ReleaseInfo) => {
+        if (active) setRelease(data);
+      })
+      .catch(() => {
+        if (active) {
+          setRelease({ available: false, error: "No se pudo consultar la última build." });
+        }
+      })
+      .finally(() => {
+        if (active) setReleaseLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const mountPlayer = useCallback(() => {
     if (playerMounted.current || !window.Twitch?.Player || !playerHost.current) return;
@@ -139,6 +193,7 @@ export default function HomePage() {
           </a>
 
           <nav className="navLinks" aria-label="Navegación principal">
+            <a href="#descargar">Descargar</a>
             <a href="#juego">Juego</a>
             <a href="#roadmap">Desarrollo</a>
             <a href="#participa">Comunidad</a>
@@ -170,11 +225,76 @@ export default function HomePage() {
               Estoy construyendo ByeTale en público. Comparto lo que funciona, lo que estoy cambiando y las decisiones en las que la comunidad puede aportar de verdad.
             </p>
             <div className="actions">
-              <a className="button primary" href="/forum">Entrar al foro</a>
-              <a className="textLink" href="#roadmap">Ver desarrollo →</a>
+              <a className="button primary" href="#descargar">Descargar el juego</a>
+              <a className="button secondary" href="/account?mode=signup">Crear cuenta</a>
+              <a className="textLink" href="/forum">Entrar al foro →</a>
             </div>
             <p className="projectLine">Godot 4 · RPG 2D · Multijugador · Desarrollo abierto</p>
           </div>
+        </div>
+      </section>
+
+      <section className="section downloadSection" id="descargar" aria-labelledby="download-title">
+        <div className="shell downloadLayout">
+          <div className="downloadIntro">
+            <span className="eyebrow">Juega la build pública</span>
+            <h2 id="download-title">Descarga ByeTale y entra al mundo.</h2>
+            <p>
+              La web consulta la última release publicada del proyecto. Cuando suba una nueva build Android, esta sección se actualizará automáticamente.
+            </p>
+          </div>
+
+          <article className="downloadPanel" aria-live="polite">
+            <div className="downloadPlatform">
+              <span className="downloadPlatformIcon" aria-hidden="true">A</span>
+              <div>
+                <small>Disponible ahora</small>
+                <strong>Android · APK</strong>
+              </div>
+            </div>
+
+            {releaseLoading ? (
+              <div className="downloadState">
+                <strong>Buscando la última build…</strong>
+                <span>Consultando las releases oficiales de ByeTale.</span>
+              </div>
+            ) : release?.available && release.download_url ? (
+              <>
+                <div className="downloadMeta" role="list" aria-label="Información de la build">
+                  <div role="listitem"><small>Versión</small><strong>{release.version || release.tag || "Última build"}</strong></div>
+                  <div role="listitem"><small>Tamaño</small><strong>{formatBytes(release.size_bytes)}</strong></div>
+                  <div role="listitem"><small>Publicada</small><strong>{formatReleaseDate(release.published_at)}</strong></div>
+                  <div role="listitem"><small>Descargas</small><strong>{release.download_count ?? 0}</strong></div>
+                </div>
+
+                <div className="downloadActions">
+                  <a className="button primary downloadButton" href={release.download_url}>Descargar APK</a>
+                  {release.release_url ? (
+                    <a className="textLink" href={release.release_url} target="_blank" rel="noreferrer">Ver release ↗</a>
+                  ) : null}
+                </div>
+
+                <p className="downloadFile">{release.file_name}</p>
+              </>
+            ) : (
+              <div className="downloadState unavailable">
+                <strong>La descarga no está disponible temporalmente.</strong>
+                <span>{release?.error || "Todavía no hay una build pública preparada para descargar."}</span>
+                {release?.release_url ? (
+                  <a className="textLink" href={release.release_url} target="_blank" rel="noreferrer">Ver última release ↗</a>
+                ) : null}
+              </div>
+            )}
+
+            <div className="downloadHelp">
+              <span>01</span>
+              <p>Descarga el APK desde esta página.</p>
+              <span>02</span>
+              <p>Android puede pedir permiso para instalar aplicaciones desde el navegador.</p>
+              <span>03</span>
+              <p>Crea tu cuenta y usa el foro para reportar errores o seguir el desarrollo.</p>
+            </div>
+          </article>
         </div>
       </section>
 
