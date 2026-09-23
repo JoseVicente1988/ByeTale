@@ -1,96 +1,32 @@
-/* ByeTale Community — visible in-game world layer.
-   Loaded last so the game art wins over the generic dark site background. */
+/* ByeTale Community — bright 2D world background, loaded after the game reference theme. */
 
 :root {
-  --world-scene: url('/byetale-world-background.webp');
-  --world-menu: url('/byetale-menu-reference.webp');
-  --world-battle: url('/byetale-battle-reference.webp');
-  --world-banner: url('/byetale-banner-reference.webp');
-  --world-panel: rgba(18, 13, 22, .78);
-  --world-panel-strong: rgba(13, 9, 17, .90);
-  --world-gold: #c99742;
-  --world-gold-hi: #f0c86c;
-  --world-red: #6e1722;
+  --world-scene: url('/byetale-world-day.svg');
+  --world-panel: rgba(8, 18, 25, .50);
+  --world-panel-strong: rgba(7, 16, 23, .60);
 }
 
 html {
-  background: #100c14 !important;
+  background: #79a9c4 !important;
 }
 
 body {
-  position: relative;
-  background-color: #100c14 !important;
-  background-image:
-    linear-gradient(180deg, rgba(13, 8, 16, .18), rgba(13, 8, 16, .42) 62%, rgba(10, 6, 12, .72)),
-    var(--world-scene) !important;
-  background-position: center top, center top !important;
-  background-size: cover, cover !important;
-  background-repeat: no-repeat, no-repeat !important;
-  background-attachment: fixed, fixed !important;
+  background-color: #79a9c4 !important;
+  background-image: var(--world-scene) !important;
+  background-position: center top !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
 }
 
-body::before {
-  content: "" !important;
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: -2 !important;
-  display: block !important;
-  pointer-events: none !important;
-  background:
-    radial-gradient(circle at 18% 8%, rgba(240, 200, 108, .10), transparent 26rem),
-    radial-gradient(circle at 82% 28%, rgba(110, 23, 34, .18), transparent 28rem),
-    linear-gradient(90deg, rgba(6, 4, 9, .52), transparent 24%, transparent 76%, rgba(6, 4, 9, .50));
-}
-
+body::before,
 body::after {
-  content: "" !important;
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: -1 !important;
-  display: block !important;
-  pointer-events: none !important;
-  opacity: .16;
-  background-image:
-    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size: 4px 4px;
-  mix-blend-mode: soft-light;
+  display: none !important;
 }
 
-main {
-  position: relative;
-}
-
-/* Top navigation behaves like a HUD strip. */
-.siteHeader,
-.forumHeader {
-  background:
-    linear-gradient(180deg, rgba(28, 18, 28, .97), rgba(13, 10, 17, .96)) !important;
-  border-bottom: 1px solid rgba(240, 200, 108, .56) !important;
-  box-shadow:
-    0 2px 0 rgba(110, 23, 34, .95),
-    0 3px 0 rgba(240, 200, 108, .42),
-    0 12px 28px rgba(0,0,0,.34) !important;
-}
-
-.navLinks a:hover,
-.forumNavLinks a:hover {
-  background: linear-gradient(180deg, #8d2430, #55121b) !important;
-  color: #fff0ce !important;
-}
-
-/* HERO: use actual ByeTale menu art as a full scene. */
+/* No dark full-screen hero overlays. */
 .hero {
-  position: relative !important;
-  min-height: min(920px, 100vh) !important;
-  padding: 120px 0 80px !important;
-  overflow: hidden !important;
-  background:
-    linear-gradient(90deg, rgba(8, 5, 11, .92) 0%, rgba(8, 5, 11, .74) 28%, rgba(8, 5, 11, .23) 57%, rgba(8, 5, 11, .08) 77%),
-    linear-gradient(180deg, transparent 62%, rgba(10, 6, 12, .80) 100%),
-    var(--world-menu) center / cover no-repeat !important;
-  border-bottom: 2px solid var(--world-gold) !important;
-  box-shadow: inset 0 -5px 0 rgba(110, 23, 34, .74) !important;
+  background: transparent !important;
 }
 
 .heroScene,
@@ -100,338 +36,124 @@ main {
   display: none !important;
 }
 
-.heroLayout {
-  min-height: 650px !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-}
-
+/* Contrast belongs behind text only. */
 .heroCopy {
-  width: min(610px, 52vw) !important;
-  max-width: 610px !important;
-  margin: 0 !important;
-  padding: 34px 34px 36px !important;
-  border-left: 2px solid rgba(240, 200, 108, .74) !important;
-  background:
-    linear-gradient(90deg, rgba(16, 10, 18, .91), rgba(16, 10, 18, .72) 72%, rgba(16, 10, 18, .14)) !important;
-  box-shadow: -18px 0 42px rgba(0,0,0,.16) !important;
-  text-shadow: 0 3px 12px rgba(0,0,0,.84) !important;
-}
-
-.hero .eyebrow,
-.downloadIntro .eyebrow {
-  min-height: 40px !important;
-  padding: 9px 30px !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  color: #fff0ca !important;
-  background: var(--world-banner) center / 100% 100% no-repeat !important;
-  text-shadow: 1px 1px 2px #2a090d !important;
-}
-
-.hero h1 {
-  color: #fff1ca !important;
-  text-shadow:
-    0 3px 0 #3a111a,
-    0 8px 28px rgba(0,0,0,.72),
-    0 0 34px rgba(240,200,108,.12) !important;
-}
-
-.heroTagline {
-  color: var(--world-gold-hi) !important;
-}
-
-.lead {
-  color: #eee3d2 !important;
-}
-
-/* Make buttons read as game menu controls. */
-.button,
-.forumButton,
-.tab,
-.modalTabs button {
-  border-radius: 3px !important;
-  border: 1px solid var(--world-gold) !important;
-  box-shadow:
-    inset 0 0 0 1px rgba(48, 10, 15, .9),
-    0 5px 12px rgba(0,0,0,.34) !important;
-}
-
-.button.primary,
-.forumButton.primary,
-.tabActive {
-  color: #fff1d0 !important;
-  background: linear-gradient(180deg, #a52c38, #65131e) !important;
-  text-shadow: 1px 1px 1px #30090d !important;
-}
-
-.button.secondary,
-.forumButton {
-  color: #f0dfbd !important;
-  background: linear-gradient(180deg, #2e2331, #17121c) !important;
-}
-
-/* Download block becomes a proper in-game window over the world. */
-.downloadSection {
-  position: relative !important;
-  padding: 86px 0 94px !important;
-  background:
-    linear-gradient(180deg, rgba(13, 8, 16, .72), rgba(13, 8, 16, .48)),
-    var(--world-battle) center 46% / cover fixed no-repeat !important;
-  border-bottom: 2px solid rgba(240, 200, 108, .42) !important;
-}
-
-.downloadSection::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(7,4,9,.62), transparent 28%, transparent 72%, rgba(7,4,9,.58)),
-    linear-gradient(180deg, rgba(110,23,34,.16), transparent 30%, transparent 78%, rgba(110,23,34,.12));
-}
-
-.downloadLayout {
   position: relative;
-  z-index: 1;
+  background: linear-gradient(90deg, rgba(7,16,23,.52), rgba(7,16,23,.20) 72%, transparent) !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,.72);
 }
 
-.downloadIntro h2 {
-  color: #fff0cb !important;
-  text-shadow: 0 3px 14px rgba(0,0,0,.82) !important;
+.heroCaption,
+.sectionHead {
+  text-shadow: 0 2px 12px rgba(0,0,0,.72);
 }
 
-.downloadIntro > p {
-  color: #dfd4c7 !important;
-  text-shadow: 0 2px 10px rgba(0,0,0,.72) !important;
-}
-
-.downloadPanel {
-  position: relative !important;
-  border: 1px solid var(--world-gold) !important;
-  border-radius: 4px !important;
-  background:
-    linear-gradient(180deg, rgba(42, 31, 43, .97), rgba(19, 14, 23, .98)) !important;
-  box-shadow:
-    inset 0 0 0 2px rgba(90, 31, 39, .68),
-    0 18px 42px rgba(0,0,0,.40) !important;
-  backdrop-filter: none !important;
-}
-
-.downloadPanel::before,
-.downloadPanel::after {
-  content: "" !important;
-  position: absolute !important;
-  width: 34px !important;
-  height: 34px !important;
-  pointer-events: none !important;
-  border-color: var(--world-gold-hi) !important;
-  opacity: .72 !important;
-}
-
-.downloadPanel::before {
-  top: 8px !important;
-  left: 8px !important;
-  border-top: 2px solid !important;
-  border-left: 2px solid !important;
-}
-
-.downloadPanel::after {
-  right: 8px !important;
-  bottom: 8px !important;
-  border-right: 2px solid !important;
-  border-bottom: 2px solid !important;
-}
-
-.downloadPlatformIcon {
-  border-radius: 2px !important;
-  color: #2c1113 !important;
-  background: linear-gradient(180deg, #f0c86c, #b77f31) !important;
-  box-shadow: 0 0 0 2px rgba(63,17,22,.72) !important;
-}
-
-/* Main page: let the world remain visible instead of switching back to flat black. */
+/* Keep the world visible between UI panels. */
+.quickStart,
 .worldSection,
 .roadmapSection,
 .participationSection,
 .finalSection,
 .streamSection,
 footer {
-  position: relative !important;
-  isolation: isolate !important;
   background: transparent !important;
 }
 
+.worldSection,
+.roadmapSection,
+.participationSection,
+.finalSection,
+.streamSection {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
 .worldSection::before,
+.worldSection::after,
 .roadmapSection::before,
+.roadmapSection::after,
 .participationSection::before,
+.participationSection::after,
 .finalSection::before,
+.finalSection::after,
 .streamSection::before,
-footer::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: -1 !important;
-  display: block !important;
-  pointer-events: none !important;
-  background: rgba(12, 8, 15, .42) !important;
+.streamSection::after {
+  display: none !important;
 }
 
-.roadmapSection::before,
-.finalSection::before {
-  background: rgba(18, 11, 19, .54) !important;
-}
-
-.participationSection::before {
-  background:
-    linear-gradient(180deg, rgba(69, 12, 22, .52), rgba(18, 9, 17, .56)) !important;
-}
-
-.streamSection::before {
-  background: rgba(8, 7, 12, .70) !important;
-}
-
-/* Bring back a strong game banner for every section heading. */
-.sectionHead,
-.participationSection .sectionHead {
-  padding: 22px 24px !important;
-  border: 1px solid rgba(240, 200, 108, .72) !important;
-  border-left: 4px solid var(--world-gold-hi) !important;
-  background:
-    linear-gradient(90deg, rgba(93, 18, 29, .94), rgba(49, 13, 24, .86) 66%, rgba(34, 14, 24, .54)) !important;
-  box-shadow: 0 10px 28px rgba(0,0,0,.25) !important;
-  text-shadow: 0 2px 10px rgba(0,0,0,.82) !important;
-}
-
-.sectionHead > div > span {
-  display: inline-flex !important;
-  min-height: 34px !important;
-  align-items: center !important;
-  padding: 6px 26px 8px !important;
-  margin: 0 0 7px -10px !important;
-  background: var(--world-banner) center / 100% 100% no-repeat !important;
-  color: #fff1ca !important;
-  text-align: center !important;
-}
-
-/* Cards feel like game windows but stay readable. */
-.featureCard,
+.quickCard,
 .roadCard,
 .participationCard,
-.streamBand,
-.twitchFrame,
 .manifesto,
-.forumSidebar,
-.forumMain,
-.forumStat,
-.forumModal,
-.threadDetailHead,
-.replyBox,
-.rules,
-.card,
-.identity {
-  border: 1px solid rgba(201, 151, 66, .70) !important;
-  border-radius: 4px !important;
-  background: linear-gradient(180deg, rgba(37, 27, 40, .90), rgba(18, 14, 23, .93)) !important;
-  box-shadow:
-    inset 0 0 0 1px rgba(91, 30, 40, .52),
-    0 9px 24px rgba(0,0,0,.28) !important;
-  backdrop-filter: blur(2px) !important;
+.featureCard,
+.streamBand {
+  background: var(--world-panel) !important;
+  backdrop-filter: blur(4px) saturate(1.05) !important;
 }
 
 .featureLarge {
-  min-height: 480px !important;
-  background:
-    linear-gradient(180deg, rgba(11,7,14,.06), rgba(11,7,14,.30) 47%, rgba(11,7,14,.90)),
-    var(--world-battle) center 45% / cover no-repeat !important;
+  background: var(--world-panel) !important;
 }
 
-.participationCard {
-  background: linear-gradient(180deg, rgba(96, 22, 32, .89), rgba(48, 13, 21, .93)) !important;
+/* Forum: same bright world, no tint layer over it. */
+.forumPage {
+  position: relative;
+  background-color: #79a9c4 !important;
+  background-image: var(--world-scene) !important;
+  background-position: center top !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
 }
 
-.streamBand {
-  background: linear-gradient(90deg, rgba(92, 20, 34, .94), rgba(35, 19, 32, .95) 52%, rgba(20, 15, 24, .96)) !important;
-}
-
-.twitchFrame {
-  overflow: hidden !important;
-  background: #0f0c13 !important;
-}
-
-footer {
-  border-top: 1px solid rgba(240, 200, 108, .30) !important;
-}
-
-/* Forum and account inherit the same world instead of flat grey/black. */
-.forumPage,
-body:has(form) main[class*='account_page'] {
-  position: relative !important;
-  background:
-    linear-gradient(180deg, rgba(13,8,16,.50), rgba(13,8,16,.68)),
-    var(--world-scene) center top / cover fixed no-repeat !important;
+.forumPage::before,
+.forumPage::after {
+  display: none !important;
 }
 
 .forumHero {
-  background:
-    linear-gradient(90deg, rgba(15,9,18,.82), rgba(15,9,18,.24) 65%),
-    var(--world-battle) center 44% / cover no-repeat !important;
+  position: relative;
+  overflow: hidden;
+  background: var(--world-scene) center 42% / cover no-repeat !important;
 }
 
-main[class*='account_page'] section[class*='account_card'],
-main[class*='account_page'] [class*='account_rules'],
-main[class*='account_page'] [class*='account_identity'] {
-  border: 1px solid rgba(201,151,66,.70) !important;
-  background: var(--world-panel-strong) !important;
-  box-shadow: inset 0 0 0 1px rgba(91,30,40,.52), 0 14px 34px rgba(0,0,0,.36) !important;
+.forumHero::after {
+  display: none !important;
 }
 
-@media (max-width: 900px) {
+.forumHero > .forumShell {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(7,17,24,.48), rgba(7,17,24,.14) 72%, transparent) !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,.72);
+}
+
+.forumSidebar,
+.forumMain {
+  background: rgba(8,18,26,.58) !important;
+  backdrop-filter: blur(5px) saturate(1.04) !important;
+}
+
+.forumHeader {
+  background: rgba(8,18,26,.66) !important;
+}
+
+/* /account owns its own game-art background and panel skin through account.module.css.
+   Do not override it here: it is the real ByeTale game-account portal. */
+
+@media (max-width: 760px) {
   body,
-  .forumPage,
-  body:has(form) main[class*='account_page'] {
+  .forumPage {
     background-attachment: scroll !important;
-  }
-
-  .hero {
-    min-height: 820px !important;
-    background-position: 60% center !important;
+    background-position: 54% top !important;
   }
 
   .heroCopy {
-    width: min(620px, 86vw) !important;
-    max-width: 620px !important;
-    background: rgba(15, 9, 18, .76) !important;
+    background: rgba(7,16,23,.42) !important;
   }
 
-  .downloadSection {
-    background-attachment: scroll !important;
-  }
-}
-
-@media (max-width: 620px) {
-  body {
-    background-position: 58% top !important;
-  }
-
-  .hero {
-    min-height: 760px !important;
-    padding-top: 104px !important;
-    background-position: 65% center !important;
-  }
-
-  .heroCopy {
-    width: 100% !important;
-    padding: 26px 20px 28px !important;
-    border-left-width: 1px !important;
-  }
-
-  .hero h1 {
-    font-size: clamp(3.7rem, 18vw, 5.2rem) !important;
-  }
-
-  .sectionHead,
-  .participationSection .sectionHead {
-    padding: 18px !important;
+  .forumHero > .forumShell {
+    background: rgba(7,17,24,.42) !important;
   }
 }
