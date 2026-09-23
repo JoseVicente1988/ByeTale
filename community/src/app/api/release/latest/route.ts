@@ -16,6 +16,8 @@ type GitHubRelease = {
   body?: string;
   published_at?: string;
   html_url?: string;
+  draft?: boolean;
+  prerelease?: boolean;
   assets?: GitHubAsset[];
 };
 
@@ -23,7 +25,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const response = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, {
+    const response = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=20`, {
       headers: {
         Accept: "application/vnd.github+json",
         "User-Agent": "ByeTale-Community",
@@ -38,24 +40,28 @@ export async function GET() {
       );
     }
 
-    const release = (await response.json()) as GitHubRelease;
-    const assets = Array.isArray(release.assets) ? release.assets : [];
-    const apk = assets.find((asset) =>
-      String(asset.name ?? "").toLowerCase().endsWith(".apk"),
-    );
+    const releases = (await response.json()) as GitHubRelease[];
+    const candidate = releases
+      .filter((release) => !release.draft)
+      .map((release) => ({
+        release,
+        apk: (Array.isArray(release.assets) ? release.assets : []).find((asset) =>
+          String(asset.name ?? "").toLowerCase().endsWith(".apk"),
+        ),
+      }))
+      .find((entry) => entry.apk?.browser_download_url);
 
-    if (!apk?.browser_download_url) {
+    if (!candidate?.apk?.browser_download_url) {
       return NextResponse.json(
         {
           available: false,
-          version: release.name ?? release.tag_name ?? null,
-          release_url: release.html_url ?? null,
-          published_at: release.published_at ?? null,
-          error: "La release más reciente no incluye un APK descargable.",
+          error: "Todavía no hay una build Android pública preparada para descargar.",
         },
         { status: 200, headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } },
       );
     }
+
+    const { release, apk } = candidate;
 
     return NextResponse.json(
       {
