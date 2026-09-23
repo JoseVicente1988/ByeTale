@@ -5,6 +5,7 @@ import "./mobile.css";
 import "./ux.css";
 import "./game-reference-theme.css";
 import "./authored.css";
+import "./platform-downloads.css";
 import "./world-backgrounds.css";
 
 export const metadata: Metadata = {
