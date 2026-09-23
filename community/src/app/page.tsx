@@ -6,6 +6,21 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type StreamStatus = "checking" | "live" | "offline";
 
+type PlatformBuild = {
+  available: boolean;
+  platform: "android" | "windows";
+  label: string;
+  format: string;
+  version?: string | null;
+  tag?: string | null;
+  published_at?: string | null;
+  release_url?: string | null;
+  download_url?: string | null;
+  file_name?: string | null;
+  size_bytes?: number;
+  download_count?: number;
+};
+
 type ReleaseInfo = {
   available: boolean;
   version?: string | null;
@@ -13,11 +28,11 @@ type ReleaseInfo = {
   published_at?: string | null;
   notes?: string;
   release_url?: string | null;
-  download_url?: string | null;
-  file_name?: string | null;
-  size_bytes?: number;
-  download_count?: number;
-  error?: string;
+  platforms?: {
+    windows: PlatformBuild;
+    android: PlatformBuild;
+  } | null;
+  error?: string | null;
 };
 
 type TwitchPlayerInstance = {
@@ -111,6 +126,48 @@ function formatReleaseDate(value?: string | null) {
     month: "short",
     year: "numeric",
   }).format(date);
+}
+
+function PlatformDownload({ build }: { build: PlatformBuild }) {
+  const isWindows = build.platform === "windows";
+  const icon = isWindows ? "W" : "A";
+  const button = isWindows ? "Descargar para Windows" : "Descargar APK";
+
+  return (
+    <article className={`platformDownloadCard ${build.available ? "isAvailable" : "isPending"}`}>
+      <div className="downloadPlatform">
+        <span className="downloadPlatformIcon" aria-hidden="true">{icon}</span>
+        <div>
+          <small>{build.available ? "Build pública" : "Preparado para publicación"}</small>
+          <strong>{build.label} · {build.format}</strong>
+        </div>
+      </div>
+
+      {build.available && build.download_url ? (
+        <>
+          <div className="platformBuildMeta">
+            <div><small>Versión</small><strong>{build.version || build.tag || "Última build"}</strong></div>
+            <div><small>Tamaño</small><strong>{formatBytes(build.size_bytes)}</strong></div>
+            <div><small>Publicada</small><strong>{formatReleaseDate(build.published_at)}</strong></div>
+          </div>
+          <div className="downloadActions">
+            <a className="button primary downloadButton" href={build.download_url}>{button}</a>
+            {build.release_url ? (
+              <a className="textLink" href={build.release_url} target="_blank" rel="noreferrer">Ver release ↗</a>
+            ) : null}
+          </div>
+          <p className="downloadFile">{build.file_name}</p>
+        </>
+      ) : (
+        <div className="platformPendingCopy">
+          <strong>{isWindows ? "Windows estará disponible aquí." : "Android estará disponible aquí."}</strong>
+          <span>
+            Cuando publique el archivo {isWindows ? "Windows x64 (.zip/.exe/.msi)" : "Android (.apk)"} en una release de ByeTale, la web lo detectará automáticamente.
+          </span>
+        </div>
+      )}
+    </article>
+  );
 }
 
 export default function HomePage() {
@@ -240,61 +297,37 @@ export default function HomePage() {
             <span className="eyebrow">Juega la build pública</span>
             <h2 id="download-title">Descarga ByeTale y entra al mundo.</h2>
             <p>
-              La web consulta la última release publicada del proyecto. Cuando suba una nueva build Android, esta sección se actualizará automáticamente.
+              La web está preparada para Windows y Android. Cada plataforma se actualiza automáticamente cuando su compilación se publica en las releases oficiales de ByeTale.
             </p>
           </div>
 
-          <article className="downloadPanel" aria-live="polite">
-            <div className="downloadPlatform">
-              <span className="downloadPlatformIcon" aria-hidden="true">A</span>
-              <div>
-                <small>Disponible ahora</small>
-                <strong>Android · APK</strong>
-              </div>
-            </div>
-
+          <div className="downloadPanel downloadPanelMulti" aria-live="polite">
             {releaseLoading ? (
               <div className="downloadState">
-                <strong>Buscando la última build…</strong>
-                <span>Consultando las releases oficiales de ByeTale.</span>
+                <strong>Buscando las últimas builds…</strong>
+                <span>Consultando Windows y Android en las releases oficiales de ByeTale.</span>
               </div>
-            ) : release?.available && release.download_url ? (
-              <>
-                <div className="downloadMeta" role="list" aria-label="Información de la build">
-                  <div role="listitem"><small>Versión</small><strong>{release.version || release.tag || "Última build"}</strong></div>
-                  <div role="listitem"><small>Tamaño</small><strong>{formatBytes(release.size_bytes)}</strong></div>
-                  <div role="listitem"><small>Publicada</small><strong>{formatReleaseDate(release.published_at)}</strong></div>
-                  <div role="listitem"><small>Descargas</small><strong>{release.download_count ?? 0}</strong></div>
-                </div>
-
-                <div className="downloadActions">
-                  <a className="button primary downloadButton" href={release.download_url}>Descargar APK</a>
-                  {release.release_url ? (
-                    <a className="textLink" href={release.release_url} target="_blank" rel="noreferrer">Ver release ↗</a>
-                  ) : null}
-                </div>
-
-                <p className="downloadFile">{release.file_name}</p>
-              </>
+            ) : release?.platforms ? (
+              <div className="downloadPlatforms">
+                <PlatformDownload build={release.platforms.windows} />
+                <PlatformDownload build={release.platforms.android} />
+              </div>
             ) : (
               <div className="downloadState unavailable">
-                <strong>La descarga no está disponible temporalmente.</strong>
-                <span>{release?.error || "Todavía no hay una build pública preparada para descargar."}</span>
-                {release?.release_url ? (
-                  <a className="textLink" href={release.release_url} target="_blank" rel="noreferrer">Ver última release ↗</a>
-                ) : null}
+                <strong>Las descargas no están disponibles temporalmente.</strong>
+                <span>{release?.error || "Todavía no hay builds públicas preparadas para descargar."}</span>
               </div>
             )}
 
             <div className="downloadHelp">
               <span>01</span>
-              <p>Descarga el APK desde esta página.</p>
+              <p>Elige Windows o Android. La cuenta de ByeTale es la misma en ambas plataformas.</p>
               <span>02</span>
-              <p>Android puede pedir permiso para instalar aplicaciones desde el navegador.</p>
+              <p>En Windows distribuiremos el juego como paquete x64; en Android, como APK.</p>
               <span>03</span>
-              <p>Crea tu cuenta y usa el foro para reportar errores o seguir el desarrollo.</p>
+              <p>Las futuras builds aparecen aquí al publicarlas, sin cambiar manualmente los botones de la web.</p>
             </div>
-          </article>
+          </div>
         </div>
       </section>
 
