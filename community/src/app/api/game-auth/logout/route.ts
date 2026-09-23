@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
   if (token) {
     await gameBackendFetch(
-      "/api/auth/logout",
+      "/api/web-auth/logout",
       {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
