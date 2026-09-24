@@ -152,9 +152,6 @@ function PlatformDownload({ build }: { build: PlatformBuild }) {
           </div>
           <div className="downloadActions">
             <a className="button primary downloadButton" href={build.download_url}>{button}</a>
-            {build.release_url ? (
-              <a className="textLink" href={build.release_url} target="_blank" rel="noreferrer">Ver release ↗</a>
-            ) : null}
           </div>
           <p className="downloadFile">{build.file_name}</p>
         </>
