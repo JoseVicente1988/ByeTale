@@ -31,3 +31,5 @@ npm run build
 ## Identidad visual
 
 La portada toma como referencia el fondo real que utiliza el login de ByeTale (`UI/background_1.jpeg`) y los recursos existentes del proyecto, como Godspire Citadel y las entidades Player Character, Skeleton y Slime.
+
+La interfaz pública de descargas debe mostrar únicamente las acciones de descarga de Windows y Android; los enlaces técnicos a la página de GitHub Release no forman parte de la UI pública.
