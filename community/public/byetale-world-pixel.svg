@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" shape-rendering="crispEdges">
+  <defs>
+    <pattern id="dither" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="none"/>
+      <rect width="2" height="2" x="0" y="0" fill="#b9c4d0" opacity=".12"/>
+      <rect width="2" height="2" x="4" y="4" fill="#0a1320" opacity=".18"/>
+    </pattern>
+    <pattern id="stars" width="96" height="72" patternUnits="userSpaceOnUse">
+      <rect x="13" y="18" width="3" height="3" fill="#e9d8a5" opacity=".55"/>
+      <rect x="70" y="41" width="2" height="2" fill="#d7e7ef" opacity=".42"/>
+      <rect x="42" y="8" width="2" height="2" fill="#f1dca0" opacity=".32"/>
+    </pattern>
+  </defs>
+
+  <!-- twilight sky -->
+  <rect width="1920" height="1080" fill="#172335"/>
+  <rect width="1920" height="280" y="0" fill="#111a2a"/>
+  <rect width="1920" height="230" y="280" fill="#26374b"/>
+  <rect width="1920" height="170" y="510" fill="#415363"/>
+  <rect width="1920" height="680" fill="url(#stars)"/>
+
+  <!-- moon glow, pixel stepped -->
+  <rect x="1464" y="142" width="118" height="118" fill="#c9d6d7" opacity=".14"/>
+  <rect x="1476" y="130" width="94" height="142" fill="#dbe1d6" opacity=".10"/>
+  <rect x="1452" y="154" width="142" height="94" fill="#dbe1d6" opacity=".08"/>
+  <rect x="1494" y="160" width="58" height="58" fill="#f2e8c1" opacity=".82"/>
+  <rect x="1502" y="152" width="42" height="74" fill="#f2e8c1" opacity=".72"/>
+
+  <!-- far mountains -->
+  <polygon points="0,520 180,386 290,452 430,328 565,468 710,354 845,490 1005,346 1170,476 1330,366 1485,492 1658,340 1920,520 1920,682 0,682" fill="#263849"/>
+  <polygon points="0,565 210,430 360,516 520,404 672,538 830,422 1015,548 1215,408 1370,522 1530,428 1710,536 1920,442 1920,710 0,710" fill="#334958"/>
+  <polygon points="105,500 190,418 239,446 190,446" fill="#7b8b8e" opacity=".42"/>
+  <polygon points="462,436 522,390 580,440 520,425" fill="#8a9898" opacity=".36"/>
+  <polygon points="1160,450 1217,397 1283,453 1219,436" fill="#899596" opacity=".32"/>
+
+  <!-- mist bands -->
+  <rect x="0" y="600" width="1920" height="42" fill="#a5b2b3" opacity=".11"/>
+  <rect x="0" y="648" width="1920" height="26" fill="#bdc5bd" opacity=".08"/>
+
+  <!-- distant forest -->
+  <g fill="#172a2c">
+    <polygon points="0,690 44,542 88,690"/><polygon points="52,690 106,510 160,690"/><polygon points="122,690 178,548 234,690"/>
+    <polygon points="220,690 268,524 316,690"/><polygon points="298,690 354,490 410,690"/><polygon points="392,690 446,538 500,690"/>
+    <polygon points="492,690 550,505 608,690"/><polygon points="590,690 650,540 710,690"/><polygon points="700,690 760,496 820,690"/>
+    <polygon points="804,690 858,530 912,690"/><polygon points="900,690 960,486 1020,690"/><polygon points="1010,690 1065,536 1120,690"/>
+    <polygon points="1110,690 1166,506 1222,690"/><polygon points="1206,690 1268,530 1330,690"/><polygon points="1320,690 1378,488 1436,690"/>
+    <polygon points="1428,690 1486,530 1544,690"/><polygon points="1530,690 1590,500 1650,690"/><polygon points="1642,690 1702,542 1762,690"/>
+    <polygon points="1750,690 1810,490 1870,690"/><polygon points="1830,690 1880,540 1930,690"/>
+  </g>
+
+  <!-- left ruined tower -->
+  <g>
+    <rect x="132" y="486" width="214" height="334" fill="#4a4f4b"/>
+    <rect x="150" y="504" width="178" height="298" fill="#59605a"/>
+    <rect x="132" y="466" width="58" height="36" fill="#3c413e"/>
+    <rect x="222" y="454" width="62" height="48" fill="#3c413e"/>
+    <rect x="300" y="472" width="46" height="30" fill="#3c413e"/>
+    <rect x="178" y="554" width="48" height="82" fill="#182126"/>
+    <rect x="256" y="556" width="44" height="78" fill="#182126"/>
+    <rect x="194" y="708" width="88" height="112" fill="#252d2e"/>
+    <rect x="160" y="530" width="16" height="18" fill="#7b7864" opacity=".55"/>
+    <rect x="294" y="650" width="18" height="20" fill="#7b7864" opacity=".45"/>
+    <rect x="224" y="674" width="14" height="14" fill="#85806a" opacity=".38"/>
+  </g>
+
+  <!-- broken wall -->
+  <g>
+    <rect x="344" y="650" width="510" height="164" fill="#454c49"/>
+    <rect x="368" y="624" width="86" height="42" fill="#515954"/>
+    <rect x="472" y="610" width="108" height="56" fill="#535b55"/>
+    <rect x="598" y="634" width="76" height="32" fill="#505752"/>
+    <rect x="688" y="602" width="116" height="64" fill="#535b56"/>
+    <rect x="418" y="704" width="84" height="110" fill="#252d2e"/>
+    <rect x="706" y="690" width="74" height="124" fill="#252d2e"/>
+    <rect x="530" y="676" width="16" height="14" fill="#827c65" opacity=".45"/>
+    <rect x="644" y="732" width="22" height="16" fill="#817a62" opacity=".42"/>
+  </g>
+
+  <!-- right arch ruin -->
+  <g>
+    <rect x="1390" y="574" width="286" height="250" fill="#424a47"/>
+    <rect x="1414" y="548" width="74" height="56" fill="#515954"/>
+    <rect x="1512" y="526" width="96" height="78" fill="#555d57"/>
+    <rect x="1624" y="556" width="52" height="48" fill="#515954"/>
+    <rect x="1476" y="650" width="126" height="174" fill="#1d292b"/>
+    <rect x="1494" y="626" width="90" height="40" fill="#1d292b"/>
+    <rect x="1458" y="678" width="18" height="146" fill="#515954"/>
+    <rect x="1602" y="678" width="18" height="146" fill="#515954"/>
+    <rect x="1422" y="724" width="20" height="16" fill="#817a62" opacity=".42"/>
+    <rect x="1636" y="622" width="16" height="18" fill="#817a62" opacity=".4"/>
+  </g>
+
+  <!-- foreground forest -->
+  <g fill="#0d1d1c">
+    <polygon points="0,888 96,602 192,888"/><polygon points="70,920 178,580 286,920"/>
+    <polygon points="250,930 354,626 458,930"/><polygon points="1200,920 1310,590 1420,920"/>
+    <polygon points="1320,930 1434,622 1548,930"/><polygon points="1510,930 1636,570 1762,930"/>
+    <polygon points="1710,930 1838,610 1966,930"/>
+  </g>
+  <g fill="#142b26">
+    <polygon points="18,920 98,682 178,920"/><polygon points="322,930 398,704 474,930"/>
+    <polygon points="1240,930 1324,694 1408,930"/><polygon points="1580,930 1670,674 1760,930"/>
+  </g>
+
+  <!-- ground -->
+  <rect x="0" y="814" width="1920" height="266" fill="#0b1718"/>
+  <polygon points="0,880 300,842 610,896 890,846 1170,900 1450,850 1920,886 1920,1080 0,1080" fill="#10201f"/>
+  <rect x="0" y="814" width="1920" height="266" fill="url(#dither)"/>
+
+  <!-- path -->
+  <polygon points="806,1080 948,820 1084,820 1248,1080" fill="#39413b"/>
+  <polygon points="858,1080 978,820 1048,820 1174,1080" fill="#515344" opacity=".76"/>
+  <rect x="934" y="916" width="104" height="12" fill="#77705a" opacity=".32"/>
+  <rect x="900" y="984" width="146" height="14" fill="#77705a" opacity=".26"/>
+
+  <!-- warm torch pixels -->
+  <rect x="674" y="736" width="8" height="38" fill="#4d3826"/>
+  <rect x="666" y="724" width="24" height="20" fill="#c87335" opacity=".7"/>
+  <rect x="672" y="716" width="12" height="26" fill="#f2c45f" opacity=".9"/>
+  <rect x="676" y="710" width="5" height="18" fill="#fff0a2"/>
+
+  <!-- global subtle pixels -->
+  <rect width="1920" height="1080" fill="url(#dither)" opacity=".38"/>
+</svg>

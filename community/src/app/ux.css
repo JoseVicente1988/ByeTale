@@ -1,0 +1,314 @@
+/* Web-first UX pass: clearer hierarchy and navigation without losing ByeTale's 2D identity. */
+
+.siteHeader {
+  position: sticky;
+  top: 0;
+  inset: auto;
+  background: rgba(10, 15, 18, 0.86);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
+}
+
+.nav {
+  min-height: 68px;
+}
+
+.navLinks a {
+  border-radius: 9px;
+}
+
+.navLinks a:hover {
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.hero {
+  min-height: 690px;
+  padding: 72px 0 64px;
+}
+
+.heroLayout {
+  min-height: 520px;
+}
+
+.heroCopy {
+  width: min(600px, 52vw);
+  padding-top: 0;
+}
+
+.hero h1 {
+  margin-top: 18px;
+  font-size: clamp(4.4rem, 7.4vw, 6.8rem);
+}
+
+.heroTagline {
+  margin-top: 14px;
+}
+
+.lead {
+  margin-top: 14px;
+  max-width: 560px;
+}
+
+.heroScene {
+  top: 18px;
+  bottom: 12px;
+  width: min(65vw, 980px);
+  filter: saturate(1.08) contrast(1.02) brightness(1.08);
+}
+
+.heroScene::after {
+  background:
+    linear-gradient(90deg, rgba(5, 7, 10, 0.65) 0%, rgba(5, 7, 10, 0.32) 24%, rgba(5, 7, 10, 0.08) 44%, transparent 66%),
+    linear-gradient(180deg, transparent 62%, rgba(5, 7, 10, 0.35) 100%);
+}
+
+.heroShade {
+  background:
+    linear-gradient(90deg, rgba(5, 7, 10, 0.82) 0%, rgba(5, 7, 10, 0.64) 24%, rgba(5, 7, 10, 0.24) 46%, rgba(5, 7, 10, 0.03) 70%, transparent 88%),
+    linear-gradient(180deg, rgba(5, 7, 10, 0.04), transparent 72%, rgba(5, 7, 10, 0.28));
+}
+
+.actions {
+  margin-top: 24px;
+}
+
+/* Immediate orientation: give a first-time visitor three obvious paths. */
+.quickStart {
+  position: relative;
+  z-index: 5;
+  padding: 24px 0 26px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(12, 18, 21, 0.78);
+  backdrop-filter: blur(14px);
+}
+
+.quickStartInner {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.7fr) minmax(0, 2fr);
+  gap: 22px;
+  align-items: center;
+}
+
+.quickIntro small {
+  display: block;
+  color: var(--gold);
+  font-size: 0.65rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.quickIntro strong {
+  display: block;
+  margin-top: 6px;
+  font: 1.2rem/1.25 Georgia, serif;
+}
+
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.quickCard {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 17px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.quickCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(216, 185, 117, 0.34);
+  background: rgba(255, 255, 255, 0.075);
+}
+
+.quickCard span:first-child {
+  display: grid;
+  gap: 5px;
+}
+
+.quickCard small {
+  color: #a9a59d;
+  font-size: 0.67rem;
+}
+
+.quickCard strong {
+  font-size: 0.9rem;
+}
+
+.quickCard b {
+  color: var(--gold-bright);
+  font-size: 1.1rem;
+}
+
+.section {
+  padding: 72px 0;
+}
+
+.sectionHead {
+  margin-bottom: 24px;
+}
+
+.streamSection {
+  margin-top: 0;
+  padding: 68px 0 38px;
+}
+
+.twitchFrame {
+  margin-top: 14px;
+}
+
+/* Cards should read as controls/content, not as black slabs. */
+.featureCard,
+.roadCard,
+.participationCard,
+.manifesto,
+.streamBand {
+  background-color: rgba(18, 27, 31, 0.72);
+}
+
+@media (max-width: 1020px) {
+  .nav {
+    flex-wrap: wrap;
+    gap: 0;
+    padding-top: 8px;
+  }
+
+  .brand {
+    margin-right: auto;
+  }
+
+  .streamPill {
+    display: none;
+  }
+
+  .navLinks {
+    order: 3;
+    width: 100%;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 7px 0 9px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    scrollbar-width: none;
+  }
+
+  .navLinks::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navLinks a {
+    flex: 0 0 auto;
+    padding: 8px 10px;
+    font-size: 0.76rem;
+  }
+
+  .hero {
+    min-height: 620px;
+  }
+
+  .heroCopy {
+    width: min(580px, 62vw);
+  }
+
+  .quickStartInner {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 760px) {
+  .nav {
+    min-height: auto;
+  }
+
+  .brandCopy small {
+    display: block;
+    font-size: 0.55rem;
+  }
+
+  .hero {
+    min-height: 0;
+    display: grid;
+    padding: 46px 0 52px;
+  }
+
+  .heroScene {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--scene) 62% 42% / cover no-repeat;
+    opacity: 0.58;
+    filter: saturate(1.08) brightness(1.08);
+  }
+
+  .heroScene::after {
+    background:
+      linear-gradient(90deg, rgba(5, 7, 10, 0.66), rgba(5, 7, 10, 0.32) 64%, rgba(5, 7, 10, 0.15)),
+      linear-gradient(180deg, rgba(5, 7, 10, 0.10), rgba(5, 7, 10, 0.34));
+  }
+
+  .heroShade {
+    background: linear-gradient(180deg, rgba(5, 7, 10, 0.06), rgba(5, 7, 10, 0.26));
+  }
+
+  .heroLayout {
+    min-height: 510px;
+    display: flex;
+    padding-top: 0;
+  }
+
+  .heroCopy {
+    width: 100%;
+    padding: 0;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.6rem, 17vw, 5rem);
+  }
+
+  .lead {
+    max-width: 520px;
+  }
+
+  .actions .button {
+    flex: 1 1 180px;
+  }
+
+  .tech {
+    margin-top: 18px;
+  }
+
+  .quickStart {
+    padding: 18px 0;
+  }
+
+  .quickGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .quickCard {
+    min-height: 72px;
+  }
+
+  .section {
+    padding: 58px 0;
+  }
+
+  .worldSection {
+    padding-top: 58px;
+  }
+
+  .streamSection {
+    padding-top: 58px;
+  }
+}

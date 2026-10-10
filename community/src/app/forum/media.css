@@ -1,0 +1,32 @@
+.postMedia {
+  width: min(100%, 760px);
+  margin-top: 14px;
+  border: 1px solid rgba(221, 186, 104, 0.22);
+  border-radius: 10px;
+  background: rgba(7, 10, 13, 0.72);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.postVideo {
+  display: block;
+  max-height: 520px;
+  object-fit: contain;
+}
+
+.postAudio {
+  display: block;
+  height: 48px;
+}
+
+.attachmentHelp {
+  display: block;
+  margin-top: 5px;
+  color: rgba(235, 226, 207, 0.58);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.attachmentName strong {
+  color: rgba(239, 204, 125, 0.92);
+  font-weight: 600;
+}
