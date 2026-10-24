@@ -1,0 +1,311 @@
+/* ByeTale Community — visual language derived from the CURRENT 2D game.
+   Primary references: ui/background_menu.png, maps/backgrounds/battlebg.png,
+   and ui/banner_city.png. No generated fantasy backgrounds. */
+
+:root {
+  --bt-menu: url('/byetale-menu-reference.webp');
+  --bt-battle: url('/byetale-battle-reference.webp');
+  --bt-banner: url('/byetale-banner-reference.webp');
+  --bt-ink: #120d16;
+  --bt-night: #111523;
+  --bt-night-2: #1c1b2c;
+  --bt-red: #6e1722;
+  --bt-red-2: #9a2630;
+  --bt-red-dark: #3d0b12;
+  --bt-gold: #c99742;
+  --bt-gold-hi: #f0c86c;
+  --bt-cream: #f6e6bd;
+  --bt-paper: #d8c89e;
+  --bt-muted: #c0b8ad;
+  --scene: var(--bt-menu);
+}
+
+html, body { background: var(--bt-ink) !important; }
+body {
+  color: var(--bt-cream) !important;
+  background-image: none !important;
+}
+body::before, body::after { display:none !important; }
+
+/* ---------- top navigation: closer to the game's HUD ---------- */
+.siteHeader,
+.forumHeader {
+  background: linear-gradient(180deg, rgba(20,14,24,.97), rgba(13,11,18,.96)) !important;
+  border-bottom: 1px solid #29171d !important;
+  box-shadow: 0 2px 0 var(--bt-red), 0 3px 0 rgba(201,151,66,.62), 0 10px 30px rgba(0,0,0,.28) !important;
+  backdrop-filter: none !important;
+}
+.brandIcon {
+  border: 1px solid var(--bt-gold) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 0 0 2px #351018, 0 3px 12px rgba(0,0,0,.38) !important;
+}
+.brandCopy strong,.forumBrand { color:var(--bt-cream)!important; font-family: Georgia,serif; }
+.brandCopy small,.forumBrand small { color:#a99e95!important; }
+.navLinks a,.forumNavLinks a { color:#d7ccc0!important; border-radius:3px!important; }
+.navLinks a:hover,.forumNavLinks a:hover { background:var(--bt-red)!important; color:#fff2ce!important; }
+.streamPill {
+  border:1px solid #573343!important;
+  border-radius:4px!important;
+  background:#211522!important;
+  color:#e2cde0!important;
+}
+
+/* ---------- HERO: exact current game menu composition ---------- */
+.hero {
+  min-height: min(940px, 100vh) !important;
+  padding: 118px 0 74px !important;
+  display:grid !important;
+  background:
+    linear-gradient(90deg, transparent 0 46%, rgba(8,5,12,.04) 57%, rgba(8,5,12,.26) 76%, rgba(8,5,12,.46) 100%),
+    var(--bt-menu) center / cover no-repeat !important;
+  border-bottom:3px solid var(--bt-red)!important;
+  box-shadow:inset 0 -1px 0 var(--bt-gold)!important;
+}
+.heroScene,.heroShade { display:none!important; }
+.heroLayout {
+  min-height:640px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+}
+.heroCopy {
+  width:min(530px,45vw)!important;
+  margin-left:auto!important;
+  padding:28px 8px 30px 30px!important;
+  background:none!important;
+  border:0!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  text-shadow:0 2px 10px rgba(0,0,0,.72);
+}
+.heroCopy::before { display:none!important; }
+.eyebrow {
+  display:inline-flex!important;
+  min-height:38px!important;
+  padding:8px 28px!important;
+  align-items:center!important;
+  border:0!important;
+  border-radius:0!important;
+  color:#fff0c7!important;
+  background:var(--bt-banner) center / 100% 100% no-repeat!important;
+  text-shadow:1px 1px 2px #29080c!important;
+  backdrop-filter:none!important;
+}
+.hero h1 {
+  margin:26px 0 0!important;
+  color:#fff0c6!important;
+  font-family:Georgia,'Times New Roman',serif!important;
+  font-size:clamp(4.3rem,8vw,7.4rem)!important;
+  line-height:.88!important;
+  letter-spacing:.02em!important;
+  text-shadow:0 3px 0 #3b111b, 0 7px 22px rgba(0,0,0,.68)!important;
+}
+.hero h1::after {
+  width:72%!important;
+  height:2px!important;
+  margin-top:18px!important;
+  background:linear-gradient(90deg,var(--bt-gold-hi),var(--bt-red-2),transparent)!important;
+  box-shadow:none!important;
+}
+.heroTagline { color:var(--bt-gold-hi)!important; text-shadow:0 2px 8px #000!important; }
+.lead { color:#eee5d7!important; text-shadow:0 2px 8px #000!important; }
+.tech span {
+  border:1px solid rgba(201,151,66,.45)!important;
+  border-radius:3px!important;
+  background:rgba(27,17,27,.78)!important;
+  color:#eadbb9!important;
+}
+
+/* Buttons imitate the red/gold menu accents instead of SaaS controls. */
+.button,.forumButton,.tab,.modalTabs button {
+  border-radius:4px!important;
+  border:1px solid var(--bt-gold)!important;
+  box-shadow:0 0 0 1px #371017, 0 4px 10px rgba(0,0,0,.3)!important;
+  transition:transform .12s ease, filter .12s ease!important;
+}
+.button:hover,.forumButton:hover,.tab:hover,.modalTabs button:hover { transform:translateY(-1px)!important; filter:brightness(1.1); }
+.button.primary,.forumButton.primary,.tabActive {
+  color:#fff2cf!important;
+  background:linear-gradient(#9f2833,#67131e)!important;
+  text-shadow:1px 1px 1px #30080d;
+}
+.button.secondary,.forumButton {
+  color:#f0dfbd!important;
+  background:linear-gradient(#28202d,#17131d)!important;
+}
+
+/* ---------- quick access: in-game menu row ---------- */
+.quickStart {
+  position:relative;
+  z-index:2;
+  margin:0!important;
+  padding:24px 0!important;
+  background:linear-gradient(180deg,#2b1018,#160d14)!important;
+  border-bottom:1px solid var(--bt-gold)!important;
+}
+.quickStartInner { align-items:center!important; }
+.quickIntro small,.sectionHead>div>span { color:var(--bt-gold-hi)!important; }
+.quickIntro strong { color:#fff0cc!important; font-family:Georgia,serif; }
+.quickCard {
+  border:1px solid #7e5a30!important;
+  border-radius:4px!important;
+  background:linear-gradient(180deg,#7a1b25,#4a0f17)!important;
+  box-shadow:inset 0 0 0 1px #2d0910, 0 5px 14px rgba(0,0,0,.28)!important;
+}
+.quickCard:hover { border-color:var(--bt-gold-hi)!important; transform:translateY(-2px)!important; }
+.quickCard small { color:#d8b774!important; }
+.quickCard strong { color:#fff0cf!important; }
+.quickCard b { color:var(--bt-gold-hi)!important; }
+
+/* ---------- main world sections: actual battle art ---------- */
+.section { position:relative!important; overflow:hidden!important; }
+.worldSection,.roadmapSection,.participationSection,.finalSection {
+  background:
+    linear-gradient(180deg,rgba(17,10,19,.22),rgba(17,10,19,.38)),
+    var(--bt-battle) center / cover fixed no-repeat!important;
+}
+.worldSection::before,.roadmapSection::before,.participationSection::before,.finalSection::before,
+.worldSection::after,.roadmapSection::after,.participationSection::after,.finalSection::after { display:none!important; }
+.section>.shell { position:relative; z-index:1; }
+.sectionHead {
+  margin-bottom:28px!important;
+  padding:20px 22px!important;
+  border-left:3px solid var(--bt-gold)!important;
+  background:linear-gradient(90deg,rgba(55,10,18,.91),rgba(31,13,24,.76) 64%,rgba(31,13,24,.18))!important;
+  box-shadow:0 7px 24px rgba(0,0,0,.22)!important;
+}
+.sectionHead>div>span {
+  display:inline-block;
+  min-width:150px;
+  padding:7px 22px 9px;
+  margin-left:-10px;
+  background:var(--bt-banner) center/100% 100% no-repeat;
+  color:#fff0c8!important;
+  text-align:center;
+}
+.sectionHead h2 { color:#fff0ce!important; text-shadow:0 2px 8px #000!important; }
+.sectionHead p { color:#ded2c5!important; }
+
+/* Cards: restrained stone/burgundy panels. No glass, no blue dashboard blocks. */
+.featureCard,.roadCard,.participationCard,.streamBand,.twitchFrame,.manifesto,
+.forumSidebar,.forumMain,.forumStat,.forumModal,.threadDetailHead,.replyBox,.rules,.card,.identity {
+  border:1px solid rgba(201,151,66,.72)!important;
+  border-radius:6px!important;
+  clip-path:none!important;
+  background:linear-gradient(180deg,rgba(36,27,39,.96),rgba(20,16,25,.97))!important;
+  box-shadow:inset 0 0 0 1px rgba(85,31,39,.66),0 8px 24px rgba(0,0,0,.30)!important;
+  backdrop-filter:none!important;
+}
+.featureCard::before,.roadCard::before,.participationCard::before,.manifesto::before { display:none!important; }
+.featureCard:hover,.roadCard:hover,.participationCard:hover {
+  border-color:var(--bt-gold-hi)!important;
+  transform:translateY(-2px)!important;
+}
+.featureCard h3,.roadCard h3,.participationCard h3,.manifesto h2 { color:#fff0cc!important; font-family:Georgia,serif; }
+.featureCard p,.roadCard p,.participationCard p,.manifesto p { color:#cfc5bb!important; }
+.featureNumber,.participationIndex { color:var(--bt-gold)!important; }
+.label.gold,.roadTop span,.participationCard a { color:var(--bt-gold-hi)!important; }
+.roadTop { border-bottom:1px solid rgba(201,151,66,.25); padding-bottom:10px; }
+
+/* Entra en el proceso: deliberately stronger and closer to the red banner UI. */
+.participationSection { padding-top:105px!important; padding-bottom:120px!important; }
+.participationSection .sectionHead {
+  border:1px solid var(--bt-gold)!important;
+  background:linear-gradient(90deg,rgba(96,18,30,.96),rgba(56,12,23,.89))!important;
+}
+.participationCard {
+  background:linear-gradient(180deg,rgba(95,20,30,.96),rgba(51,13,21,.97))!important;
+  border-color:#b9873b!important;
+}
+.participationCard p { color:#eadbca!important; }
+
+/* ---------- Twitch ---------- */
+.streamSection {
+  padding:70px 0!important;
+  background:linear-gradient(180deg,#17111d,#0e0c13)!important;
+}
+.streamSection::before { display:none!important; }
+.streamBand {
+  background:linear-gradient(90deg,#5a1523,#251421 46%,#16111b)!important;
+}
+.twitchFrame { background:#100d14!important; overflow:hidden; }
+.twitchFooter { border-top:1px solid var(--bt-gold)!important; background:#29131c!important; }
+
+/* ---------- FORUM: exact battle art + game panels ---------- */
+.forumPage {
+  background:
+    linear-gradient(180deg,rgba(13,9,17,.26),rgba(13,9,17,.48)),
+    var(--bt-battle) center / cover fixed no-repeat!important;
+}
+.forumPage::before { display:none!important; }
+.forumHero {
+  background:
+    linear-gradient(90deg,rgba(20,10,20,.78),rgba(20,10,20,.28) 60%,rgba(20,10,20,.10)),
+    var(--bt-battle) center 44% / cover no-repeat!important;
+  border-bottom:2px solid var(--bt-gold)!important;
+}
+.forumHero::after { display:none!important; }
+.forumHero h1 { color:#fff0c8!important; text-shadow:0 3px 10px #000!important; }
+.forumHero p { color:#e1d5c8!important; }
+.forumStat { background:rgba(55,16,25,.88)!important; }
+.forumStat b { color:var(--bt-gold-hi)!important; }
+.forumSearch input,.replyBox textarea,.modalForm textarea,.modalForm input,.modalForm select {
+  border:1px solid #715832!important;
+  border-radius:4px!important;
+  background:#18131d!important;
+  color:#f6e8c7!important;
+  box-shadow:inset 0 0 0 1px #0b090d!important;
+}
+.categoryButton { border-radius:3px!important; }
+.categoryButton:hover,.categoryButton.active {
+  border-color:var(--bt-gold)!important;
+  background:linear-gradient(90deg,#681722,#35131d)!important;
+}
+.categoryIcon,.avatar {
+  border-radius:4px!important;
+  border:1px solid #8a6a36!important;
+  background:#1d1621!important;
+}
+.threadRow { border-top:1px solid rgba(201,151,66,.16)!important; }
+.threadRow:hover { background:rgba(103,23,34,.26)!important; }
+.threadTitle,.threadDetailHead h2 { color:#fff0c9!important; }
+.threadDetailHead {
+  border-bottom:2px solid var(--bt-red-2)!important;
+  background:linear-gradient(180deg,#5e1621,#2b121b)!important;
+}
+.post { border-top:1px solid rgba(201,151,66,.22)!important; }
+.postAuthor { background:#1c1520!important; border-color:rgba(201,151,66,.18)!important; }
+.postBody { color:#ddd4c8!important; background:rgba(24,18,27,.92)!important; }
+.forumModal { border:2px solid var(--bt-gold)!important; }
+.modalHead { border-bottom:2px solid var(--bt-red-2)!important; background:#50141e!important; }
+
+/* Floating account control */
+[class*='account-dock_dock'] {
+  border:1px solid var(--bt-gold)!important;
+  border-radius:4px!important;
+  clip-path:none!important;
+  background:linear-gradient(#711a25,#3e0e16)!important;
+  box-shadow:0 5px 16px rgba(0,0,0,.36)!important;
+}
+
+footer { background:#120d15!important; border-top:1px solid var(--bt-gold)!important; }
+
+@media(max-width:900px){
+  .hero {
+    min-height:820px!important;
+    background:
+      linear-gradient(180deg,rgba(7,5,10,.08) 0 45%,rgba(7,5,10,.75) 76%,rgba(7,5,10,.90)),
+      var(--bt-menu) 36% center / cover no-repeat!important;
+  }
+  .heroLayout { align-items:end!important; }
+  .heroCopy { width:100%!important; max-width:680px!important; padding:28px 20px!important; }
+  .worldSection,.roadmapSection,.participationSection,.finalSection,.forumPage { background-attachment:scroll!important; }
+}
+
+@media(max-width:600px){
+  .hero h1 { font-size:clamp(3.7rem,19vw,5.4rem)!important; }
+  .eyebrow { padding-inline:18px!important; }
+  .sectionHead { padding:18px!important; }
+  .sectionHead>div>span { min-width:130px; }
+}
