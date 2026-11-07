@@ -1,3 +1,8 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# ByeTale Community build artifacts
+/community/node_modules/
+/community/.next/
+/community/tsconfig.tsbuildinfo

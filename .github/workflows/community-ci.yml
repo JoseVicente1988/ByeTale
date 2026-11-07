@@ -1,0 +1,206 @@
+name: ByeTale Community CI
+
+on:
+  push:
+    branches: [community-web]
+    paths:
+      - 'community/**'
+      - '.github/workflows/community-ci.yml'
+  pull_request:
+    paths:
+      - 'community/**'
+      - '.github/workflows/community-ci.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: byetale-community-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        working-directory: community
+        run: npm ci --no-audit --no-fund
+
+      - name: Dependency security audit
+        working-directory: community
+        run: npm audit --audit-level=high
+
+      - name: Typecheck
+        working-directory: community
+        run: npm run typecheck
+
+      - name: Production build
+        working-directory: community
+        run: npm run build
+
+      - name: Verify Vercel token
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          test -n "$VERCEL_TOKEN" || { echo "VERCEL_TOKEN is missing"; exit 1; }
+          echo "VERCEL_TOKEN is configured"
+
+      - name: Ensure Vercel project exists
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          STATUS=$(curl -sS -o /tmp/vercel-project.json -w "%{http_code}" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "https://api.vercel.com/v9/projects/byetale-community?teamId=team_XyjNhaZz7oxusZTQoGYgywKS")
+          if [ "$STATUS" = "404" ]; then
+            CREATE_STATUS=$(curl -sS -o /tmp/vercel-create.json -w "%{http_code}" \
+              -X POST \
+              -H "Authorization: Bearer $VERCEL_TOKEN" \
+              -H "Content-Type: application/json" \
+              "https://api.vercel.com/v11/projects?teamId=team_XyjNhaZz7oxusZTQoGYgywKS" \
+              --data '{"name":"byetale-community","framework":"nextjs","gitRepository":{"type":"github","repo":"JoseVicente1988/ByeTale"}}')
+            cat /tmp/vercel-create.json
+            test "$CREATE_STATUS" -ge 200 -a "$CREATE_STATUS" -lt 300
+          else
+            cat /tmp/vercel-project.json
+            test "$STATUS" -ge 200 -a "$STATUS" -lt 300
+          fi
+
+      - name: Configure Vercel project
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          STATUS=$(curl -sS -o /tmp/vercel-config.json -w "%{http_code}" \
+            -X PATCH \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            "https://api.vercel.com/v9/projects/byetale-community?teamId=team_XyjNhaZz7oxusZTQoGYgywKS" \
+            --data '{"framework":"nextjs","rootDirectory":"community","nodeVersion":"22.x","ssoProtection":null}')
+          cat /tmp/vercel-config.json
+          test "$STATUS" -ge 200 -a "$STATUS" -lt 300
+
+      - name: Deploy community-web to production via Vercel REST API
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          STATUS=$(curl -sS -o /tmp/vercel-deploy.json -w "%{http_code}" \
+            -X POST \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            "https://api.vercel.com/v13/deployments?teamId=team_XyjNhaZz7oxusZTQoGYgywKS" \
+            --data '{"name":"byetale-community","project":"byetale-community","target":"production","gitSource":{"type":"github","org":"JoseVicente1988","repo":"ByeTale","ref":"community-web"}}')
+          cat /tmp/vercel-deploy.json
+          test "$STATUS" -ge 200 -a "$STATUS" -lt 300
+          DEPLOYMENT_ID=$(node -e "const d=require('/tmp/vercel-deploy.json'); process.stdout.write(d.id || '')")
+          DEPLOYMENT_URL=$(node -e "const d=require('/tmp/vercel-deploy.json'); process.stdout.write(d.url || '')")
+          test -n "$DEPLOYMENT_ID"
+          echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> "$GITHUB_ENV"
+          echo "DEPLOYMENT_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
+
+      - name: Wait for Vercel production deployment
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          for i in $(seq 1 60); do
+            curl -sS \
+              -H "Authorization: Bearer $VERCEL_TOKEN" \
+              "https://api.vercel.com/v13/deployments/$DEPLOYMENT_ID?teamId=team_XyjNhaZz7oxusZTQoGYgywKS" \
+              > /tmp/vercel-status.json
+            STATE=$(node -e "const d=require('/tmp/vercel-status.json'); process.stdout.write(d.readyState || d.status || '')")
+            echo "Vercel state: $STATE"
+            if [ "$STATE" = "READY" ]; then
+              cat /tmp/vercel-status.json
+              exit 0
+            fi
+            if [ "$STATE" = "ERROR" ] || [ "$STATE" = "CANCELED" ]; then
+              cat /tmp/vercel-status.json
+              exit 1
+            fi
+            sleep 5
+          done
+          echo "Timed out waiting for Vercel deployment"
+          cat /tmp/vercel-status.json
+          exit 1
+
+      - name: Verify public site, forum and real game artwork
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
+        run: |
+          for URL in \
+            "https://byetale-community.vercel.app/" \
+            "https://byetale-community.vercel.app/forum" \
+            "https://byetale-community.vercel.app/account"; do
+            echo "Checking $URL"
+            CODE=$(curl -sS -L --retry 6 --retry-delay 5 -o /tmp/page.html -w "%{http_code}" "$URL")
+            echo "HTTP $CODE"
+            test "$CODE" = "200"
+            grep -qi "ByeTale" /tmp/page.html
+          done
+
+          for ASSET in byetale-menu-reference.webp byetale-battle-reference.webp byetale-banner-reference.webp; do
+            ASSET_URL="https://byetale-community.vercel.app/$ASSET"
+            echo "Checking $ASSET_URL"
+            CODE=$(curl -sS -L --retry 6 --retry-delay 5 -o "/tmp/$ASSET" -w "%{http_code}" "$ASSET_URL")
+            test "$CODE" = "200"
+            test "$(wc -c < "/tmp/$ASSET")" -gt 8000
+          done
+
+          CSS_URLS=$(grep -oE 'href="[^"]+\.css[^"]*"' /tmp/page.html | cut -d'"' -f2 || true)
+          FOUND_REAL=0
+          FOUND_SYNTHETIC=0
+          for CSS_PATH in $CSS_URLS; do
+            case "$CSS_PATH" in
+              http*) CSS_URL="$CSS_PATH" ;;
+              *) CSS_URL="https://byetale-community.vercel.app$CSS_PATH" ;;
+            esac
+            curl -sS -L "$CSS_URL" -o /tmp/chunk.css
+            grep -q 'byetale-menu-reference.webp' /tmp/chunk.css && FOUND_REAL=1
+            if grep -Eq 'byetale-world-(pixel|day|dawn)\.svg' /tmp/chunk.css; then FOUND_SYNTHETIC=1; fi
+          done
+          test "$FOUND_REAL" = "1"
+          test "$FOUND_SYNTHETIC" = "0"
+
+      - name: Capture production homepage screenshot
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
+        run: |
+          BROWSER=$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)
+          test -n "$BROWSER"
+          "$BROWSER" --headless --no-sandbox --disable-gpu --hide-scrollbars \
+            --window-size=1440,1100 \
+            --screenshot=/tmp/byetale-home.png \
+            https://byetale-community.vercel.app/
+          test -s /tmp/byetale-home.png
+          file /tmp/byetale-home.png
+
+      - name: Upload production visual check
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
+        uses: actions/upload-artifact@v4
+        with:
+          name: byetale-production-home
+          path: /tmp/byetale-home.png
+          if-no-files-found: error
+          retention-days: 3
+
+      - name: Print production URL
+        if: github.event_name != 'pull_request' || github.head_ref == 'community-web'
+        run: |
+          echo "Production deployment: https://$DEPLOYMENT_URL"
+          echo "Stable alias: https://byetale-community.vercel.app"
+          echo "Forum: https://byetale-community.vercel.app/forum"
+          echo "Account: https://byetale-community.vercel.app/account"
+          echo "Menu reference: https://byetale-community.vercel.app/byetale-menu-reference.webp"
+          echo "Battle reference: https://byetale-community.vercel.app/byetale-battle-reference.webp"
+          echo "Banner reference: https://byetale-community.vercel.app/byetale-banner-reference.webp"
