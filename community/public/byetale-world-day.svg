@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" shape-rendering="crispEdges">
+  <title>ByeTale pixel-art world</title>
+  <desc>Bright layered 2D RPG landscape inspired by the current ByeTale visual direction.</desc>
+
+  <!-- sky -->
+  <rect width="1600" height="900" fill="#79a9c4"/>
+  <rect y="0" width="1600" height="120" fill="#6b98b6"/>
+  <rect y="120" width="1600" height="120" fill="#7da9c2"/>
+  <rect y="240" width="1600" height="110" fill="#91b5c4"/>
+  <rect y="350" width="1600" height="100" fill="#a8c3c3"/>
+
+  <!-- pixel sun -->
+  <rect x="1260" y="88" width="88" height="88" fill="#f1d280"/>
+  <rect x="1272" y="76" width="64" height="12" fill="#f1d280"/>
+  <rect x="1272" y="176" width="64" height="12" fill="#f1d280"/>
+  <rect x="1248" y="100" width="12" height="64" fill="#f1d280"/>
+  <rect x="1348" y="100" width="12" height="64" fill="#f1d280"/>
+
+  <!-- clouds -->
+  <g fill="#c9d7d2" opacity="0.95">
+    <rect x="150" y="126" width="116" height="24"/>
+    <rect x="174" y="102" width="72" height="24"/>
+    <rect x="198" y="90" width="36" height="12"/>
+    <rect x="266" y="138" width="64" height="12"/>
+    <rect x="508" y="178" width="132" height="24"/>
+    <rect x="536" y="154" width="76" height="24"/>
+    <rect x="612" y="190" width="64" height="12"/>
+    <rect x="1000" y="118" width="118" height="22"/>
+    <rect x="1022" y="96" width="68" height="22"/>
+  </g>
+
+  <!-- far mountains -->
+  <path fill="#688797" d="M0 455 L160 315 L250 390 L380 250 L500 365 L650 235 L790 370 L930 270 L1085 390 L1230 245 L1390 385 L1510 295 L1600 390 L1600 560 L0 560 Z"/>
+  <path fill="#7895a1" d="M0 455 L160 315 L250 390 L380 250 L500 365 L650 235 L790 370 L930 270 L1085 390 L1230 245 L1390 385 L1510 295 L1600 390 L1600 430 L0 500 Z" opacity="0.55"/>
+
+  <!-- snow caps / highlights -->
+  <g fill="#b9c8c6">
+    <path d="M338 294 L380 250 L426 296 L397 286 L380 302 L364 286 Z"/>
+    <path d="M611 276 L650 235 L696 280 L672 270 L650 288 L632 271 Z"/>
+    <path d="M1185 292 L1230 245 L1276 292 L1254 282 L1230 302 L1210 282 Z"/>
+  </g>
+
+  <!-- mid hills -->
+  <path fill="#496876" d="M0 520 L130 405 L235 485 L345 388 L475 505 L590 395 L735 505 L835 405 L960 500 L1100 390 L1245 505 L1360 404 L1490 495 L1600 430 L1600 650 L0 650 Z"/>
+
+  <!-- distant castle / Valdoria silhouette -->
+  <g transform="translate(1070 350)">
+    <rect x="60" y="92" width="250" height="150" fill="#656c68"/>
+    <rect x="92" y="55" width="72" height="187" fill="#71746e"/>
+    <rect x="218" y="35" width="76" height="207" fill="#6b6e68"/>
+    <rect x="108" y="18" width="40" height="37" fill="#5a625f"/>
+    <rect x="236" y="0" width="40" height="35" fill="#575f5c"/>
+    <rect x="38" y="116" width="42" height="126" fill="#5d6562"/>
+    <rect x="294" y="112" width="44" height="130" fill="#59615f"/>
+    <rect x="128" y="152" width="116" height="90" fill="#4a5351"/>
+    <rect x="163" y="174" width="46" height="68" fill="#34413f"/>
+    <g fill="#d0b873">
+      <rect x="112" y="84" width="12" height="20"/>
+      <rect x="250" y="69" width="12" height="20"/>
+      <rect x="267" y="69" width="12" height="20"/>
+    </g>
+  </g>
+
+  <!-- distant treeline -->
+  <g fill="#315548">
+    <path d="M0 620 L55 475 L110 620 Z"/>
+    <path d="M55 620 L120 435 L185 620 Z"/>
+    <path d="M150 620 L220 455 L290 620 Z"/>
+    <path d="M260 620 L325 420 L390 620 Z"/>
+    <path d="M365 620 L430 460 L495 620 Z"/>
+    <path d="M470 620 L535 430 L600 620 Z"/>
+    <path d="M580 620 L650 455 L720 620 Z"/>
+    <path d="M700 620 L770 425 L840 620 Z"/>
+    <path d="M830 620 L900 450 L970 620 Z"/>
+    <path d="M940 620 L1010 430 L1080 620 Z"/>
+    <path d="M1060 620 L1120 460 L1180 620 Z"/>
+    <path d="M1170 620 L1240 425 L1310 620 Z"/>
+    <path d="M1300 620 L1370 445 L1440 620 Z"/>
+    <path d="M1420 620 L1490 420 L1560 620 Z"/>
+    <path d="M1510 620 L1570 465 L1630 620 Z"/>
+  </g>
+
+  <!-- meadow -->
+  <rect y="610" width="1600" height="290" fill="#4d7354"/>
+  <rect y="610" width="1600" height="34" fill="#41694d"/>
+  <rect y="760" width="1600" height="140" fill="#3d6548"/>
+
+  <!-- middle forest -->
+  <g fill="#284b40">
+    <path d="M20 760 L96 535 L172 760 Z"/>
+    <path d="M122 760 L210 500 L298 760 Z"/>
+    <path d="M265 760 L340 548 L415 760 Z"/>
+    <path d="M1220 760 L1300 520 L1380 760 Z"/>
+    <path d="M1335 760 L1425 485 L1515 760 Z"/>
+    <path d="M1470 760 L1550 535 L1630 760 Z"/>
+  </g>
+  <g fill="#1d3a34">
+    <rect x="86" y="650" width="18" height="110"/>
+    <rect x="201" y="620" width="18" height="140"/>
+    <rect x="331" y="660" width="18" height="100"/>
+    <rect x="1290" y="640" width="18" height="120"/>
+    <rect x="1416" y="605" width="18" height="155"/>
+    <rect x="1542" y="650" width="18" height="110"/>
+  </g>
+
+  <!-- road -->
+  <path fill="#8c8065" d="M700 900 L905 900 L1002 610 L884 610 Z"/>
+  <path fill="#9c8e70" d="M756 900 L854 900 L930 610 L897 610 Z"/>
+  <g fill="#716a58" opacity="0.75">
+    <rect x="797" y="842" width="26" height="12"/>
+    <rect x="838" y="782" width="20" height="10"/>
+    <rect x="865" y="724" width="18" height="9"/>
+    <rect x="890" y="670" width="14" height="8"/>
+  </g>
+
+  <!-- foreground shrubs / rocks -->
+  <g fill="#355b40">
+    <rect x="410" y="792" width="120" height="24"/>
+    <rect x="455" y="770" width="48" height="22"/>
+    <rect x="1080" y="805" width="154" height="28"/>
+    <rect x="1128" y="780" width="62" height="25"/>
+  </g>
+  <g fill="#67716a">
+    <rect x="548" y="816" width="42" height="26"/>
+    <rect x="565" y="802" width="24" height="14"/>
+    <rect x="1018" y="834" width="54" height="30"/>
+    <rect x="1038" y="818" width="30" height="16"/>
+  </g>
+
+  <!-- tiny field details -->
+  <g fill="#d6c66c">
+    <rect x="350" y="700" width="5" height="9"/><rect x="355" y="696" width="5" height="5"/>
+    <rect x="1180" y="705" width="5" height="9"/><rect x="1185" y="701" width="5" height="5"/>
+    <rect x="620" y="748" width="5" height="9"/><rect x="625" y="744" width="5" height="5"/>
+  </g>
+
+  <!-- subtle pixel dithering, not a dark overlay -->
+  <g fill="#ffffff" opacity="0.045">
+    <rect x="80" y="210" width="4" height="4"/><rect x="280" y="330" width="4" height="4"/>
+    <rect x="520" y="120" width="4" height="4"/><rect x="760" y="285" width="4" height="4"/>
+    <rect x="980" y="205" width="4" height="4"/><rect x="1440" y="260" width="4" height="4"/>
+  </g>
+</svg>
