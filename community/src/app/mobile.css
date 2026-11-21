@@ -1,0 +1,638 @@
+/* Mobile-first overrides for ByeTale Community.
+ * CSS viewport queries are intentional: the layout adapts continuously without UA sniffing.
+ */
+
+@media (max-width: 1020px) {
+  html {
+    scroll-padding-top: 118px;
+  }
+
+  .siteHeader .nav {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
+    padding: 9px 0 8px;
+  }
+
+  .siteHeader .brand {
+    min-width: 0;
+  }
+
+  .siteHeader .navLinks {
+    grid-column: 1 / -1;
+    display: flex;
+    width: 100%;
+    gap: 6px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .siteHeader .navLinks::-webkit-scrollbar {
+    display: none;
+  }
+
+  .siteHeader .navLinks a {
+    flex: 0 0 auto;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    background: rgba(11, 18, 22, 0.58);
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+  }
+
+  .siteHeader .navLinks a::after {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --mobile-gutter: 14px;
+  }
+
+  html {
+    scroll-padding-top: calc(118px + env(safe-area-inset-top));
+  }
+
+  body {
+    width: 100%;
+    overflow-x: clip;
+  }
+
+  .shell,
+  .forumShell {
+    width: calc(100% - (var(--mobile-gutter) * 2));
+  }
+
+  /* Header becomes a compact two-row mobile toolbar. */
+  .siteHeader {
+    padding-top: env(safe-area-inset-top);
+    background: rgba(7, 13, 17, 0.90);
+    backdrop-filter: blur(18px) saturate(1.08);
+  }
+
+  .siteHeader .nav {
+    min-height: 0;
+  }
+
+  .brandIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .brandCopy strong {
+    font-size: 0.88rem;
+    letter-spacing: 0.11em;
+  }
+
+  .brandCopy small {
+    display: none;
+  }
+
+  .streamPill {
+    display: inline-flex;
+    max-width: 158px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 8px 10px;
+    font-size: 0.61rem;
+  }
+
+  /* Hero: image first, copy immediately after it; no giant 980px desktop block. */
+  .hero {
+    min-height: 0;
+    display: block;
+    padding: calc(118px + env(safe-area-inset-top)) 0 48px;
+  }
+
+  .heroScene {
+    top: calc(118px + env(safe-area-inset-top));
+    left: 0;
+    right: 0;
+    bottom: auto;
+    width: 100%;
+    height: clamp(255px, 72vw, 430px);
+    background-position: center 24%;
+    background-size: cover;
+    opacity: 1;
+  }
+
+  .heroScene::after {
+    background: linear-gradient(180deg, transparent 50%, rgba(12, 23, 29, 0.10) 68%, #0c171d 100%);
+  }
+
+  .heroShade {
+    background: linear-gradient(180deg, transparent 0 52%, rgba(12, 23, 29, 0.18) 64%, #0c171d 79%, #0c171d 100%);
+  }
+
+  .heroLayout {
+    min-height: 0;
+    display: block;
+    padding-top: clamp(255px, 72vw, 430px);
+  }
+
+  .heroCopy {
+    width: 100%;
+    padding-top: 24px;
+  }
+
+  .eyebrow {
+    min-height: 29px;
+    max-width: 100%;
+    padding: 0 10px;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+  }
+
+  .hero h1 {
+    margin-top: 17px;
+    font-size: clamp(3rem, 17vw, 4.7rem);
+    line-height: 0.88;
+    letter-spacing: 0.025em;
+  }
+
+  .hero h1::after {
+    margin-top: 14px;
+  }
+
+  .heroTagline {
+    margin-top: 14px;
+    font-size: clamp(1.08rem, 5.4vw, 1.35rem);
+  }
+
+  .lead {
+    margin-top: 13px;
+    font-size: 0.94rem;
+    line-height: 1.64;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 9px;
+    margin-top: 22px;
+  }
+
+  .button {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .tech {
+    flex-wrap: nowrap;
+    width: calc(100vw - (var(--mobile-gutter) * 2));
+    margin-top: 17px;
+    padding-bottom: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tech::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tech span {
+    flex: 0 0 auto;
+  }
+
+  .heroCaption,
+  .scrollCue {
+    display: none;
+  }
+
+  /* Twitch */
+  .streamSection {
+    margin-top: 0;
+    padding: 24px 0 18px;
+  }
+
+  .streamBand {
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    min-height: 0;
+    padding: 16px;
+    border-radius: 15px;
+  }
+
+  .streamBand p {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .streamStatus {
+    justify-self: end;
+    padding: 7px 9px;
+  }
+
+  .twitchFrame {
+    width: 100%;
+    margin-top: 12px;
+    overflow: hidden;
+    border-radius: 15px;
+  }
+
+  .twitchPlayer {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 16 / 9;
+  }
+
+  .twitchPlayer iframe {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .twitchFooter {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+    padding: 12px 14px;
+  }
+
+  /* Content sections */
+  .section,
+  .worldSection,
+  .finalSection {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+
+  .sectionHead {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .sectionHead h2,
+  .manifesto h2 {
+    font-size: clamp(1.9rem, 10vw, 2.55rem);
+    line-height: 1.04;
+  }
+
+  .sectionHead p,
+  .manifesto p {
+    font-size: 0.88rem;
+    line-height: 1.62;
+  }
+
+  .worldGrid,
+  .roadmap,
+  .participation {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    gap: 12px;
+  }
+
+  .featureCard,
+  .featureLarge,
+  .roadCard,
+  .participationCard {
+    min-height: 0;
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .featureLarge {
+    grid-row: auto;
+    min-height: 330px;
+    background-position: center 40%;
+  }
+
+  .featureLarge h3 {
+    font-size: clamp(1.75rem, 9vw, 2.35rem);
+  }
+
+  .featureCard h3 {
+    font-size: 1.16rem;
+  }
+
+  .featureCard p,
+  .roadCard p,
+  .participationCard p {
+    min-height: 0;
+    font-size: 0.84rem;
+    line-height: 1.58;
+  }
+
+  .roadCard h3 {
+    margin-top: 22px;
+  }
+
+  .participationCard > i {
+    margin-bottom: 20px;
+  }
+
+  .manifesto {
+    display: grid;
+    gap: 22px;
+    padding: 22px;
+    border-radius: 16px;
+  }
+
+  .manifesto .button {
+    width: 100%;
+  }
+
+  .footer {
+    min-height: 0;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+    padding: 28px 0 calc(82px + env(safe-area-inset-bottom));
+  }
+
+  /* Forum: mobile behaves like a native discussion surface, not a squeezed desktop table. */
+  .forumHeader {
+    position: sticky;
+    top: 0;
+  }
+
+  .forumNav {
+    min-height: 64px;
+    height: auto;
+    padding: 9px 0;
+    gap: 9px;
+  }
+
+  .forumBrand {
+    font-size: 15px;
+  }
+
+  .forumBrand small,
+  .forumUserName,
+  .forumNavLinks {
+    display: none;
+  }
+
+  .forumUser {
+    margin-left: auto;
+  }
+
+  .forumButton {
+    min-height: 42px;
+    padding: 10px 12px;
+    touch-action: manipulation;
+  }
+
+  .forumHero {
+    padding: 42px 0 26px;
+    background-position: 58% 38% !important;
+  }
+
+  .forumHero h1 {
+    font-size: clamp(2.55rem, 15vw, 4rem);
+  }
+
+  .forumHero p {
+    font-size: 0.87rem;
+    line-height: 1.58;
+  }
+
+  .forumStats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 8px;
+  }
+
+  .forumStat {
+    min-width: 0;
+    padding: 10px;
+  }
+
+  .forumToolbar {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 16px 0 12px;
+  }
+
+  .forumSearch input,
+  .replyBox textarea,
+  .modalForm textarea,
+  .modalForm input,
+  .modalForm select {
+    font-size: 16px;
+  }
+
+  .forumLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding-bottom: 88px;
+  }
+
+  .forumSidebar {
+    position: static;
+    display: flex;
+    gap: 7px;
+    padding: 7px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .forumSidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .categoryButton {
+    flex: 0 0 168px;
+    min-width: 168px;
+    padding: 10px;
+  }
+
+  .categoryCopy small {
+    max-width: 105px;
+  }
+
+  .forumMain,
+  .forumSidebar {
+    border-radius: 12px;
+  }
+
+  .forumPanelHead,
+  .threadDetailHead,
+  .replyBox {
+    padding: 16px;
+  }
+
+  .forumPanelHead {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .forumPanelHead .forumButton {
+    width: 100%;
+  }
+
+  .threadRow {
+    grid-template-columns: 1fr;
+    gap: 9px;
+    padding: 15px;
+  }
+
+  .threadTitle {
+    font-size: 0.9rem;
+    line-height: 1.38;
+  }
+
+  .threadMetrics {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-align: left;
+  }
+
+  .threadMetrics b {
+    display: inline;
+    margin: 0;
+  }
+
+  .threadDetailHead h2 {
+    font-size: clamp(1.75rem, 9vw, 2.35rem);
+  }
+
+  .post {
+    grid-template-columns: 1fr;
+  }
+
+  .postAuthor {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 15px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .postAuthor b,
+  .postAuthor small {
+    margin: 0;
+  }
+
+  .officialMark {
+    margin: 0;
+  }
+
+  .postBody {
+    padding: 16px;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .replyActions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .replyActions .forumButton {
+    width: 100%;
+  }
+
+  .modalBackdrop {
+    align-items: end;
+    padding: 0;
+  }
+
+  .forumModal {
+    width: 100%;
+    max-height: 88dvh;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .modalHead,
+  .modalBody {
+    padding: 17px;
+  }
+
+  .modalFooter {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding-bottom: max(4px, env(safe-area-inset-bottom));
+  }
+
+  .modalFooter .forumButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  :root {
+    --mobile-gutter: 12px;
+  }
+
+  .siteHeader .navLinks a {
+    min-height: 36px;
+    padding: 7px 10px;
+    font-size: 0.72rem;
+  }
+
+  .streamPill {
+    max-width: 130px;
+  }
+
+  .hero {
+    padding-top: calc(114px + env(safe-area-inset-top));
+  }
+
+  .heroScene {
+    top: calc(114px + env(safe-area-inset-top));
+    height: 76vw;
+  }
+
+  .heroLayout {
+    padding-top: 76vw;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.85rem, 17vw, 4rem);
+  }
+
+  .streamBand {
+    grid-template-columns: 1fr;
+  }
+
+  .streamStatus {
+    justify-self: start;
+  }
+
+  .featureLarge {
+    min-height: 300px;
+  }
+
+  .forumStats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .button,
+  .forumButton,
+  .categoryButton,
+  .threadRow,
+  .navLinks a {
+    -webkit-tap-highlight-color: rgba(216, 185, 117, 0.14);
+  }
+
+  .participationCard:hover,
+  .button:hover,
+  .forumButton:hover {
+    transform: none;
+  }
+}

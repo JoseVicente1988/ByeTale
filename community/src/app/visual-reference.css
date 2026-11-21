@@ -1,0 +1,264 @@
+/* Final visual composition: let the ByeTale artwork lead the page.
+ * Castle/world art stays visible; contrast is applied only where text needs it.
+ */
+
+body {
+  background: #111c26 !important;
+}
+
+.siteHeader {
+  background: linear-gradient(180deg, rgba(6, 12, 20, .58), rgba(6, 12, 20, .34)) !important;
+  border-bottom-color: rgba(255,255,255,.10) !important;
+  backdrop-filter: blur(14px) saturate(1.08) !important;
+}
+
+/* HERO: use the artwork exactly as composed — castle on the left, copy on the right. */
+.hero {
+  min-height: min(960px, 100svh) !important;
+  background: #0b1420 !important;
+  padding-top: 104px !important;
+}
+
+.heroScene {
+  inset: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  background-image: var(--scene) !important;
+  background-position: left center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  filter: saturate(1.06) contrast(1.03) brightness(1.08) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.heroScene::before,
+.heroScene::after {
+  display: none !important;
+}
+
+.heroShade {
+  display: block !important;
+  background:
+    linear-gradient(90deg,
+      rgba(5,10,18,0) 0%,
+      rgba(5,10,18,0) 42%,
+      rgba(5,10,18,.08) 54%,
+      rgba(5,10,18,.30) 70%,
+      rgba(5,10,18,.48) 100%),
+    linear-gradient(180deg, rgba(4,8,14,.05) 0%, transparent 65%, rgba(5,10,16,.32) 100%) !important;
+}
+
+.heroLayout {
+  min-height: 720px !important;
+  justify-content: flex-end !important;
+}
+
+.heroCopy {
+  width: min(570px, 42vw) !important;
+  margin-left: auto !important;
+  padding: 42px 0 0 38px !important;
+  text-shadow: 0 3px 22px rgba(0,0,0,.72) !important;
+}
+
+.hero .eyebrow {
+  background: rgba(6,12,20,.36) !important;
+  border-color: rgba(245,216,157,.34) !important;
+}
+
+.hero h1 {
+  text-shadow: 0 4px 26px rgba(0,0,0,.66) !important;
+}
+
+.heroTagline,
+.lead {
+  text-shadow: 0 3px 18px rgba(0,0,0,.76) !important;
+}
+
+.button.secondary {
+  background: rgba(8,14,22,.44) !important;
+  border-color: rgba(255,255,255,.22) !important;
+}
+
+.quickStart {
+  background: #14222c !important;
+  border-top: 1px solid rgba(255,255,255,.08) !important;
+  border-bottom: 1px solid rgba(255,255,255,.08) !important;
+}
+
+.quickCard,
+.quickIntro {
+  background: rgba(13,24,31,.72) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Scenic sections: paintings fill the band; no black curtain over them. */
+.worldSection,
+.roadmapSection,
+.participationSection,
+.finalSection,
+.streamSection {
+  background: #14242d !important;
+}
+
+.worldSection::before,
+.roadmapSection::before,
+.participationSection::before,
+.finalSection::before,
+.streamSection::before {
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: auto !important;
+  transform: none !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  opacity: 1 !important;
+  filter: saturate(1.02) contrast(1.02) brightness(1.05) !important;
+}
+
+.worldSection::before,
+.participationSection::before,
+.streamSection::before {
+  background-image: var(--battle-scene) !important;
+  background-position: center center !important;
+}
+
+.roadmapSection::before,
+.finalSection::before {
+  background-image: var(--scene) !important;
+  background-position: left center !important;
+}
+
+.worldSection::after,
+.participationSection::after,
+.streamSection::after {
+  background:
+    linear-gradient(90deg, rgba(11,22,28,.70) 0 31%, rgba(11,22,28,.30) 50%, rgba(11,22,28,.18) 76%, rgba(11,22,28,.40) 100%),
+    linear-gradient(180deg, rgba(10,20,26,.18), rgba(10,20,26,.36)) !important;
+}
+
+.roadmapSection::after,
+.finalSection::after {
+  background:
+    linear-gradient(90deg, rgba(10,19,26,.18) 0 42%, rgba(10,19,26,.34) 58%, rgba(10,19,26,.64) 100%),
+    linear-gradient(180deg, rgba(10,19,26,.12), rgba(10,19,26,.34)) !important;
+}
+
+.featureCard,
+.roadCard,
+.participationCard,
+.manifesto,
+.streamBand {
+  background: rgba(8,16,22,.62) !important;
+  border-color: rgba(255,255,255,.15) !important;
+  box-shadow: 0 18px 54px rgba(0,0,0,.20) !important;
+  backdrop-filter: blur(10px) saturate(1.05) !important;
+}
+
+.sectionHead h2,
+.sectionHead p,
+.featureCard,
+.roadCard,
+.participationCard,
+.manifesto {
+  text-shadow: 0 2px 14px rgba(0,0,0,.55) !important;
+}
+
+/* Forum: scenic hero and visible world behind the discussion surface. */
+.forumPage {
+  background:
+    linear-gradient(180deg, rgba(13,23,30,.50), rgba(13,23,30,.72)),
+    var(--battle-scene) center top / cover fixed no-repeat !important;
+}
+
+.forumHero {
+  background-image:
+    linear-gradient(90deg, rgba(9,17,24,.62) 0%, rgba(9,17,24,.30) 42%, rgba(9,17,24,.12) 72%, rgba(9,17,24,.30) 100%),
+    var(--scene) !important;
+  background-position: center, left center !important;
+  background-size: auto, cover !important;
+  background-repeat: no-repeat !important;
+}
+
+.forumSidebar,
+.forumMain {
+  background: rgba(8,16,22,.72) !important;
+  border-color: rgba(255,255,255,.14) !important;
+  backdrop-filter: blur(12px) saturate(1.05) !important;
+}
+
+.forumHeader {
+  background: rgba(7,14,20,.70) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+/* Desktop composition follows the original artwork. */
+@media (min-width: 761px) {
+  .heroCopy {
+    transform: translateX(1vw);
+  }
+}
+
+/* Mobile: show the painting first, then the content; never bury it under a dark overlay. */
+@media (max-width: 760px) {
+  .siteHeader {
+    background: rgba(7,14,20,.76) !important;
+  }
+
+  .hero {
+    min-height: 0 !important;
+    padding-top: calc(118px + env(safe-area-inset-top)) !important;
+    background: #12212b !important;
+  }
+
+  .heroScene {
+    top: calc(118px + env(safe-area-inset-top)) !important;
+    bottom: auto !important;
+    height: clamp(300px, 78vw, 470px) !important;
+    background-position: 25% center !important;
+    background-size: cover !important;
+    filter: saturate(1.04) contrast(1.02) brightness(1.08) !important;
+  }
+
+  .heroShade {
+    background: linear-gradient(180deg, transparent 0 55%, rgba(15,28,36,.14) 70%, #12212b 100%) !important;
+  }
+
+  .heroLayout {
+    min-height: 0 !important;
+    display: block !important;
+    padding-top: clamp(300px, 78vw, 470px) !important;
+  }
+
+  .heroCopy {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 22px 0 0 !important;
+    transform: none !important;
+  }
+
+  .worldSection::after,
+  .roadmapSection::after,
+  .participationSection::after,
+  .finalSection::after,
+  .streamSection::after {
+    background: linear-gradient(180deg, rgba(12,24,31,.28), rgba(12,24,31,.58)) !important;
+  }
+
+  .worldSection::before,
+  .roadmapSection::before,
+  .participationSection::before,
+  .finalSection::before,
+  .streamSection::before {
+    background-position: center center !important;
+    filter: saturate(1.02) brightness(1.04) !important;
+  }
+
+  .forumPage {
+    background-attachment: scroll !important;
+  }
+}
