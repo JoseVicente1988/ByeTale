@@ -1,6 +1,6 @@
 # ByeTale · Bug report index
 
-_Sincronizado automáticamente: `2026-11-25T20:01:41.910152+00:00` · 1 reportes · 0 incidentes correlacionados · 1 fingerprints._
+_Sincronizado automáticamente: `2026-11-26T02:44:09.670712+00:00` · 1 reportes · 0 incidentes correlacionados · 1 fingerprints._
 
 ## Incidentes correlacionados
 
