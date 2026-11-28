@@ -1,0 +1,1 @@
+{"name":"byetale-bug-report-api","private":true,"type":"module","dependencies":{"postgres":"^3.4.7"}}
